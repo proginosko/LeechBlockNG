@@ -1,0 +1,37 @@
+/* LeechBlock CSS style */
+
+body {
+	background-color: #fff;
+	color: #2e3436;
+	font: normal 16px "Open Sans", Arial, sans-serif;
+	text-align: center;
+}
+
+div {
+	margin-top: 50px;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: 300;
+}
+
+a {
+    color: #2ca089;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.support {
+	color: #777;
+	font-size: 14px;
+	font-style: italic;
+}
+
+.support a {
+	color: #777;
+	text-decoration: underline;
+}

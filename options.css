@@ -1,0 +1,27 @@
+/* LeechBlock options CSS style */
+
+body {
+	background-color: #fff;
+	color: #000;
+}
+
+hr {
+	background-color: #888;
+	color: #888;
+	border: none;
+	height: 1px;
+}
+
+legend {
+	font-weight: bold;
+}
+
+#form-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#panes {
+	display: inline-block;
+}

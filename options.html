@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<html lang="us">
+
+	<head>
+		<meta charset="utf-8">
+		<title>LeechBlock Options</title>
+		<link href="jquery-ui/jquery-ui.min.css" rel="stylesheet">
+		<link href="options.css" rel="stylesheet">
+		<link href="icons/leechblock16.ico" rel="icon" type="image/x-icon">
+		<link href="icons/leechblock16.ico" rel="shortcut icon" type="image/x-icon">
+	</head>
+
+	<body>
+
+		<div id="form-container">
+
+			<form id="form" style="display: none;">
+
+				<div id="panes">
+					<h3>Block Set 1<span id="blockSetCustomName1"></span></h3>
+					<div id="blockSet1">
+						<fieldset>
+							<legend>What to Block</legend>
+							<p>
+								<em>In this section, specify the sites you want to block.</em>
+							</p>
+							<hr>
+							<p>
+								<label>Enter a custom name for this block set (optional):</label><br>
+								<div><input id="setName1" type="text" size="60"></div>
+							</p>
+							<p>
+								<label>Enter the domain names of the sites to block (one item per line):</label><br>
+								<div><textarea id="sites1" cols="80" rows="10" spellcheck="false" placeholder="somesite.com" title="Use * as wildcard and + to prefix exceptions"></textarea></div>
+							</p>
+						</fieldset>
+						<fieldset>
+							<legend>When to Block</legend>
+							<p>
+								<em>In this section, specify when you want to block these sites.</em>
+							</p>
+							<hr>
+							<p>
+								<label>Enter the time periods within which to block these sites (optional):</label>
+								<div>
+									<input id="times1" type="text" size="60" placeholder="Example: 0900-1230,1330-1700" title="Leave blank for no time periods">
+									&nbsp;&nbsp;&nbsp;&nbsp;<button id="allDay1" type="button">All Day</button>
+								</div>
+							</p>
+							<p>
+								<label>Enter a time limit after which to block these sites (optional):</label>
+								<div>
+									<input id="limitMins1" type="text" size="4" title="Leave blank for no time limit">
+									&nbsp;minutes in every&nbsp;
+									<select id="limitPeriod1">
+										<option value=""></option>
+										<option value="900">quarter-hour (15 mins)</option>
+										<option value="1800">half-hour (30 mins)</option>
+										<option value="3600">hour</option>
+										<option value="7200">2 hours</option>
+										<option value="10800">3 hours</option>
+										<option value="14400">4 hours</option>
+										<option value="21600">6 hours</option>
+										<option value="43200">half-day (12 hours)</option>
+										<option value="86400">day (24 hours)</option>
+										<option value="172800">2 days (48 hours)</option>
+										<option value="604800">week (7 days)</option>
+									</select>
+								</div>
+							</p>
+							<p>
+								<label>Select when to block these sites:</label>
+								<select id="conjMode1">
+									<option>within time periods OR after time limit</option>
+									<option>within time periods AND after time limit</option>
+								</select>
+							</p>
+							<p>
+								<label>Select the days on which to block these sites:</label>
+								<div id="days1">
+									<input id="day01" type="checkbox"><label for="day01">Sun</label>
+									&nbsp;
+									<input id="day11" type="checkbox"><label for="day11">Mon</label>
+									&nbsp;
+									<input id="day21" type="checkbox"><label for="day21">Tue</label>
+									&nbsp;
+									<input id="day31" type="checkbox"><label for="day31">Wed</label>
+									&nbsp;
+									<input id="day41" type="checkbox"><label for="day41">Thu</label>
+									&nbsp;
+									<input id="day51" type="checkbox"><label for="day51">Fri</label>
+									&nbsp;
+									<input id="day61" type="checkbox"><label for="day61">Sat</label>
+								</div>
+							</p>
+						</fieldset>
+						<fieldset>
+							<legend>How to Block</legend>
+							<p>
+								<em>In this section, specify how you want to block these sites.</em>
+							</p>
+							<hr>
+							<p>
+								<label>Enter the fully specified URL of the page to show instead of these blocked sites:</label>
+								<div><input id="blockURL1" type="text" size="80" placeholder="http://somesite.com/somepage.html" title="Use $U to pass URL of blocked page"></div>
+							</p>
+							<p>
+								<div>
+									<label>Predefined URLs:</label>
+									<button id="defaultPage1" type="button">Default Page</button>
+									<button id="delayingPage1" type="button" style="display: none;">Delaying Page</button>
+									<button id="blankPage1" type="button">Blank Page</button>
+									<button id="homePage1" type="button">Home Page</button>
+								</div>
+							</p>
+							<hr>
+							<p>
+								<input id="activeBlock1" type="checkbox">
+								<label for="activeBlock1">Actively block pages on these sites once time period is entered or time limit is exceeded</label>
+							</p>
+							<p>
+								<input id="countFocus1" type="checkbox">
+								<label for="countFocus1">Count time spent on these sites only when browser tab is active</label>
+							</p>
+							<p style="display: none;">
+								<input id="delayFirst1" type="checkbox">
+								<label for="delayFirst1">Block only first accessed page of site when delaying page is used</label>
+							</p>
+							<p style="display: none;">
+								Delay access to sites by&nbsp;
+								<input id="delaySecs1" type="text" size="2">
+								&nbsp;seconds when delaying page is used
+							</p>
+						</fieldset>
+						<fieldset>
+							<legend>Advanced Options</legend>
+							<p>
+								<em><strong>Warning!</strong> Be sure you understand the consequences of these options before selecting any of them.</em>
+							</p>
+							<hr>
+							<p>
+								<input id="prevOpts1" type="checkbox">
+								<label for="prevOpts1">Prevent access to options for this block set at times when these sites are blocked</label>
+							</p>
+							<p>
+								<input id="prevAddons1" type="checkbox">
+								<label for="prevAddons1">Prevent access to about:addons at times when these sites are blocked</label>
+							</p>
+							<p>
+								<input id="prevConfig1" type="checkbox">
+								<label for="prevConfig1">Prevent access to about:config and about:support at times when these sites are blocked</label>
+							</p>
+						</fieldset>
+					</div>
+				</div>
+
+				<p style="text-align: center;">
+					<button id="saveOptions" type="button">Save Options</button>
+				</p>
+
+			</form>
+
+		</div>
+
+		<div id="alerts" style="display: none;">
+			<div id="alertBadTimes" title="LeechBlock Options">
+				<p>Please enter the time periods in the correct format. Use 24-hour clock format (HHMM) for times,
+				a dash (-) between start time and end time, and commas or spaces to separate time periods.</p>
+			</div>
+			<div id="alertBadTimeLimit" title="LeechBlock Options">
+				<p>Please enter the time limit in the correct format (as a positive whole number).</p>
+			</div>
+			<div id="alertBadSeconds" title="LeechBlock Options">
+				<p>Please enter the number of seconds in the correct format (as a positive whole number).</p>
+			</div>
+			<div id="alertBadBlockURL" title="LeechBlock Options">
+				<p>Please enter the URL for the blocking page in the correct format (as a fully specified URL).</p>
+			</div>
+		</div>
+
+		<script src="jquery-ui/external/jquery/jquery.js"></script>
+		<script src="jquery-ui/jquery-ui.min.js"></script>
+	    <script src="common.js"></script>
+	    <script src="options.js"></script>
+
+	</body>
+
+</html>

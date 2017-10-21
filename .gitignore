@@ -1,0 +1,5 @@
+*.bat
+*.txt
+*.xpi
+
+jquery-ui/**

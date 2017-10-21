@@ -1,0 +1,42 @@
+{
+
+	"description": "LeechBlock is a simple productivity tool designed to block those time-wasting sites that can suck the life out of your working day. All you need to do is specify which sites to block and when to block them.",
+	"manifest_version": 2,
+	"name": "LeechBlock NG",
+	"version": "0.1",
+	"homepage_url": "http://www.proginosko.com/leechblock/",
+	"icons": {
+		"48": "icons/leechblock48.png",
+		"96": "icons/leechblock96.png"
+	},
+
+	"applications": {
+		"gecko": {
+			"id": "leechblockng@proginosko.com"
+		}
+	},
+
+	"options_ui": {
+		"page": "options.html",
+		"open_in_tab": true
+	},
+
+	"permissions": [
+		"alarms",
+		"storage",
+		"tabs",
+		"webNavigation"
+	],
+
+	"background": {
+		"scripts": ["common.js", "background.js"]
+	},
+
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"js": ["content.js"]
+		}
+	]
+
+}
