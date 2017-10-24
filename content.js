@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 const WIDGET_STYLE =
-		"position: fixed; z-index: 10000; top: 0px; left: 0px; " +
+		"position: fixed; z-index: 2147483647; top: 0px; left: 0px; " +
 		"margin: 2px; padding: 4px 4px 2px 4px; " +
 		"background-color: #FFF; border: solid 1px #808080; border-radius: 4px; " +
 		"color: #000; font: normal 12px \"Lucida Console\", \"Monaco\", monospace;";
