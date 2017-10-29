@@ -17,7 +17,7 @@ function listObjectProperties(obj, name) {
 	return list;
 }
 
-// Cleans options
+// Clean options
 //
 function cleanOptions(options) {
 	for (let set = 1; set <= NUM_SETS; set++) {
@@ -79,7 +79,7 @@ function cleanOptions(options) {
 	}
 }
 
-// Cleans time data
+// Clean time data
 //
 // timedata[0] = start time for statistics (secs since epoch)
 // timedata[1] = total time spent on sites (secs)
@@ -97,7 +97,7 @@ function cleanTimeData(options) {
 	}
 }
 
-// Returns parsed URL (page address, arguments, and hash)
+// Return parsed URL (page address, arguments, and hash)
 //
 function getParsedURL(url) {
 	let results = PARSE_URL.exec(url);
@@ -138,7 +138,7 @@ function getParsedURL(url) {
 	}
 }
 
-// Creates regular expressions for matching sites to block/allow
+// Create regular expressions for matching sites to block/allow
 //
 function getRegExpSites(sites) {
 	if (sites == "") {
@@ -183,7 +183,7 @@ function getRegExpSites(sites) {
 	};
 }
 
-// Converts site pattern to regular expression
+// Convert site pattern to regular expression
 //
 function patternToRegExp(pattern) {
 	let special = /[\.\|\?\:\+\-\^\$\(\)\[\]\{\}\\]/g;
@@ -195,7 +195,7 @@ function patternToRegExp(pattern) {
 			.replace(/{STAR}/g, "*");			// convert stars
 }
 
-// Converts keyword to regular expression
+// Convert keyword to regular expression
 //
 function keywordToRegExp(keyword) {
 	let special = /[\.\|\?\:\+\-\^\$\(\)\[\]\{\}\\]/g;
@@ -206,26 +206,26 @@ function keywordToRegExp(keyword) {
 			+ "\\b";
 }
 
-// Tests URL against block/allow regular expressions
+// Test URL against block/allow regular expressions
 //
 function testURL(pageURL, blockRE, allowRE) {
 	return (blockRE != "" && (new RegExp(blockRE, "i")).test(pageURL)
 			&& !(allowRE != "" && (new RegExp(allowRE, "i")).test(pageURL)));
 }
 
-// Checks time periods format
+// Check time periods format
 //
 function checkTimePeriodsFormat(times) {
 	return (times == "") || /^[0-2]\d[0-5]\d-[0-2]\d[0-5]\d([, ]+[0-2]\d[0-5]\d-[0-2]\d[0-5]\d)*$/.test(times);
 }
 
-// Checks positive integer format
+// Check positive integer format
 //
 function checkPosIntFormat(value) {
 	return (value == "") || /^[1-9][0-9]*$/.test(value);
 }
 
-// Converts times to minute periods
+// Convert times to minute periods
 //
 function getMinPeriods(times) {
 	let minPeriods = [];
@@ -246,7 +246,7 @@ function getMinPeriods(times) {
 	return minPeriods;
 }
 
-// Cleans time periods
+// Clean time periods
 //
 function cleanTimePeriods(times) {
 	// Convert to minute periods
@@ -301,7 +301,7 @@ function cleanTimePeriods(times) {
 	return cleanTimes.join(",");
 }
 
-// Calculates start of time period from current time and time limit period
+// Calculate start of time period from current time and time limit period
 //
 function getTimePeriodStart(now, limitPeriod) {
 	limitPeriod = +limitPeriod; // force value to number
@@ -332,7 +332,7 @@ function getTimePeriodStart(now, limitPeriod) {
 	return 0;
 }
 
-// Formats a time in seconds to HH:MM:SS format
+// Format a time in seconds to HH:MM:SS format
 //
 function formatTime(secs) {
 	let neg = (secs < 0);
@@ -345,7 +345,7 @@ function formatTime(secs) {
 			+ ":" + ((s < 10) ? "0" + s : s);
 }
 
-// Determines whether all items in array evalate to true
+// Determine whether all items in array evalate to true
 //
 function allTrue(array) {
 	if (Array.isArray(array)) {

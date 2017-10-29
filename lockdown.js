@@ -5,7 +5,7 @@
 function log(message) { console.log("[LBNG] " + message); }
 function warn(message) { console.warn("[LBNG] " + message); }
 
-// Initializes form
+// Initialize form
 //
 function initializeForm() {
 	//log("initializeForm");
@@ -27,7 +27,7 @@ function initializeForm() {
 	}
 }
 
-// Handles activate button click
+// Handle activate button click
 //
 function onActivate() {
 	//log("onActivate");
@@ -70,7 +70,7 @@ function onActivate() {
 	browser.runtime.sendMessage({ type: "close" });
 }
 
-// Handles cancel button click
+// Handle cancel button click
 //
 function onCancel() {
 	//log("onCancel");
@@ -78,6 +78,8 @@ function onCancel() {
 	// Request tab close
 	browser.runtime.sendMessage({ type: "close" });
 }
+
+/*** STARTUP CODE BEGINS HERE ***/
 
 // Use HTML for first check box to create other check boxes
 let siteHTML = $("#sites").html();

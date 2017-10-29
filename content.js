@@ -10,7 +10,7 @@ const WIDGET_STYLE =
 
 var tlWidget;
 
-// Creates time left widget
+// Create time left widget
 //
 function createTimeLeftWidget() {
 	tlWidget = document.createElement("div");
@@ -18,7 +18,7 @@ function createTimeLeftWidget() {
 	document.body.appendChild(tlWidget);
 }
 
-// Updates time left widget
+// Update time left widget
 //
 function updateTimeLeftWidget(value) {
 	if (!tlWidget) {

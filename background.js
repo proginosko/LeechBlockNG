@@ -13,7 +13,7 @@ var focusedWindowId = -1;
 function log(message) { console.log("[LBNG] " + message); }
 function warn(message) { console.warn("[LBNG] " + message); }
 
-// Creates menus
+// Create menus
 //
 function createMenus() {
 	// Lockdown
@@ -38,7 +38,7 @@ function createMenus() {
 	}
 }
 
-// Retrieves options from local storage
+// Retrieve options from local storage
 //
 function retrieveOptions() {
 	//log("retrieveOptions");
@@ -57,7 +57,7 @@ function retrieveOptions() {
 	}
 }
 
-// Saves time data to local storage
+// Save time data to local storage
 //
 function saveTimeData() {
 	//log("saveTimeData");
@@ -70,7 +70,7 @@ function saveTimeData() {
 	browser.storage.local.set(options);
 }
 
-// Updates ID of focused window
+// Update ID of focused window
 //
 function updateFocusedWindowId() {
 	browser.windows.getLastFocused().then(
@@ -79,7 +79,7 @@ function updateFocusedWindowId() {
 	);
 }
 
-// Checks the URL of a tab and applies block if necessary (returns true if blocked)
+// Check the URL of a tab and applies block if necessary (returns true if blocked)
 //
 function checkTab(id, url, isRepeat) {
 	//log("checkTab: " + id + " " + url);
@@ -213,7 +213,7 @@ function checkTab(id, url, isRepeat) {
 	return false; // not blocked
 }
 
-// Clocks time spent on page
+// Clock time spent on page
 //
 function clockPageTime(id, open, focus) {
 	if (!TABS[id] || !TABS[id].blockable) {
@@ -265,7 +265,7 @@ function clockPageTime(id, open, focus) {
 	}
 }
 
-// Updates time data for specified page
+// Update time data for specified page
 //
 function updateTimeData(url, secsOpen, secsFocus) {
 	//log("updateTimeData: " + url + " " + secsOpen + " " + secsFocus);
@@ -350,7 +350,7 @@ function updateTimeData(url, secsOpen, secsFocus) {
 	}
 }
 
-// Updates time left widget
+// Update time left widget
 //
 function updateTimeLeftWidget(id) {
 	if (!TABS[id] || !TABS[id].blockable || /^about/.test(TABS[id].url)) {
@@ -368,7 +368,7 @@ function updateTimeLeftWidget(id) {
 	browser.tabs.sendMessage(id, message);
 }
 
-// Creates info for blocking/delaying page
+// Create info for blocking/delaying page
 //
 function createBlockInfo(url) {
 	// Get parsed URL
@@ -409,7 +409,7 @@ function createBlockInfo(url) {
 	};
 }
 
-// Returns time when blocked sites will be unblocked (as Date object)
+// Return time when blocked sites will be unblocked (as Date object)
 //
 function getUnblockTime(set) {
 	// Check for invalid set number
