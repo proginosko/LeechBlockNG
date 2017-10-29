@@ -7,10 +7,8 @@ function warn(message) { console.warn("[LBNG] " + message); }
 
 // Save options to local storage
 //
-function saveOptions(e) {
+function saveOptions() {
 	//log("saveOptions");
-
-	e.preventDefault();
 
 	// Check format for text fields
 	for (let set = 1; set <= NUM_SETS; set++) {
@@ -96,14 +94,21 @@ function saveOptions(e) {
 
 	browser.storage.local.set(options);
 
-	$("#form").hide("fade");
-
 	// Notify extension that options have been updated
 	browser.runtime.sendMessage({ type: "options" });
 
-	retrieveOptions();
+	$("#form").hide({ effect: "fade", complete: retrieveOptions });
 
-	$("#form").show("fade");
+	$("#form").show({ effect: "fade" });
+}
+
+// Save options and close tab
+//
+function saveOptionsClose() {
+	saveOptions();
+
+	// Request tab close
+	browser.runtime.sendMessage({ type: "close" });
 }
 
 // Retrieve options from local storage
@@ -234,7 +239,7 @@ function retrieveOptions() {
 	}
 }
 
-// Disables options for block set
+// Disable options for block set
 //
 function disableSetOptions(set) {
 	let items = [
@@ -251,6 +256,8 @@ function disableSetOptions(set) {
 		}
 	}
 }
+
+/*** STARTUP CODE BEGINS HERE ***/
 
 // Use HTML for first block set to create other block sets
 let blockSetHTML = $("#panes").html();
@@ -280,6 +287,8 @@ for (let set = 1; set <= NUM_SETS; set++) {
 }
 $("#saveOptions").button();
 $("#saveOptions").click(saveOptions);
+$("#saveOptionsClose").button();
+$("#saveOptionsClose").click(saveOptionsClose);
 
 let alerts = ["alertBadTimes", "alertBadTimeLimit", "alertBadSeconds", "alertBadBlockURL"];
 for (let alert of alerts) {
