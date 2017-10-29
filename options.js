@@ -274,16 +274,15 @@ $("#panes").accordion({
 	heightStyle: "content"
 });
 for (let set = 1; set <= NUM_SETS; set++) {
-	//$(`#allDay${set}`).button();
 	$(`#allDay${set}`).click(function (e) { $(`#times${set}`).val(ALL_DAY_TIMES); });
-	//$(`#defaultPage${set}`).button();
 	$(`#defaultPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DEFAULT_BLOCK_URL); });
-	//$(`#delayingPage${set}`).button();
 	$(`#delayingPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DELAYED_BLOCK_URL); });
-	//$(`#blankPage${set}`).button();
 	$(`#blankPage${set}`).click(function (e) { $(`#blockURL${set}`).val("about:blank"); });
-	//$(`#homePage${set}`).button();
 	$(`#homePage${set}`).click(function (e) { $(`#blockURL${set}`).val("about:home"); });
+	$(`#showAdvOpts${set}`).click(function (e) {
+		$(`#showAdvOpts${set}`).css("display", "none");
+		$(`#advOpts${set}`).css("display", "inline");
+	});
 }
 $("#saveOptions").button();
 $("#saveOptions").click(saveOptions);
