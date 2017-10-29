@@ -13,6 +13,31 @@ var focusedWindowId = -1;
 function log(message) { console.log("[LBNG] " + message); }
 function warn(message) { console.warn("[LBNG] " + message); }
 
+// Creates menus
+//
+function createMenus() {
+	// Lockdown
+	browser.menus.create({
+		id: "lockdown",
+		type: "normal",
+		title: "Lockdown",
+		contexts: ["all", "tools_menu"]});
+
+	// Options
+	browser.menus.create({
+		id: "options",
+		type: "normal",
+		title: "Options",
+		contexts: ["all", "tools_menu"]});
+
+	browser.menus.onClicked.addListener(onMenuClick);
+
+	function onMenuClick(info, tab) {
+		let id = info.menuItemId;
+		browser.tabs.create({ url: `${id}.html` });
+	}
+}
+
 // Retrieves options from local storage
 //
 function retrieveOptions() {
@@ -525,6 +550,21 @@ function getUnblockTime(set) {
 	return null;
 }
 
+// Apply lockdown for specified set
+//
+function applyLockdown(set, endTime) {
+	//log("applyLockdown: " + set + " " + endTime);
+
+	let timedata = OPTIONS[`timedata${set}`];
+
+	// Apply lockdown only if it doesn't reduce any current lockdown
+	if (endTime > timedata[4]) {
+		timedata[4] = endTime;
+	}
+
+	OPTIONS[`timedata${set}`] = timedata;
+}
+
 /*** EVENT HANDLERS BEGIN HERE ***/
 
 function handleMessage(message, sender, sendResponse) {
@@ -533,11 +573,19 @@ function handleMessage(message, sender, sendResponse) {
 		return;
 	}
 
-	//log("handleMessage: " + sender.tab.id + " " + sender.url);
+	//log("handleMessage: " + sender.tab.id + " " + message.type);
 
-	if (message.type == "options") {
+	if (message.type == "close") {
+		// Close tab requested
+		browser.tabs.remove(sender.tab.id);
+	} else if (message.type == "options") {
+		// Options updated
 		retrieveOptions();
+	} else if (message.type == "lockdown") {
+		// Lockdown requested
+		applyLockdown(message.set, message.endTime);
 	} else if (message.type == "blocked") {
+		// Blocking page requested block info
 		let info = createBlockInfo(sender.url);
 		sendResponse(info);
 	}
@@ -621,6 +669,8 @@ function handleAlarm(alarm) {
 }
 
 /*** STARTUP CODE BEGINS HERE ***/
+
+createMenus();
 
 retrieveOptions();
 

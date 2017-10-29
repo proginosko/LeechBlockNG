@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<html lang="us">
+
+	<head>
+		<meta charset="utf-8">
+		<title>LeechBlock Lockdown</title>
+		<link href="jquery-ui/jquery-ui.min.css" rel="stylesheet">
+		<link href="options.css" rel="stylesheet">
+		<link href="icons/leechblock16.ico" rel="icon" type="image/x-icon">
+		<link href="icons/leechblock16.ico" rel="shortcut icon" type="image/x-icon">
+	</head>
+
+	<body>
+
+		<div id="form-container">
+
+			<form id="form" style="display: none;">
+
+				<fieldset class="ui-widget ui-widget-content">
+					<legend>Lockdown Options</legend>
+					<p>
+						<label>Enter the duration of the lockdown:</label><br>
+						<div>
+							<input id="hours" type="text" size="2" list="hours-list">
+							<datalist id="hours-list">
+								<option value="0">
+								<option value="1">
+								<option value="2">
+								<option value="3">
+								<option value="4">
+								<option value="5">
+								<option value="6">
+								<option value="12">
+								<option value="18">
+								<option value="24">
+							</datalist>
+							<label for="hours">hour(s)</label>
+							<input id="mins" type="text" size="2" list="mins-list">
+							<datalist id="mins-list">
+								<option value="0">
+								<option value="5">
+								<option value="10">
+								<option value="15">
+								<option value="20">
+								<option value="25">
+								<option value="30">
+								<option value="35">
+								<option value="40">
+								<option value="45">
+								<option value="50">
+								<option value="55">
+							</datalist>
+							<label for="mins">minute(s)</label>
+						</div>
+					</p>
+					<hr>
+					<p>
+						<label>Select the sites to block during the lockdown:</label><br>
+						<div id="sites">
+							<p>
+								<input id="site1" type="checkbox"><label id="siteLabel1" for="site1">Sites specified in Block Set 1</label>
+							</p>
+						</div>
+					</p>
+				</fieldset>
+
+				<p style="text-align: center;">
+					<button id="activate" type="button">Activate Lockdown</button>
+					<button id="cancel" type="button">Cancel</button>
+				</p>
+
+			</form>
+
+		</div>
+
+		<div id="alerts" style="display: none;">
+			<div id="alertNoDuration" title="LeechBlock Lockdown">
+				<p>Please enter the duration of the lockdown.</p>
+			</div>
+			<div id="alertNoSets" title="LeechBlock Lockdown">
+				<p>Please select the sites to lockdown.</p>
+			</div>
+		</div>
+
+		<script src="jquery-ui/external/jquery/jquery.js"></script>
+		<script src="jquery-ui/jquery-ui.min.js"></script>
+	    <script src="common.js"></script>
+	    <script src="lockdown.js"></script>
+
+	</body>
+
+</html>

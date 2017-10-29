@@ -123,6 +123,14 @@ function retrieveOptions() {
 		// Get current time in seconds
 		let now = Math.floor(Date.now() / 1000);
 
+		// Check whether a lockdown is currently active
+		for (let set = 1; set <= NUM_SETS; set++) {
+			let timedata = options[`timedata${set}`];
+			if (now < timedata[4]) {
+				document.querySelector(`#cancelLockdown${set}`).disabled = false;
+			}
+		}
+
 		// Check whether access to options should be prevented
 		for (let set = 1; set <= NUM_SETS; set++) {
 			if (options[`prevOpts${set}`]) {
@@ -234,7 +242,7 @@ function disableSetOptions(set) {
 		"day0", "day1", "day2", "day3", "day4", "day5", "day6",
 		"blockURL", "defaultPage", "delayingPage", "blankPage", "homePage",
 		"activeBlock", "countFocus", "delayFirst", "delaySecs",
-		"prevOpts", "prevAddons", "prevConfig"
+		"prevOpts", "prevAddons", "prevConfig", "cancelLockdown"
 	];
 	for (let item of items) {
 		let element = document.querySelector(`#${item}${set}`);
@@ -247,10 +255,10 @@ function disableSetOptions(set) {
 // Use HTML for first block set to create other block sets
 let blockSetHTML = $("#panes").html();
 for (let set = 2; set <= NUM_SETS; set++) {
-	let newBlockSetHTML = blockSetHTML
+	let nextBlockSetHTML = blockSetHTML
 			.replace(/Block Set 1/g, `Block Set ${set}`)
 			.replace(/(id|for)="(\w+)1"/g, `$1="$2${set}"`);
-	$("#panes").append(newBlockSetHTML);
+	$("#panes").append(nextBlockSetHTML);
 }
 
 // Set up JQuery UI widgets

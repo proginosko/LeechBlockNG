@@ -23,6 +23,7 @@
 
 	"permissions": [
 		"alarms",
+		"menus",
 		"storage",
 		"tabs",
 		"webNavigation"
