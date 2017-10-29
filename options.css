@@ -25,3 +25,9 @@ legend {
 #panes {
 	display: inline-block;
 }
+
+@media (max-width: 720px) {
+	.ui-widget {
+		font-size: 12px;
+	}
+}
