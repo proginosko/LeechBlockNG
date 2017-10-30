@@ -16,13 +16,6 @@ function warn(message) { console.warn("[LBNG] " + message); }
 // Create menus
 //
 function createMenus() {
-	// Lockdown
-	browser.menus.create({
-		id: "lockdown",
-		type: "normal",
-		title: "Lockdown",
-		contexts: ["all", "tools_menu"]});
-
 	// Options
 	browser.menus.create({
 		id: "options",
@@ -30,11 +23,22 @@ function createMenus() {
 		title: "Options",
 		contexts: ["all", "tools_menu"]});
 
+	// Lockdown
+	browser.menus.create({
+		id: "lockdown",
+		type: "normal",
+		title: "Lockdown",
+		contexts: ["all", "tools_menu"]});
+
 	browser.menus.onClicked.addListener(onMenuClick);
 
 	function onMenuClick(info, tab) {
 		let id = info.menuItemId;
-		browser.tabs.create({ url: `${id}.html` });
+		if (id == "options") {
+			browser.runtime.openOptionsPage();
+		} else if (id == "lockdown") {
+			browser.tabs.create({ url: "lockdown.html" });
+		}
 	}
 }
 
@@ -567,6 +571,12 @@ function applyLockdown(set, endTime) {
 
 /*** EVENT HANDLERS BEGIN HERE ***/
 
+function handleClick(tab) {
+	//log("handleClick: " + tab.id);
+
+	browser.runtime.openOptionsPage();	
+}
+
 function handleMessage(message, sender, sendResponse) {
 	if (!sender) {
 		warn("No sender!");
@@ -673,6 +683,8 @@ function handleAlarm(alarm) {
 createMenus();
 
 retrieveOptions();
+
+browser.browserAction.onClicked.addListener(handleClick);
 
 browser.runtime.onMessage.addListener(handleMessage);
 

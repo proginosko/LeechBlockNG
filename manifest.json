@@ -38,6 +38,15 @@
 			"matches": ["<all_urls>"],
 			"js": ["content.js"]
 		}
-	]
+	],
+
+	"browser_action": {
+		"browser_style": true,
+		"default_icon": {
+			"16": "icons/leechblock16.png",
+			"32": "icons/leechblock32.png"
+		},
+		"default_title": "LeechBlock NG"
+	}
 
 }
