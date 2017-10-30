@@ -1,3 +1,6 @@
+### Version 0.2.1 (29 Oct 2017)
+* Added toolbar button.
+
 ### Version 0.2 (28 Oct 2017)
 * Added lockdown function.
 
