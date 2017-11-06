@@ -86,14 +86,20 @@ function updateFocusedWindowId() {
 // Check the URL of a tab and applies block if necessary (returns true if blocked)
 //
 function checkTab(id, url, isRepeat) {
-	//log("checkTab: " + id + " " + url);
+	//log("checkTab: " + id + " " + url + " " + isRepeat);
 
-	if (!TABS[id] || !isRepeat) {
-		TABS[id] = { url: url, blockable: false };
+	// Quick exit for about:blank
+	if (/about:blank/i.test(url)) {
+		return false; // not blocked
 	}
 
-	// Quick exit for non-http/non-file/non-about URLs
-	if (!/^(http|file|about)/.test(url)) {
+	if (!TABS[id]) {
+		TABS[id] = { url: url, allowedHost: null, allowedPath: null };
+	}
+
+	// Quick exit for non-blockable URLs
+	if (!/^(http|file|about)/i.test(url)) {
+		TABS[id].blockable = false;
 		return false; // not blocked
 	}
 
@@ -101,6 +107,16 @@ function checkTab(id, url, isRepeat) {
 
 	// Get parsed URL for this page
 	let parsedURL = getParsedURL(url);
+
+	// Check for allowed host/path
+	let ah = (TABS[id].allowedHost == parsedURL.host);
+	let ap = !TABS[id].allowedPath || (TABS[id].allowedPath == parsedURL.path);
+	if (ah && ap) {
+		return false; // not blocked
+	} else {
+		TABS[id].allowedHost = null;
+		TABS[id].allowedPath = null;
+	}
 
 	// Get URL without hash part (unless it's a hash-bang part)
 	let pageURL = parsedURL.page;
@@ -198,7 +214,7 @@ function checkTab(id, url, isRepeat) {
 				blockURL = blockURL.replace(/\$S/g, set).replace(/\$U/g, pageURL);
 
 				// Redirect page
-				browser.tabs.update(id, {url: blockURL});
+				browser.tabs.update(id, { url: blockURL });
 
 				return true; // blocked
 			}
@@ -236,7 +252,7 @@ function clockPageTime(id, open, focus) {
 		}
 	} else {
 		if (TABS[id].openTime != undefined) {
-			if (/^(http|file)/.test(TABS[id].url)) {
+			if (/^(http|file)/i.test(TABS[id].url)) {
 				// Calculate seconds spent on this page (while open)
 				secsOpen = ((time - TABS[id].openTime) / 1000);
 			}
@@ -254,7 +270,7 @@ function clockPageTime(id, open, focus) {
 		}
 	} else {
 		if (TABS[id].focusTime != undefined) {
-			if (/^(http|file)/.test(TABS[id].url)) {
+			if (/^(http|file)/i.test(TABS[id].url)) {
 				// Calculate seconds spent on this page (while focused)
 				secsFocus = ((time - TABS[id].focusTime) / 1000);
 			}
@@ -357,7 +373,7 @@ function updateTimeData(url, secsOpen, secsFocus) {
 // Update time left widget
 //
 function updateTimeLeftWidget(id) {
-	if (!TABS[id] || !TABS[id].blockable || /^about/.test(TABS[id].url)) {
+	if (!TABS[id] || !TABS[id].blockable || /^about/i.test(TABS[id].url)) {
 		return;
 	}
 
@@ -405,11 +421,15 @@ function createBlockInfo(url) {
 		}
 	}
 
+	// Get delaying time for block set
+	let delaySecs = OPTIONS[`delaySecs${blockedSet}`];
+
 	return {
 		blockedSet: blockedSet,
 		blockedSetName: blockedSetName,
 		blockedURL: blockedURL,
-		unblockTime: unblockTime
+		unblockTime: unblockTime,
+		delaySecs: delaySecs
 	};
 }
 
@@ -569,6 +589,24 @@ function applyLockdown(set, endTime) {
 	OPTIONS[`timedata${set}`] = timedata;
 }
 
+// Open page blocked by delaying page
+//
+function openDelayedPage(id, url, set) {
+	//log("openDelayedPage: " + id + " " + url);
+
+	// Get parsed URL for this page
+	let parsedURL = getParsedURL(url);
+
+	// Set parameters for allowing host
+	TABS[id].allowedHost = parsedURL.host;
+	if (!OPTIONS[`delayFirst${set}`]) {
+		TABS[id].allowedPath = parsedURL.path;
+	}
+
+	// Redirect page
+	browser.tabs.update(id, { url: url });
+}
+
 /*** EVENT HANDLERS BEGIN HERE ***/
 
 function handleClick(tab) {
@@ -595,9 +633,12 @@ function handleMessage(message, sender, sendResponse) {
 		// Lockdown requested
 		applyLockdown(message.set, message.endTime);
 	} else if (message.type == "blocked") {
-		// Blocking page requested block info
+		// Block info requested by blocking/delaying page
 		let info = createBlockInfo(sender.url);
 		sendResponse(info);
+	} else if (message.type == "delayed") {
+		// Redirect requested by delaying page
+		openDelayedPage(sender.tab.id, message.blockedURL, message.blockedSet);
 	}
 }
 

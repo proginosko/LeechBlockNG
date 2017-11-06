@@ -35,7 +35,7 @@ function saveOptions() {
 			$("#alertBadSeconds").dialog("open");
 			return;
 		}
-		if (blockURL != DEFAULT_BLOCK_URL && !parsedURL.page) {
+		if (blockURL != DEFAULT_BLOCK_URL && blockURL != DELAYED_BLOCK_URL && !parsedURL.page) {
 			$("#panes").accordion("option", "active", (set - 1));
 			$("#alertBadBlockURL").dialog("open");
 			return;
