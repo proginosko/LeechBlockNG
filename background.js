@@ -13,32 +13,50 @@ var focusedWindowId = -1;
 function log(message) { console.log("[LBNG] " + message); }
 function warn(message) { console.warn("[LBNG] " + message); }
 
-// Create menus
+// Refresh menus
 //
-function createMenus() {
+function refreshMenus() {
+	browser.menus.removeAll();
+
 	// Options
 	browser.menus.create({
 		id: "options",
-		type: "normal",
 		title: "Options",
-		contexts: ["all", "tools_menu"]});
+		contexts: ["all", "tools_menu"]
+	});
 
 	// Lockdown
 	browser.menus.create({
 		id: "lockdown",
-		type: "normal",
 		title: "Lockdown",
-		contexts: ["all", "tools_menu"]});
+		contexts: ["all", "tools_menu"]
+	});
 
-	browser.menus.onClicked.addListener(onMenuClick);
+	browser.menus.create({
+		type: "separator",
+		contexts: ["all"]
+	});
 
-	function onMenuClick(info, tab) {
-		let id = info.menuItemId;
-		if (id == "options") {
-			browser.runtime.openOptionsPage();
-		} else if (id == "lockdown") {
-			browser.tabs.create({ url: "lockdown.html" });
+	// Add Site
+	browser.menus.create({
+		id: "addSite",
+		title: "Add Site",
+		contexts: ["all"]
+	});
+
+	// Add Site submenu
+	for (let set = 1; set <= NUM_SETS; set++) {
+		let title = `Add Site to Block Set ${set}`;
+		let setName = OPTIONS[`setName${set}`];
+		if (setName) {
+			title += ` (${setName})`;
 		}
+		browser.menus.create({
+			id: `addSite-${set}`,
+			parentId: "addSite",
+			title: title,
+			contexts: ["all", "tools_menu"]
+		});
 	}
 }
 
@@ -54,6 +72,7 @@ function retrieveOptions() {
 		cleanTimeData(options);
 		//console.log(listObjectProperties(options, "options"));
 		OPTIONS = options;
+		refreshMenus();
 	}
 
 	function onError(error) {
@@ -607,12 +626,65 @@ function openDelayedPage(id, url, set) {
 	browser.tabs.update(id, { url: url });
 }
 
+// Add site to block set
+//
+function addSiteToSet(url, set) {
+	log("addSiteToSet: " + url + " " + set);
+
+	if (!/^http/i.test(url) || set < 1 || set > NUM_SETS) {
+		return;
+	}
+
+	// Get parsed URL for this page
+	let parsedURL = getParsedURL(url);
+
+	// Get sites for this set
+	let sites = OPTIONS[`sites${set}`];
+
+	// Add site if not already included
+	let site = parsedURL.host.replace(/^www\./, "");
+	let patterns = sites.split(/\s+/);
+	if (patterns.indexOf(site) < 0) {
+		// Get sorted list of sites including new one
+		patterns.push(site);
+		sites = patterns.sort().join(" ");
+
+		// Get regular expressions to match sites
+		let regexps = getRegExpSites(sites);
+
+		// Update options
+		OPTIONS[`sites${set}`] = sites;
+		OPTIONS[`blockRE${set}`] = regexps.block;
+		OPTIONS[`allowRE${set}`] = regexps.allow;
+		OPTIONS[`keywordRE${set}`] = regexps.keyword;
+
+		// Save updated options to local storage
+		let options = {};
+		options[`sites${set}`] = sites;
+		options[`blockRE${set}`] = regexps.block;
+		options[`allowRE${set}`] = regexps.allow;
+		options[`keywordRE${set}`] = regexps.keyword;
+		browser.storage.local.set(options);
+	}	
+}
+
 /*** EVENT HANDLERS BEGIN HERE ***/
 
 function handleClick(tab) {
 	//log("handleClick: " + tab.id);
 
 	browser.runtime.openOptionsPage();	
+}
+
+function handleMenuClick(info, tab) {
+	let id = info.menuItemId;
+	if (id == "options") {
+		browser.runtime.openOptionsPage();
+	} else if (id == "lockdown") {
+		browser.tabs.create({ url: "lockdown.html" });
+	} else if (id.startsWith("addSite-")) {
+		addSiteToSet(info.pageUrl, id.substr(8));
+	}
 }
 
 function handleMessage(message, sender, sendResponse) {
@@ -721,11 +793,11 @@ function handleAlarm(alarm) {
 
 /*** STARTUP CODE BEGINS HERE ***/
 
-createMenus();
-
 retrieveOptions();
 
 browser.browserAction.onClicked.addListener(handleClick);
+
+browser.menus.onClicked.addListener(handleMenuClick);
 
 browser.runtime.onMessage.addListener(handleMessage);
 
