@@ -1,3 +1,7 @@
+### Version 0.3 (06 Nov 2017)
+* Added delaying page.
+* Added "Add Site" menu.
+
 ### Version 0.2.1 (29 Oct 2017)
 * Added toolbar button.
 
