@@ -1,3 +1,6 @@
+### Version 0.3.1 (07 Nov 2017)
+* Fixed bug.
+
 ### Version 0.3 (06 Nov 2017)
 * Added delaying page.
 * Added "Add Site" menu.
