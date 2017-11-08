@@ -108,12 +108,13 @@ function checkTab(id, url, isRepeat) {
 	//log("checkTab: " + id + " " + url + " " + isRepeat);
 
 	// Quick exit for about:blank
-	if (/about:blank/i.test(url)) {
+	if (url == "about:blank") {
 		return false; // not blocked
 	}
 
 	if (!TABS[id]) {
-		TABS[id] = { url: url, allowedHost: null, allowedPath: null };
+		// Create object to track this tab
+		TABS[id] = { allowedHost: null, allowedPath: null };
 	}
 
 	// Quick exit for non-blockable URLs
@@ -123,6 +124,7 @@ function checkTab(id, url, isRepeat) {
 	}
 
 	TABS[id].blockable = true;
+	TABS[id].url = url;
 
 	// Get parsed URL for this page
 	let parsedURL = getParsedURL(url);
