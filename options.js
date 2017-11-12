@@ -21,22 +21,22 @@ function saveOptions() {
 
 		// Check field values
 		if (!checkTimePeriodsFormat(times)) {
-			$("#panes").accordion("option", "active", (set - 1));
+			$("#tabs").tabs("option", "active", (set - 1));
 			$("#alertBadTimes").dialog("open");
 			return;
 		}
 		if (!checkPosIntFormat(limitMins)) {
-			$("#panes").accordion("option", "active", (set - 1));
+			$("#tabs").tabs("option", "active", (set - 1));
 			$("#alertBadTimeLimit").dialog("open");
 			return;
 		}
 		if (!delaySecs || !checkPosIntFormat(delaySecs)) {
-			$("#panes").accordion("option", "active", (set - 1));
+			$("#tabs").tabs("option", "active", (set - 1));
 			$("#alertBadSeconds").dialog("open");
 			return;
 		}
 		if (blockURL != DEFAULT_BLOCK_URL && blockURL != DELAYED_BLOCK_URL && !parsedURL.page) {
-			$("#panes").accordion("option", "active", (set - 1));
+			$("#tabs").tabs("option", "active", (set - 1));
 			$("#alertBadBlockURL").dialog("open");
 			return;
 		}
@@ -208,9 +208,9 @@ function retrieveOptions() {
 			
 			// Append custom set name to panel heading (if specified)
 			if (setName) {
-				document.querySelector(`#blockSetCustomName${set}`).innerText = ` (${setName})`;
+				document.querySelector(`#blockSetName${set}`).innerText = setName;
 			} else {
-				document.querySelector(`#blockSetCustomName${set}`).innerText = "";
+				document.querySelector(`#blockSetName${set}`).innerText = `Block Set ${set}`;
 			}
 
 			// Set component values
@@ -260,19 +260,20 @@ function disableSetOptions(set) {
 /*** STARTUP CODE BEGINS HERE ***/
 
 // Use HTML for first block set to create other block sets
-let blockSetHTML = $("#panes").html();
+let tabHTML = $("#tabBlockSet1").html();
+let setHTML = $("#blockSet1").html();
 for (let set = 2; set <= NUM_SETS; set++) {
-	let nextBlockSetHTML = blockSetHTML
+	let nextTabHTML = tabHTML
 			.replace(/Block Set 1/g, `Block Set ${set}`)
+			.replace(/(id|href)="(#?\w+)1"/g, `$1="$2${set}"`);
+	let nextSetHTML = setHTML
 			.replace(/(id|for)="(\w+)1"/g, `$1="$2${set}"`);
-	$("#panes").append(nextBlockSetHTML);
+	$("#tabGeneral").before(`<li id="tabBlockSet${set}">${nextTabHTML}</li>`);
+	$("#generalOptions").before(`<div id="blockSet${set}">${nextSetHTML}</div>`);
 }
 
 // Set up JQuery UI widgets
-$("#panes").accordion({
-	collapsible: false,
-	heightStyle: "content"
-});
+$("#tabs").tabs();
 for (let set = 1; set <= NUM_SETS; set++) {
 	$(`#allDay${set}`).click(function (e) { $(`#times${set}`).val(ALL_DAY_TIMES); });
 	$(`#defaultPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DEFAULT_BLOCK_URL); });
