@@ -210,7 +210,7 @@ function retrieveOptions() {
 			let prevAddons = options[`prevAddons${set}`];
 			let prevConfig = options[`prevConfig${set}`];
 			
-			// Append custom set name to panel heading (if specified)
+			// Apply custom set name to tab (if specified)
 			if (setName) {
 				document.querySelector(`#blockSetName${set}`).innerText = setName;
 			} else {
@@ -244,6 +244,176 @@ function retrieveOptions() {
 
 	function onError(error) {
 		warn("Cannot get options: " + error);
+	}
+}
+
+// Export options
+//
+function exportOptions() {
+}
+
+// Import options
+//
+function importOptions() {
+	let file = document.querySelector("#importFile").files[0];
+	if (!file) {
+		$("#alertNoImportFile").dialog("open");
+		return;
+	}
+
+	// Read and process file
+	let reader = new FileReader();
+	reader.onload = processImportFile;
+	reader.readAsText(file);
+	
+	function processImportFile(event) {
+		let text = event.target.result;
+		if (!text) {
+			warn("Cannot import options from file.");
+			return;
+		}
+
+		function isTrue(str) { return /^true$/i.test(str); }
+
+		// Extract options from text
+		let regexp = /^(\w+)=(.*)$/;
+		let lines = text.split(/[\n\r]+/);
+		let options = {};
+		for (let line of lines) {
+			let results = regexp.exec(line);
+			if (results) {
+				options[results[1]] = results[2];
+			}
+		}
+
+		for (let set = 1; set <= NUM_SETS; set++) {
+			// Get option values
+			let setName = options[`setName${set}`];
+			let sites = options[`sites${set}`];
+			let times = options[`times${set}`];
+			let limitMins = options[`limitMins${set}`];
+			let limitPeriod = options[`limitPeriod${set}`];
+			let conjMode = options[`conjMode${set}`];
+			let days = options[`days${set}`];
+			let blockURL = options[`blockURL${set}`];
+			let activeBlock = options[`activeBlock${set}`];
+			let countFocus = options[`countFocus${set}`];
+			let delayFirst = options[`delayFirst${set}`];
+			let delaySecs = options[`delaySecs${set}`];
+			let prevOpts = options[`prevOpts${set}`];
+			let prevAddons = options[`prevAddons${set}`];
+			let prevConfig = options[`prevConfig${set}`];
+
+			// Set component values
+			if (setName != undefined) {
+				let element = document.querySelector(`#setName${set}`);
+				if (!element.disabled) {
+					element.value = setName;
+					if (setName) {
+						document.querySelector(`#blockSetName${set}`).innerText = setName;
+					} else {
+						document.querySelector(`#blockSetName${set}`).innerText = `Block Set ${set}`;
+					}
+				}
+			}
+			if (sites != undefined) {
+				let element = document.querySelector(`#sites${set}`);
+				if (!element.disabled) {
+					element.value = sites.replace(/\s+/g, "\n");
+				}
+			}
+			if (times != undefined) {
+				let element = document.querySelector(`#times${set}`);
+				if (!element.disabled) {
+					element.value = times;
+				}
+			}
+			if (limitMins != undefined) {
+				let element = document.querySelector(`#limitMins${set}`);
+				if (!element.disabled) {
+					element.value = limitMins;
+				}
+			}
+			if (limitPeriod != undefined) {
+				let element = document.querySelector(`#limitPeriod${set}`);
+				if (!element.disabled) {
+					element.value = limitPeriod;
+				}
+			}
+			if (conjMode != undefined) {
+				let element = document.querySelector(`#conjMode${set}`);
+				if (!element.disabled) {
+					element.selectedIndex = isTrue(conjMode) ? 1 : 0;
+				}
+			}
+			if (days != undefined) {
+				days = decodeDays(days);
+				for (let i = 0; i < 7; i++) {
+					let element = document.querySelector(`#day${i}${set}`);
+					if (!element.disabled) {
+						element.checked = days[i];
+					}
+				}
+			}
+			if (blockURL != undefined) {
+				let element = document.querySelector(`#blockURL${set}`);
+				if (!element.disabled) {
+					element.value = blockURL;
+				}
+			}
+			if (activeBlock != undefined) {
+				let element = document.querySelector(`#activeBlock${set}`);
+				if (!element.disabled) {
+					element.checked = isTrue(activeBlock);
+				}
+			}
+			if (countFocus != undefined) {
+				let element = document.querySelector(`#countFocus${set}`);
+				if (!element.disabled) {
+					element.checked = isTrue(countFocus);
+				}
+			}
+			if (delayFirst != undefined) {
+				let element = document.querySelector(`#delayFirst${set}`);
+				if (!element.disabled) {
+					element.checked = isTrue(delayFirst);
+				}
+			}
+			if (delaySecs != undefined) {
+				let element = document.querySelector(`#delaySecs${set}`);
+				if (!element.disabled) {
+					element.value = delaySecs;
+				}
+			}
+			if (prevOpts != undefined) {
+				let element = document.querySelector(`#prevOpts${set}`);
+				if (!element.disabled) {
+					element.checked = isTrue(prevOpts);
+				}
+			}
+			if (prevAddons != undefined) {
+				let element = document.querySelector(`#prevAddons${set}`);
+				if (!element.disabled) {
+					element.checked = isTrue(prevAddons);
+				}
+			}
+			if (prevConfig != undefined) {
+				let element = document.querySelector(`#prevConfig${set}`);
+				if (!element.disabled) {
+					element.checked = isTrue(prevConfig);
+				}
+			}
+		}
+
+		// General options
+		let timerSize = options["timerSize"];
+		let timerLocation = options["timerLocation"];
+		if (timerSize != undefined) {
+			document.querySelector("#timerSize").value = timerSize;
+		}
+		if (timerLocation != undefined) {
+			document.querySelector("#timerLocation").value = timerLocation;
+		}
 	}
 }
 
@@ -293,21 +463,21 @@ for (let set = 1; set <= NUM_SETS; set++) {
 		$(`#advOpts${set}`).css("display", "inline");
 	});
 }
+$("#exportOptions").click(exportOptions);
+$("#importOptions").click(importOptions);
 $("#saveOptions").button();
 $("#saveOptions").click(saveOptions);
 $("#saveOptionsClose").button();
 $("#saveOptionsClose").click(saveOptionsClose);
 
-let alerts = ["alertBadTimes", "alertBadTimeLimit", "alertBadSeconds", "alertBadBlockURL"];
-for (let alert of alerts) {
-	$(`#${alert}`).dialog({
-		autoOpen: false,
-		modal: true,
-		buttons: {
-			OK: function() { $(this).dialog("close"); }
-		}
-	});
-}
+// Initialize alert dialogs
+$("div[id^='alert']").dialog({
+	autoOpen: false,
+	modal: true,
+	buttons: {
+		OK: function() { $(this).dialog("close"); }
+	}
+});
 
 $("#form").show();
 

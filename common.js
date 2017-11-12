@@ -6,6 +6,8 @@ const NUM_SETS = 6;
 const ALL_DAY_TIMES = "0000-2400";
 const DEFAULT_BLOCK_URL = "blocked.html?$S&$U";
 const DELAYED_BLOCK_URL = "delayed.html?$S&$U";
+const LEGACY_DEFAULT_BLOCK_URL = "chrome://leechblock/content/blocked.xhtml?$S&$U";
+const LEGACY_DELAYED_BLOCK_URL = "chrome://leechblock/content/delayed.xhtml?$S&$U";
 
 const PARSE_URL = /^((([\w-]+):\/*(\w+(?::\w+)?@)?([\w-\.]+)(?::(\d*))?)([^\?#]*))(\?[^#]*)?(#.*)?$/;
 
@@ -75,6 +77,14 @@ function cleanOptions(options) {
 		}
 		if (typeof options[`keywordRE${set}`] !== "string") {
 			options[`keywordRE${set}`] = "";
+		}
+
+		// Update legacy values
+		if (options[`blockURL${set}`] == LEGACY_DEFAULT_BLOCK_URL) {
+			options[`blockURL${set}`] = DEFAULT_BLOCK_URL;
+		}
+		if (options[`blockURL${set}`] == LEGACY_DELAYED_BLOCK_URL) {
+			options[`blockURL${set}`] = DELAYED_BLOCK_URL;
 		}
 	}
 
@@ -364,4 +374,24 @@ function allTrue(array) {
 	} else {
 		return false;
 	}
+}
+
+// Encode day selection
+//
+function encodeDays(days) {
+	let dayCode = 0;
+	for (let i = 0; i < 7; i++) {
+		if (days[i]) dayCode |= (1 << i);
+	}
+	return dayCode;
+}
+
+// Decode day selection
+//
+function decodeDays(dayCode) {
+	let days = new Array(7);
+	for (let i = 0; i < 7; i++) {
+		days[i] = ((dayCode & (1 << i)) != 0);
+	}
+	return days;
 }
