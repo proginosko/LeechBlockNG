@@ -77,6 +77,14 @@ function cleanOptions(options) {
 			options[`keywordRE${set}`] = "";
 		}
 	}
+
+	// General options
+	if (typeof options["timerSize"] !== "string") {
+		options["timerSize"] = "1"; // default: medium
+	}
+	if (typeof options["timerLocation"] !== "string") {
+		options["timerLocation"] = "0"; // default: top left
+	}
 }
 
 // Clean time data

@@ -48,14 +48,14 @@
 								<label>Enter the time periods within which to block these sites (optional):</label>
 								<div>
 									<input id="times1" type="text" size="60" placeholder="Example: 0900-1230,1330-1700" title="Leave blank for no time periods">
-									&nbsp;&nbsp;&nbsp;&nbsp;<button id="allDay1" type="button">All Day</button>
+									<button id="allDay1" type="button">All Day</button>
 								</div>
 							</p>
 							<p>
 								<label>Enter a time limit after which to block these sites (optional):</label>
 								<div>
 									<input id="limitMins1" type="text" size="4" title="Leave blank for no time limit">
-									&nbsp;minutes in every&nbsp;
+									minutes in every
 									<select id="limitPeriod1">
 										<option value=""></option>
 										<option value="900">quarter-hour (15 mins)</option>
@@ -162,6 +162,26 @@
 						</fieldset>
 					</div>
 					<div id="generalOptions">
+						<fieldset>
+							<legend>Miscellaneous</legend>
+							<p>
+								<label>Countdown timer size:</label>
+								<select id="timerSize">
+									<option value="0">small</option>
+									<option value="1">medium</option>
+									<option value="2">large</option>
+									<option value="3">extra large</option>
+								</select>
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<label>Countdown timer location:</label>
+								<select id="timerLocation">
+									<option value="0">top left</option>
+									<option value="1">top right</option>
+									<option value="2">bottom right</option>
+									<option value="3">bottom left</option>
+								</select>
+							</p>
+						</fieldset>
 					</div>
 				</div>
 

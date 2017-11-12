@@ -92,6 +92,10 @@ function saveOptions() {
 		options[`keywordRE${set}`] = regexps.keyword;
 	}
 
+	// General options
+	options["timerSize"] = document.querySelector("#timerSize").value;
+	options["timerLocation"] = document.querySelector("#timerLocation").value;
+
 	browser.storage.local.set(options);
 
 	// Notify extension that options have been updated
@@ -232,6 +236,10 @@ function retrieveOptions() {
 			document.querySelector(`#prevAddons${set}`).checked = prevAddons;
 			document.querySelector(`#prevConfig${set}`).checked = prevConfig;
 		}
+
+		// General options
+		document.querySelector("#timerSize").value = options["timerSize"];
+		document.querySelector("#timerLocation").value = options["timerLocation"];
 	}
 
 	function onError(error) {

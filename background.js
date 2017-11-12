@@ -400,11 +400,15 @@ function updateTimeLeftWidget(id) {
 
 	// Send message to tab
 	let secsLeft = TABS[id].secsLeft;
-	let message = { type: "timeleft" };
+	let message = {
+		type: "timeleft",
+		size: OPTIONS["timerSize"],
+		location: OPTIONS["timerLocation"]
+	};
 	if (secsLeft == undefined || secsLeft == Infinity) {
-		message.content = null; // hide widget
+		message.text = null; // hide widget
 	} else {
-		message.content = formatTime(secsLeft); // show widget with time left
+		message.text = formatTime(secsLeft); // show widget with time left
 	}
 	browser.tabs.sendMessage(id, message);
 }
