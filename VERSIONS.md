@@ -1,3 +1,7 @@
+### Version 0.4 (12 Nov 2017)
+* Added export/import functions.
+* Added options to change timer size and location.
+
 ### Version 0.3.1 (07 Nov 2017)
 * Fixed bug.
 
