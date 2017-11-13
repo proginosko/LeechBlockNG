@@ -2,6 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+const DEFAULT_OPTIONS_FILE = "LeechBlockOptions.txt";
+
 function log(message) { console.log("[LBNG] " + message); }
 function warn(message) { console.warn("[LBNG] " + message); }
 
@@ -250,6 +252,62 @@ function retrieveOptions() {
 // Export options
 //
 function exportOptions() {
+	let options = {};
+
+	for (let set = 1; set <= NUM_SETS; set++) {
+		// Get component values
+		let setName = document.querySelector(`#setName${set}`).value;
+		let sites = document.querySelector(`#sites${set}`).value;
+		sites = sites.replace(/\s+/g, " ").replace(/(^ +)|( +$)|(\w+:\/+)/g, "");
+		let times = document.querySelector(`#times${set}`).value;
+		let limitMins = document.querySelector(`#limitMins${set}`).value;
+		let limitPeriod = document.querySelector(`#limitPeriod${set}`).value;
+		let conjMode = document.querySelector(`#conjMode${set}`).selectedIndex == 1;
+		let days = [];
+		for (let i = 0; i < 7; i++) {
+			days.push(document.querySelector(`#day${i}${set}`).checked);
+		}
+		let blockURL = document.querySelector(`#blockURL${set}`).value;
+		let activeBlock = document.querySelector(`#activeBlock${set}`).checked;
+		let countFocus = document.querySelector(`#countFocus${set}`).checked;
+		let delayFirst = document.querySelector(`#delayFirst${set}`).checked;
+		let delaySecs = document.querySelector(`#delaySecs${set}`).value;
+		let prevOpts = document.querySelector(`#prevOpts${set}`).checked;
+		let prevAddons = document.querySelector(`#prevAddons${set}`).checked;
+		let prevConfig = document.querySelector(`#prevConfig${set}`).checked;
+
+		// Set option values
+		options[`setName${set}`] = setName;
+		options[`sites${set}`] = sites;
+		options[`times${set}`] = cleanTimePeriods(times);
+		options[`limitMins${set}`] = limitMins;
+		options[`limitPeriod${set}`] = limitPeriod;
+		options[`conjMode${set}`] = conjMode;
+		options[`days${set}`] = encodeDays(days);
+		options[`blockURL${set}`] = blockURL;
+		options[`activeBlock${set}`] = activeBlock;
+		options[`countFocus${set}`] = countFocus;
+		options[`delayFirst${set}`] = delayFirst;
+		options[`delaySecs${set}`] = delaySecs;
+		options[`prevOpts${set}`] = prevOpts;
+		options[`prevAddons${set}`] = prevAddons;
+		options[`prevConfig${set}`] = prevConfig;
+	}
+
+	// General options
+	options["timerSize"] = document.querySelector("#timerSize").value;
+	options["timerLocation"] = document.querySelector("#timerLocation").value;
+
+	// Convert options to text lines
+	let lines = [];
+	for (let option in options) {
+		lines.push(option + "=" + options[option] + "\n");
+	}
+
+	// Create blob and download it
+	let blob = new Blob(lines, { type: "text/plain", endings: "native" });
+	var url = URL.createObjectURL(blob);
+	browser.downloads.download({ url: url, filename: DEFAULT_OPTIONS_FILE, saveAs: true });
 }
 
 // Import options
