@@ -163,9 +163,12 @@
 					</div>
 					<div id="generalOptions">
 						<fieldset>
-							<legend>Miscellaneous</legend>
+							<legend>Countdown Timer</legend>
 							<p>
-								<label>Countdown timer size:</label>
+								<input id="timerVisible" type="checkbox">
+								<label for="timerVisible">Show timer</label>
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<label>Timer size:</label>
 								<select id="timerSize">
 									<option value="0">small</option>
 									<option value="1">medium</option>
@@ -173,7 +176,7 @@
 									<option value="3">extra large</option>
 								</select>
 								&nbsp;&nbsp;&nbsp;&nbsp;
-								<label>Countdown timer location:</label>
+								<label>Timer location:</label>
 								<select id="timerLocation">
 									<option value="0">top left</option>
 									<option value="1">top right</option>

@@ -95,6 +95,7 @@ function saveOptions() {
 	}
 
 	// General options
+	options["timerVisible"] = document.querySelector("#timerVisible").checked;
 	options["timerSize"] = document.querySelector("#timerSize").value;
 	options["timerLocation"] = document.querySelector("#timerLocation").value;
 
@@ -240,6 +241,7 @@ function retrieveOptions() {
 		}
 
 		// General options
+		document.querySelector("#timerVisible").checked = options["timerVisible"];
 		document.querySelector("#timerSize").value = options["timerSize"];
 		document.querySelector("#timerLocation").value = options["timerLocation"];
 	}
@@ -295,6 +297,7 @@ function exportOptions() {
 	}
 
 	// General options
+	options["timerVisible"] = document.querySelector("#timerVisible").checked;
 	options["timerSize"] = document.querySelector("#timerSize").value;
 	options["timerLocation"] = document.querySelector("#timerLocation").value;
 
@@ -464,8 +467,12 @@ function importOptions() {
 		}
 
 		// General options
+		let timerVisible = options["timerVisible"];
 		let timerSize = options["timerSize"];
 		let timerLocation = options["timerLocation"];
+		if (timerVisible != undefined) {
+			document.querySelector("#timerVisible").checked = timerVisible;
+		}
 		if (timerSize != undefined) {
 			document.querySelector("#timerSize").value = timerSize;
 		}

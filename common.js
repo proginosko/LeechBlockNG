@@ -89,6 +89,9 @@ function cleanOptions(options) {
 	}
 
 	// General options
+	if (typeof options["timerVisible"] !== "boolean") {
+		options["timerVisible"] = true; // default: visible
+	}
 	if (typeof options["timerSize"] !== "string") {
 		options["timerSize"] = "1"; // default: medium
 	}

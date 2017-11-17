@@ -19,45 +19,45 @@ const WIDGET_LOCATIONS = [
 	["", "0px", "0px", ""]
 ];
 
-var tlWidget;
+var timerWidget;
 
-// Create time left widget
+// Create timer widget
 //
-function createTimeLeftWidget() {
-	tlWidget = document.createElement("div");
-	tlWidget.setAttribute("style", WIDGET_DEFAULT_STYLE);
-	document.body.appendChild(tlWidget);
+function createTimerWidget() {
+	timerWidget = document.createElement("div");
+	timerWidget.setAttribute("style", WIDGET_DEFAULT_STYLE);
+	document.body.appendChild(timerWidget);
 }
 
-// Update time left widget
+// Update timer widget
 //
-function updateTimeLeftWidget(text, size, location) {
-	if (!tlWidget) {
-		createTimeLeftWidget();
+function updateTimerWidget(text, size, location) {
+	if (!timerWidget) {
+		createTimerWidget();
 	}
 
 	if (!text) {
-		tlWidget.hidden = true;
+		timerWidget.hidden = true;
 	} else {
-		tlWidget.innerText = text;
+		timerWidget.innerText = text;
 		if (size >= 0 && size < WIDGET_SIZES.length) {
-			tlWidget.style.fontSize = WIDGET_SIZES[size];
+			timerWidget.style.fontSize = WIDGET_SIZES[size];
 		}
 		if (location >= 0 && location < WIDGET_LOCATIONS.length) {
-			tlWidget.style.top = WIDGET_LOCATIONS[location][0];
-			tlWidget.style.bottom = WIDGET_LOCATIONS[location][1];
-			tlWidget.style.left = WIDGET_LOCATIONS[location][2];
-			tlWidget.style.right = WIDGET_LOCATIONS[location][3];
+			timerWidget.style.top = WIDGET_LOCATIONS[location][0];
+			timerWidget.style.bottom = WIDGET_LOCATIONS[location][1];
+			timerWidget.style.left = WIDGET_LOCATIONS[location][2];
+			timerWidget.style.right = WIDGET_LOCATIONS[location][3];
 		}
-		tlWidget.hidden = false;
+		timerWidget.hidden = false;
 	}
 }
 
 /*** EVENT HANDLERS BEGIN HERE ***/
 
 function handleMessage(message, sender) {
-	if (message.type == "timeleft") {
-		updateTimeLeftWidget(message.text, message.size, message.location);
+	if (message.type == "timer") {
+		updateTimerWidget(message.text, message.size, message.location);
 	}
 }
 

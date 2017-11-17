@@ -391,9 +391,9 @@ function updateTimeData(url, secsOpen, secsFocus) {
 	}
 }
 
-// Update time left widget
+// Update timer widget
 //
-function updateTimeLeftWidget(id) {
+function updateTimerWidget(id) {
 	if (!TABS[id] || !TABS[id].blockable || /^about/i.test(TABS[id].url)) {
 		return;
 	}
@@ -401,11 +401,11 @@ function updateTimeLeftWidget(id) {
 	// Send message to tab
 	let secsLeft = TABS[id].secsLeft;
 	let message = {
-		type: "timeleft",
+		type: "timer",
 		size: OPTIONS["timerSize"],
 		location: OPTIONS["timerLocation"]
 	};
-	if (secsLeft == undefined || secsLeft == Infinity) {
+	if (!OPTIONS["timerVisible"] || secsLeft == undefined || secsLeft == Infinity) {
 		message.text = null; // hide widget
 	} else {
 		message.text = formatTime(secsLeft); // show widget with time left
@@ -732,7 +732,7 @@ function handleTabUpdated(tabId, changeInfo, tab) {
 
 	if (changeInfo.status && changeInfo.status == "complete") {
 		clockPageTime(tabId, true, isFocused);
-		updateTimeLeftWidget(tabId);
+		updateTimerWidget(tabId);
 	}
 }
 
@@ -742,7 +742,7 @@ function handleTabActivated(activeInfo) {
 	let isFocused = (activeInfo.windowId == focusedWindowId);
 
 	clockPageTime(activeInfo.tabId, true, isFocused);
-	updateTimeLeftWidget(activeInfo.tabId);
+	updateTimerWidget(activeInfo.tabId);
 }
 
 function handleTabRemoved(tabId, removeInfo) {
@@ -784,7 +784,7 @@ function handleAlarm(alarm) {
 			let blocked = checkTab(tab.id, tab.url, true);
 
 			if (!blocked) {
-				updateTimeLeftWidget(tab.id);
+				updateTimerWidget(tab.id);
 			}
 		}
 
