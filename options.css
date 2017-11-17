@@ -1,5 +1,9 @@
 /* LeechBlock options CSS style */
 
+html {
+	overflow-y: scroll;
+}
+
 body {
 	background-color: #fff;
 	color: #000;
