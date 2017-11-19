@@ -30,6 +30,16 @@ legend {
 	display: inline-block;
 }
 
+#promptAccessCodeText {
+	font: normal 14px monospace;
+	user-select: none;
+	-moz-user-select: none;
+}
+
+#promptAccessCodeInput {
+	font: normal 14px monospace;
+}
+
 @media (max-width: 720px) {
 	.ui-widget {
 		font-size: 12px;

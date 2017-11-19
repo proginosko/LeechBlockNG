@@ -7,6 +7,9 @@ const DEFAULT_OPTIONS_FILE = "LeechBlockOptions.txt";
 function log(message) { console.log("[LBNG] " + message); }
 function warn(message) { console.warn("[LBNG] " + message); }
 
+var gAccessConfirmed = false;
+var gAccessRequiredInput;
+
 // Save options to local storage
 //
 function saveOptions() {
@@ -95,6 +98,9 @@ function saveOptions() {
 	}
 
 	// General options
+	options["oa"] = document.querySelector("#optionsAccess").value;
+	options["password"] = document.querySelector("#accessPassword").value;
+	options["hpp"] = document.querySelector("#hidePassword").checked;
 	options["timerVisible"] = document.querySelector("#timerVisible").checked;
 	options["timerSize"] = document.querySelector("#timerSize").value;
 	options["timerLocation"] = document.querySelector("#timerLocation").value;
@@ -105,15 +111,18 @@ function saveOptions() {
 	browser.runtime.sendMessage({ type: "options" });
 
 	$("#form").hide({ effect: "fade", complete: retrieveOptions });
-
-	$("#form").show({ effect: "fade" });
 }
 
 // Save options and close tab
 //
 function saveOptionsClose() {
 	saveOptions();
+	closeOptions();
+}
 
+// Close options tab
+//
+function closeOptions() {
 	// Request tab close
 	browser.runtime.sendMessage({ type: "close" });
 }
@@ -241,13 +250,68 @@ function retrieveOptions() {
 		}
 
 		// General options
+		document.querySelector("#optionsAccess").value = options["oa"];
+		document.querySelector("#accessPassword").value = options["password"];
+		document.querySelector("#hidePassword").checked = options["hpp"];
 		document.querySelector("#timerVisible").checked = options["timerVisible"];
 		document.querySelector("#timerSize").value = options["timerSize"];
 		document.querySelector("#timerLocation").value = options["timerLocation"];
+
+		confirmAccess(options);
 	}
 
 	function onError(error) {
 		warn("Cannot get options: " + error);
+	}
+}
+
+// Confirm access to options
+//
+function confirmAccess(options) {
+	if (gAccessConfirmed) {
+		// Access already confirmed
+		$("#form").show({ effect: "fade" });
+		return;
+	}
+
+	let oa = options["oa"];
+	let password = options["password"];
+	let hpp = options["hpp"];
+
+	if (oa == 1 && password) {
+		gAccessRequiredInput = password;
+		if (hpp) {
+			$("#promptPasswordInput").attr("type", "password");
+		} else {
+			$("#promptPasswordInput").attr("type", "text");
+		}
+		$("#promptPasswordInput").val("");
+		$("#promptPassword").dialog("open");
+		$("#promptPasswordInput").focus();
+	} else if (oa > 1) {
+		let code = createAccessCode(32);
+		let codeText = code;
+		gAccessRequiredInput = code;
+		if (oa > 2) {
+			code = createAccessCode(32);
+			codeText += code;
+			gAccessRequiredInput += code;
+		}
+		if (oa > 3) {
+			code = createAccessCode(32);
+			codeText += "<br>" + code;
+			gAccessRequiredInput += code;
+			code = createAccessCode(32);
+			codeText += code;
+			gAccessRequiredInput += code;
+		}
+		$("#promptAccessCodeText").html(codeText);
+		$("#promptAccessCodeInput").val("");
+		$("#promptAccessCode").dialog("open");
+		$("#promptAccessCodeInput").focus();
+	} else {
+		gAccessConfirmed = true;
+		$("#form").show({ effect: "fade" });
 	}
 }
 
@@ -297,6 +361,9 @@ function exportOptions() {
 	}
 
 	// General options
+	options["oa"] = document.querySelector("#optionsAccess").value;
+	options["password"] = document.querySelector("#accessPassword").value;
+	options["hpp"] = document.querySelector("#hidePassword").checked;
 	options["timerVisible"] = document.querySelector("#timerVisible").checked;
 	options["timerSize"] = document.querySelector("#timerSize").value;
 	options["timerLocation"] = document.querySelector("#timerLocation").value;
@@ -467,9 +534,21 @@ function importOptions() {
 		}
 
 		// General options
+		let oa = options["oa"];
+		let password = options["password"];
+		let hpp = options["hpp"];
 		let timerVisible = options["timerVisible"];
 		let timerSize = options["timerSize"];
 		let timerLocation = options["timerLocation"];
+		if (oa != undefined) {
+			document.querySelector("#optionsAccess").value = oa;
+		}
+		if (password != undefined) {
+			document.querySelector("#accessPassword").value = password;
+		}
+		if (hpp != undefined) {
+			document.querySelector("#hidePassword").checked = hpp;
+		}
 		if (timerVisible != undefined) {
 			document.querySelector("#timerVisible").checked = timerVisible;
 		}
@@ -498,6 +577,47 @@ function disableSetOptions(set) {
 			element.disabled = true;
 		}
 	}
+}
+
+// Initialize access control prompt
+//
+function initAccessControlPrompt(prompt) {
+	// Create functions for buttons
+	let dialogButtons = {
+		OK: function () {
+			let input = $(`#${prompt}Input`);
+			if (input.val() == gAccessRequiredInput) {
+				gAccessConfirmed = true;
+				$("#form").show({ effect: "fade" });
+				$(`#${prompt}`).dialog("close");
+			} else {
+				input.val("");
+				input.effect({ effect: "highlight", color: "#ff0000" });
+				input.focus();
+			}
+		},
+		Cancel: function () {
+			$(`#${prompt}`).dialog("close");
+		}
+	};
+
+	// Initialize prompt dialog
+	$(`#${prompt}`).dialog({
+		autoOpen: false,
+		modal: true,
+		width: 600,
+		buttons: dialogButtons,
+		close: function (event, ui) { if (!gAccessConfirmed) closeOptions(); }
+	});
+
+	// Connect ENTER key to OK button
+	$(`#${prompt}Input`).keydown(
+		function (event) {
+			if (event.which == 13) {
+				dialogButtons.OK();
+			}
+		}
+	);
 }
 
 /*** STARTUP CODE BEGINS HERE ***/
@@ -539,11 +659,14 @@ $("#saveOptionsClose").click(saveOptionsClose);
 $("div[id^='alert']").dialog({
 	autoOpen: false,
 	modal: true,
+	width: 600,
 	buttons: {
-		OK: function() { $(this).dialog("close"); }
+		OK: function () { $(this).dialog("close"); }
 	}
 });
 
-$("#form").show();
+// Initialize access control prompts
+initAccessControlPrompt("promptPassword");
+initAccessControlPrompt("promptAccessCode");
 
 document.addEventListener("DOMContentLoaded", retrieveOptions);

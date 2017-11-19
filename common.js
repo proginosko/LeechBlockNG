@@ -89,6 +89,15 @@ function cleanOptions(options) {
 	}
 
 	// General options
+	if (typeof options["oa"] !== "string") {
+		options["oa"] = "0"; // default: no password or code
+	}
+	if (typeof options["password"] !== "string") {
+		options["password"] = ""; // default: blank
+	}
+	if (typeof options["hpp"] !== "boolean") {
+		options["hpp"] = true; // default: hidden
+	}
 	if (typeof options["timerVisible"] !== "boolean") {
 		options["timerVisible"] = true; // default: visible
 	}
@@ -397,4 +406,16 @@ function decodeDays(dayCode) {
 		days[i] = ((dayCode & (1 << i)) != 0);
 	}
 	return days;
+}
+
+// Creates a random access code of a specified length
+//
+function createAccessCode(len) {
+	// Omit O, 0, I, l to avoid ambiguity with some fonts
+	const codeChars = "~!@#$%^&*()[]{}?+-=ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz123456789";
+	let code = "";
+	for (let i = 0; i < len; i++) {
+		code += codeChars.charAt(Math.random() * codeChars.length);
+	}
+	return code;
 }

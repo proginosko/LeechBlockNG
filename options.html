@@ -163,6 +163,29 @@
 					</div>
 					<div id="generalOptions">
 						<fieldset>
+							<legend>Access Control</legend>
+							<p>
+								<label>Select the requirement for access to options:</label><br>
+								<div>
+									<select id="optionsAccess">
+										<option value="0">Don't require the user to enter any password or access code</option>
+										<option value="1">Require the user to enter a password</option>
+										<option value="2">Require the user to enter a random 32-character access code</option>
+										<option value="3">Require the user to enter a random 64-character access code</option>
+										<option value="4">Require the user to enter a random 128-character access code</option>
+									</select>
+								</div>
+							</p>
+							<p>
+								<label>Password:</label>
+								<input id="accessPassword" type="text" size="60">
+							</p>
+							<p>
+								<input id="hidePassword" type="checkbox">
+								<label for="hidePassword">Hide password characters when entered at prompt</label>
+							</p>
+						</fieldset>
+						<fieldset>
 							<legend>Countdown Timer</legend>
 							<p>
 								<input id="timerVisible" type="checkbox">
@@ -221,6 +244,18 @@
 			</div>
 			<div id="alertNoImportFile" title="LeechBlock Options">
 				<p>Please select a file containing the options to import.</p>
+			</div>
+		</div>
+
+		<div id="prompts" style="display: none;">
+			<div id="promptPassword" title="LeechBlock Options">
+				<p>Enter the password for access to options:</p>
+				<p><input id="promptPasswordInput" type="text" size="60"></p>
+			</div>
+			<div id="promptAccessCode" title="LeechBlock Options">
+				<p>Enter the following code for access to options:</p>
+				<p id="promptAccessCodeText"></p>
+				<p><input id="promptAccessCodeInput" type="text" size="64"></p>
 			</div>
 		</div>
 
