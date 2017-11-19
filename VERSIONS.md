@@ -1,3 +1,8 @@
+### Version 0.5 (19 Nov 2017)
+* Added access control options.
+* Added option to show/hide timer.
+* Fixed cancel lockdown option.
+
 ### Version 0.4 (12 Nov 2017)
 * Added export/import functions.
 * Added options to change timer size and location.
