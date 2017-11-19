@@ -614,6 +614,14 @@ function applyLockdown(set, endTime) {
 	OPTIONS[`timedata${set}`] = timedata;
 }
 
+// Cancel lockdown for specified set
+//
+function cancelLockdown(set) {
+	//log("cancelLockdown: " + set);
+
+	OPTIONS[`timedata${set}`][4] = 0;
+}
+
 // Open page blocked by delaying page
 //
 function openDelayedPage(id, url, set) {
@@ -708,8 +716,13 @@ function handleMessage(message, sender, sendResponse) {
 		// Options updated
 		retrieveOptions();
 	} else if (message.type == "lockdown") {
-		// Lockdown requested
-		applyLockdown(message.set, message.endTime);
+		if (!message.endTime) {
+			// Lockdown canceled
+			cancelLockdown(message.set);
+		} else {
+			// Lockdown requested
+			applyLockdown(message.set, message.endTime);
+		}
 	} else if (message.type == "blocked") {
 		// Block info requested by blocking/delaying page
 		let info = createBlockInfo(sender.url);

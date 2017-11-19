@@ -147,9 +147,8 @@ function retrieveOptions() {
 		// Check whether a lockdown is currently active
 		for (let set = 1; set <= NUM_SETS; set++) {
 			let timedata = options[`timedata${set}`];
-			if (now < timedata[4]) {
-				document.querySelector(`#cancelLockdown${set}`).disabled = false;
-			}
+			let lockdown = (timedata[4] > now);
+			document.querySelector(`#cancelLockdown${set}`).disabled = !lockdown;
 		}
 
 		// Check whether access to options should be prevented
@@ -646,6 +645,11 @@ for (let set = 1; set <= NUM_SETS; set++) {
 	$(`#showAdvOpts${set}`).click(function (e) {
 		$(`#showAdvOpts${set}`).css("display", "none");
 		$(`#advOpts${set}`).css("display", "inline");
+	});
+	$(`#cancelLockdown${set}`).click(function (e) {
+		browser.runtime.sendMessage({ type: "lockdown", set: set });
+		this.disabled = true;
+		$("#alertLockdownCancel").dialog("open");
 	});
 }
 $("#exportOptions").click(exportOptions);
