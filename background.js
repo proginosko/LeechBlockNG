@@ -410,7 +410,7 @@ function updateTimerWidget(id) {
 	} else {
 		message.text = formatTime(secsLeft); // show widget with time left
 	}
-	browser.tabs.sendMessage(id, message);
+	browser.tabs.sendMessage(id, message).catch(function (e) {});
 }
 
 // Create info for blocking/delaying page
