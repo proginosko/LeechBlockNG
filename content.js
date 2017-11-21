@@ -21,34 +21,39 @@ const WIDGET_LOCATIONS = [
 
 var timerWidget;
 
-// Create timer widget
-//
-function createTimerWidget() {
-	timerWidget = document.createElement("div");
-	timerWidget.setAttribute("style", WIDGET_DEFAULT_STYLE);
-	document.body.appendChild(timerWidget);
-}
-
 // Update timer widget
 //
 function updateTimerWidget(text, size, location) {
-	if (!timerWidget) {
-		createTimerWidget();
-	}
-
 	if (!text) {
-		timerWidget.hidden = true;
+		if (timerWidget) {
+			// Hide widget
+			timerWidget.hidden = true;
+		}
 	} else {
+		if (!timerWidget) {
+			// Create widget
+			timerWidget = document.createElement("div");
+			timerWidget.setAttribute("style", WIDGET_DEFAULT_STYLE);
+			document.body.appendChild(timerWidget);
+		}
+
+		// Set text
 		timerWidget.innerText = text;
+
+		// Set size
 		if (size >= 0 && size < WIDGET_SIZES.length) {
 			timerWidget.style.fontSize = WIDGET_SIZES[size];
 		}
+
+		// Set location
 		if (location >= 0 && location < WIDGET_LOCATIONS.length) {
 			timerWidget.style.top = WIDGET_LOCATIONS[location][0];
 			timerWidget.style.bottom = WIDGET_LOCATIONS[location][1];
 			timerWidget.style.left = WIDGET_LOCATIONS[location][2];
 			timerWidget.style.right = WIDGET_LOCATIONS[location][3];
 		}
+
+		// Show widget
 		timerWidget.hidden = false;
 	}
 }
