@@ -8,6 +8,8 @@ var OPTIONS = {};
 
 var TABS = [];
 
+var gSetCounted = [];
+
 var focusedWindowId = -1;
 
 function log(message) { console.log("[LBNG] " + message); }
@@ -72,6 +74,7 @@ function retrieveOptions() {
 		cleanTimeData(options);
 		//console.log(listObjectProperties(options, "options"));
 		OPTIONS = options;
+		gSetCounted = Array(NUM_SETS).fill(false);
 		refreshMenus();
 	}
 
@@ -100,6 +103,40 @@ function updateFocusedWindowId() {
 		function (win) { focusedWindowId = win.id; },
 		function (error) { warn("Cannot get focused window: " + error); }
 	);
+}
+
+// Process tabs: update time spent and check for blocks
+// 
+function processTabs() {
+	//log("processTabs");
+
+	gSetCounted.fill(false);
+
+	browser.tabs.query({}).then(onGot, onError);
+
+	function onGot(tabs) {
+		// Process all tabs
+		for (let tab of tabs) {
+			let isFocused = (tab.active && tab.windowId == focusedWindowId);
+
+			// Force update of time spent on this page
+			clockPageTime(tab.id, false, false);
+			clockPageTime(tab.id, true, isFocused);
+
+			let blocked = checkTab(tab.id, tab.url, true);
+
+			if (!blocked) {
+				updateTimerWidget(tab.id);
+			}
+		}
+
+		// Save time data to local storage
+		saveTimeData();
+	}
+
+	function onError(error) {
+		warn("Cannot get tabs: " + error);
+	}
 }
 
 // Check the URL of a tab and applies block if necessary (returns true if blocked)
@@ -339,10 +376,12 @@ function updateTimeData(url, secsOpen, secsFocus) {
 			let conjMode = OPTIONS[`conjMode${set}`];
 			let days = OPTIONS[`days${set}`];
 
-			/*
-			// Avoid over-counting time when multiple documents loaded
-			if (!countFocus && !LeechBlock.isActiveLoadedDoc(set, doc)) continue;
-			*/
+			// Avoid overcounting time for non-focused tabs
+			if (!countFocus && gSetCounted[set - 1]) {
+				continue;
+			} else {
+				gSetCounted[set - 1] = true;
+			}
 
 			// Reset time data if currently invalid
 			if (!Array.isArray(timedata) || timedata.length != 5) {
@@ -783,31 +822,7 @@ function handleWinFocused(winId) {
 function handleAlarm(alarm) {
 	//log("handleAlarm: " + alarm.name);
 
-	browser.tabs.query({}).then(onGot, onError);
-
-	function onGot(tabs) {
-		// Process all tabs
-		for (let tab of tabs) {
-			let isFocused = (tab.active && tab.windowId == focusedWindowId);
-
-			// Force update of time spent on this page
-			clockPageTime(tab.id, false, false);
-			clockPageTime(tab.id, true, isFocused);
-
-			let blocked = checkTab(tab.id, tab.url, true);
-
-			if (!blocked) {
-				updateTimerWidget(tab.id);
-			}
-		}
-
-		// Save time data to local storage
-		saveTimeData();
-	}
-
-	function onError(error) {
-		warn("Cannot get tabs: " + error);
-	}
+	processTabs();
 }
 
 /*** STARTUP CODE BEGINS HERE ***/
