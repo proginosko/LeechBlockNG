@@ -7,7 +7,7 @@ const TICK_TIME = (1 / 60); // update every second
 var gOptions = {};
 var gTabs = [];
 var gSetCounted = [];
-var gFocusedWindowId = -1;
+var gFocusWindowId = 0;
 
 function log(message) { console.log("[LBNG] " + message); }
 function warn(message) { console.warn("[LBNG] " + message); }
@@ -15,6 +15,10 @@ function warn(message) { console.warn("[LBNG] " + message); }
 // Refresh menus
 //
 function refreshMenus() {
+	if (!browser.menus) {
+		return; // no support for menus!
+	}
+
 	browser.menus.removeAll();
 
 	// Options
@@ -95,8 +99,12 @@ function saveTimeData() {
 // Update ID of focused window
 //
 function updateFocusedWindowId() {
+	if (!browser.windows) {
+		return; // no support for windows!
+	}
+
 	browser.windows.getLastFocused().then(
-		function (win) { gFocusedWindowId = win.id; },
+		function (win) { gFocusWindowId = win.id; },
 		function (error) { warn("Cannot get focused window: " + error); }
 	);
 }
@@ -113,11 +121,11 @@ function processTabs() {
 	function onGot(tabs) {
 		// Process all tabs
 		for (let tab of tabs) {
-			let isFocused = (tab.active && tab.windowId == gFocusedWindowId);
+			let focus = tab.active && (!gFocusWindowId || tab.windowId == gFocusWindowId);
 
 			// Force update of time spent on this page
 			clockPageTime(tab.id, false, false);
-			clockPageTime(tab.id, true, isFocused);
+			clockPageTime(tab.id, true, focus);
 
 			let blocked = checkTab(tab.id, tab.url, true);
 
@@ -775,10 +783,10 @@ function handleTabCreated(tab) {
 function handleTabUpdated(tabId, changeInfo, tab) {
 	//log("handleTabUpdated: " + tabId);
 
-	let isFocused = (tab.active && tab.windowId == gFocusedWindowId);
+	let focus = tab.active && (!gFocusWindowId || tab.windowId == gFocusWindowId);
 
 	if (changeInfo.status && changeInfo.status == "complete") {
-		clockPageTime(tabId, true, isFocused);
+		clockPageTime(tabId, true, focus);
 		updateTimerWidget(tabId);
 	}
 }
@@ -786,9 +794,9 @@ function handleTabUpdated(tabId, changeInfo, tab) {
 function handleTabActivated(activeInfo) {
 	//log("handleTabActivated: " + activeInfo.tabId);
 
-	let isFocused = (activeInfo.windowId == gFocusedWindowId);
+	let focus = (!gFocusWindowId || activeInfo.windowId == gFocusWindowId);
 
-	clockPageTime(activeInfo.tabId, true, isFocused);
+	clockPageTime(activeInfo.tabId, true, focus);
 	updateTimerWidget(activeInfo.tabId);
 }
 
@@ -811,7 +819,7 @@ function handleBeforeNavigate(navDetails) {
 function handleWinFocused(winId) {
 	//log("handleWinFocused: " + winId);
 
-	gFocusedWindowId = winId;
+	gFocusWindowId = winId;
 }
 
 function handleAlarm(alarm) {
@@ -824,9 +832,14 @@ function handleAlarm(alarm) {
 
 retrieveOptions();
 
+browser.alarms.onAlarm.addListener(handleAlarm);
+browser.alarms.create("LBNG", { periodInMinutes: TICK_TIME });
+
 browser.browserAction.onClicked.addListener(handleClick);
 
-browser.menus.onClicked.addListener(handleMenuClick);
+if (browser.menus) {
+	browser.menus.onClicked.addListener(handleMenuClick);
+}
 
 browser.runtime.onMessage.addListener(handleMessage);
 
@@ -837,7 +850,6 @@ browser.tabs.onRemoved.addListener(handleTabRemoved);
 
 browser.webNavigation.onBeforeNavigate.addListener(handleBeforeNavigate);
 
-browser.windows.onFocusChanged.addListener(handleWinFocused);
-
-browser.alarms.onAlarm.addListener(handleAlarm);
-browser.alarms.create("LBNG", { periodInMinutes: TICK_TIME });
+if (browser.windows) {
+	browser.windows.onFocusChanged.addListener(handleWinFocused);
+}
