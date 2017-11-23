@@ -379,7 +379,7 @@ function formatTime(secs) {
 //
 function allTrue(array) {
 	if (Array.isArray(array)) {
-		for (let i = 0; i <= array.length; i++) {
+		for (let i = 0; i < array.length; i++) {
 			if (!array[i]) return false;
 		}
 		return true;
