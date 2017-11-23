@@ -4,13 +4,10 @@
 
 const TICK_TIME = (1 / 60); // update every second
 
-var OPTIONS = {};
-
-var TABS = [];
-
+var gOptions = {};
+var gTabs = [];
 var gSetCounted = [];
-
-var focusedWindowId = -1;
+var gFocusedWindowId = -1;
 
 function log(message) { console.log("[LBNG] " + message); }
 function warn(message) { console.warn("[LBNG] " + message); }
@@ -49,7 +46,7 @@ function refreshMenus() {
 	// Add Site submenu
 	for (let set = 1; set <= NUM_SETS; set++) {
 		let title = `Add Site to Block Set ${set}`;
-		let setName = OPTIONS[`setName${set}`];
+		let setName = gOptions[`setName${set}`];
 		if (setName) {
 			title += ` (${setName})`;
 		}
@@ -72,8 +69,7 @@ function retrieveOptions() {
 	function onGot(options) {
 		cleanOptions(options);
 		cleanTimeData(options);
-		//console.log(listObjectProperties(options, "options"));
-		OPTIONS = options;
+		gOptions = options;
 		gSetCounted = Array(NUM_SETS).fill(false);
 		refreshMenus();
 	}
@@ -90,7 +86,7 @@ function saveTimeData() {
 
 	let options = {};
 	for (let set = 1; set <= NUM_SETS; set++) {
-		options[`timedata${set}`] = OPTIONS[`timedata${set}`];
+		options[`timedata${set}`] = gOptions[`timedata${set}`];
 	}
 
 	browser.storage.local.set(options);
@@ -100,7 +96,7 @@ function saveTimeData() {
 //
 function updateFocusedWindowId() {
 	browser.windows.getLastFocused().then(
-		function (win) { focusedWindowId = win.id; },
+		function (win) { gFocusedWindowId = win.id; },
 		function (error) { warn("Cannot get focused window: " + error); }
 	);
 }
@@ -117,7 +113,7 @@ function processTabs() {
 	function onGot(tabs) {
 		// Process all tabs
 		for (let tab of tabs) {
-			let isFocused = (tab.active && tab.windowId == focusedWindowId);
+			let isFocused = (tab.active && tab.windowId == gFocusedWindowId);
 
 			// Force update of time spent on this page
 			clockPageTime(tab.id, false, false);
@@ -149,31 +145,31 @@ function checkTab(id, url, isRepeat) {
 		return false; // not blocked
 	}
 
-	if (!TABS[id]) {
+	if (!gTabs[id]) {
 		// Create object to track this tab
-		TABS[id] = { allowedHost: null, allowedPath: null };
+		gTabs[id] = { allowedHost: null, allowedPath: null };
 	}
 
 	// Quick exit for non-blockable URLs
 	if (!/^(http|file|about)/i.test(url)) {
-		TABS[id].blockable = false;
+		gTabs[id].blockable = false;
 		return false; // not blocked
 	}
 
-	TABS[id].blockable = true;
-	TABS[id].url = url;
+	gTabs[id].blockable = true;
+	gTabs[id].url = url;
 
 	// Get parsed URL for this page
 	let parsedURL = getParsedURL(url);
 
 	// Check for allowed host/path
-	let ah = (TABS[id].allowedHost == parsedURL.host);
-	let ap = !TABS[id].allowedPath || (TABS[id].allowedPath == parsedURL.path);
+	let ah = (gTabs[id].allowedHost == parsedURL.host);
+	let ap = !gTabs[id].allowedPath || (gTabs[id].allowedPath == parsedURL.path);
 	if (ah && ap) {
 		return false; // not blocked
 	} else {
-		TABS[id].allowedHost = null;
-		TABS[id].allowedPath = null;
+		gTabs[id].allowedHost = null;
+		gTabs[id].allowedPath = null;
 	}
 
 	// Get URL without hash part (unless it's a hash-bang part)
@@ -188,34 +184,34 @@ function checkTab(id, url, isRepeat) {
 	// Get current time in seconds
 	let now = Math.floor(Date.now() / 1000);
 
-	TABS[id].secsLeft = Infinity;
+	gTabs[id].secsLeft = Infinity;
 
 	for (let set = 1; set <= NUM_SETS; set++) {
 		// Get regular expressions for matching sites to block/allow
-		let blockRE = OPTIONS[`blockRE${set}`];
+		let blockRE = gOptions[`blockRE${set}`];
 		if (blockRE == "") continue; // no block for this set
-		let allowRE = OPTIONS[`allowRE${set}`];
-		let keywordRE = OPTIONS[`keywordRE${set}`];
+		let allowRE = gOptions[`allowRE${set}`];
+		let keywordRE = gOptions[`keywordRE${set}`];
 
 		// Get options for preventing access to about:addons and about:config
-		let prevAddons = OPTIONS[`prevAddons${set}`];
-		let prevConfig = OPTIONS[`prevConfig${set}`];
+		let prevAddons = gOptions[`prevAddons${set}`];
+		let prevConfig = gOptions[`prevConfig${set}`];
 
 		// Test URL against block/allow regular expressions
 		if (testURL(pageURL, blockRE, allowRE)
 				|| (prevAddons && /^about:addons/i.test(pageURL))
 				|| (prevConfig && /^about:(config|support)/i.test(pageURL))) {
 			// Get options for this set
-			let timedata = OPTIONS[`timedata${set}`];
-			let times = OPTIONS[`times${set}`];
+			let timedata = gOptions[`timedata${set}`];
+			let times = gOptions[`times${set}`];
 			let minPeriods = getMinPeriods(times);
-			let limitMins = OPTIONS[`limitMins${set}`];
-			let limitPeriod = OPTIONS[`limitPeriod${set}`];
+			let limitMins = gOptions[`limitMins${set}`];
+			let limitPeriod = gOptions[`limitPeriod${set}`];
 			let periodStart = getTimePeriodStart(now, limitPeriod);
-			let conjMode = OPTIONS[`conjMode${set}`];
-			let days = OPTIONS[`days${set}`];
-			let blockURL = OPTIONS[`blockURL${set}`];
-			let activeBlock = OPTIONS[`activeBlock${set}`];
+			let conjMode = gOptions[`conjMode${set}`];
+			let days = gOptions[`days${set}`];
+			let blockURL = gOptions[`blockURL${set}`];
+			let activeBlock = gOptions[`activeBlock${set}`];
 
 			// Check day
 			let onSelectedDay = days[timedate.getDay()];
@@ -281,9 +277,9 @@ function checkTab(id, url, isRepeat) {
 			let secsLeft = conjMode
 					? (secsLeftBeforePeriod + secsLeftBeforeLimit)
 					: Math.min(secsLeftBeforePeriod, secsLeftBeforeLimit);
-			if (secsLeft < TABS[id].secsLeft) {
-				TABS[id].secsLeft = secsLeft;
-				TABS[id].secsLeftSet = set;
+			if (secsLeft < gTabs[id].secsLeft) {
+				gTabs[id].secsLeft = secsLeft;
+				gTabs[id].secsLeftSet = set;
 			}
 		}
 	}
@@ -294,7 +290,7 @@ function checkTab(id, url, isRepeat) {
 // Clock time spent on page
 //
 function clockPageTime(id, open, focus) {
-	if (!TABS[id] || !TABS[id].blockable) {
+	if (!gTabs[id] || !gTabs[id].blockable) {
 		return;
 	}
 
@@ -304,42 +300,42 @@ function clockPageTime(id, open, focus) {
 	// Clock time during which page has been open
 	let secsOpen = 0;
 	if (open) {
-		if (TABS[id].openTime == undefined) {
+		if (gTabs[id].openTime == undefined) {
 			// Set open time for this page
-			TABS[id].openTime = time;
+			gTabs[id].openTime = time;
 		}
 	} else {
-		if (TABS[id].openTime != undefined) {
-			if (/^(http|file)/i.test(TABS[id].url)) {
+		if (gTabs[id].openTime != undefined) {
+			if (/^(http|file)/i.test(gTabs[id].url)) {
 				// Calculate seconds spent on this page (while open)
-				secsOpen = ((time - TABS[id].openTime) / 1000);
+				secsOpen = ((time - gTabs[id].openTime) / 1000);
 			}
 
-			TABS[id].openTime = undefined;
+			gTabs[id].openTime = undefined;
 		}
 	}
 
 	// Clock time during which page has been focused
 	let secsFocus = 0;
 	if (focus) {
-		if (TABS[id].focusTime == undefined) {
+		if (gTabs[id].focusTime == undefined) {
 			// Set focus time for this page
-			TABS[id].focusTime = time;
+			gTabs[id].focusTime = time;
 		}
 	} else {
-		if (TABS[id].focusTime != undefined) {
-			if (/^(http|file)/i.test(TABS[id].url)) {
+		if (gTabs[id].focusTime != undefined) {
+			if (/^(http|file)/i.test(gTabs[id].url)) {
 				// Calculate seconds spent on this page (while focused)
-				secsFocus = ((time - TABS[id].focusTime) / 1000);
+				secsFocus = ((time - gTabs[id].focusTime) / 1000);
 			}
 
-			TABS[id].focusTime = undefined;
+			gTabs[id].focusTime = undefined;
 		}
 	}
 
 	// Update time data if necessary
 	if (secsOpen > 0 || secsFocus > 0) {
-		updateTimeData(TABS[id].url, secsOpen, secsFocus);
+		updateTimeData(gTabs[id].url, secsOpen, secsFocus);
 	}
 }
 
@@ -360,21 +356,21 @@ function updateTimeData(url, secsOpen, secsFocus) {
 
 	for (let set = 1; set <= NUM_SETS; set++) {
 		// Get regular expressions for matching sites to block/allow
-		let blockRE = OPTIONS[`blockRE${set}`];
+		let blockRE = gOptions[`blockRE${set}`];
 		if (blockRE == "") continue; // no block for this set
-		let allowRE = OPTIONS[`allowRE${set}`];
+		let allowRE = gOptions[`allowRE${set}`];
 
 		// Test URL against block/allow regular expressions
 		if (testURL(pageURL, blockRE, allowRE)) {
 			// Get options for this set
-			let timedata = OPTIONS[`timedata${set}`];
-			let countFocus = OPTIONS[`countFocus${set}`];
-			let times = OPTIONS[`times${set}`];
+			let timedata = gOptions[`timedata${set}`];
+			let countFocus = gOptions[`countFocus${set}`];
+			let times = gOptions[`times${set}`];
 			let minPeriods = getMinPeriods(times);
-			let limitPeriod = OPTIONS[`limitPeriod${set}`];
+			let limitPeriod = gOptions[`limitPeriod${set}`];
 			let periodStart = getTimePeriodStart(now, limitPeriod);
-			let conjMode = OPTIONS[`conjMode${set}`];
-			let days = OPTIONS[`days${set}`];
+			let conjMode = gOptions[`conjMode${set}`];
+			let days = gOptions[`days${set}`];
 
 			// Avoid overcounting time for non-focused tabs
 			if (!countFocus && gSetCounted[set - 1]) {
@@ -425,7 +421,7 @@ function updateTimeData(url, secsOpen, secsFocus) {
 			}
 
 			// Update time data for this set
-			OPTIONS[`timedata${set}`] = timedata;
+			gOptions[`timedata${set}`] = timedata;
 		}
 	}
 }
@@ -433,18 +429,18 @@ function updateTimeData(url, secsOpen, secsFocus) {
 // Update timer widget
 //
 function updateTimerWidget(id) {
-	if (!TABS[id] || !TABS[id].blockable || /^about/i.test(TABS[id].url)) {
+	if (!gTabs[id] || !gTabs[id].blockable || /^about/i.test(gTabs[id].url)) {
 		return;
 	}
 
 	// Send message to tab
-	let secsLeft = TABS[id].secsLeft;
+	let secsLeft = gTabs[id].secsLeft;
 	let message = {
 		type: "timer",
-		size: OPTIONS["timerSize"],
-		location: OPTIONS["timerLocation"]
+		size: gOptions["timerSize"],
+		location: gOptions["timerLocation"]
 	};
-	if (!OPTIONS["timerVisible"] || secsLeft == undefined || secsLeft == Infinity) {
+	if (!gOptions["timerVisible"] || secsLeft == undefined || secsLeft == Infinity) {
 		message.text = null; // hide widget
 	} else {
 		message.text = formatTime(secsLeft); // show widget with time left
@@ -466,7 +462,7 @@ function createBlockInfo(url) {
 
 	// Get block set and URL (including hash part) of blocked page
 	let blockedSet = parsedURL.args.shift();
-	let blockedSetName = OPTIONS[`setName${blockedSet}`];
+	let blockedSetName = gOptions[`setName${blockedSet}`];
 	let blockedURL = parsedURL.query.substring(3); // retains original separators (& or ;)
 	if (parsedURL.hash != null) {
 		blockedURL += "#" + parsedURL.hash;
@@ -486,7 +482,7 @@ function createBlockInfo(url) {
 	}
 
 	// Get delaying time for block set
-	let delaySecs = OPTIONS[`delaySecs${blockedSet}`];
+	let delaySecs = gOptions[`delaySecs${blockedSet}`];
 
 	return {
 		blockedSet: blockedSet,
@@ -512,14 +508,14 @@ function getUnblockTime(set) {
 	let now = Math.floor(Date.now() / 1000);
 
 	// Get options for this set
-	let timedata = OPTIONS[`timedata${set}`];
-	let times = OPTIONS[`times${set}`];
+	let timedata = gOptions[`timedata${set}`];
+	let times = gOptions[`times${set}`];
 	let minPeriods = getMinPeriods(times);
-	let limitMins = OPTIONS[`limitMins${set}`];
-	let limitPeriod = OPTIONS[`limitPeriod${set}`];
+	let limitMins = gOptions[`limitMins${set}`];
+	let limitPeriod = gOptions[`limitPeriod${set}`];
 	let periodStart = getTimePeriodStart(now, limitPeriod);
-	let conjMode = OPTIONS[`conjMode${set}`];
-	let days = OPTIONS[`days${set}`];
+	let conjMode = gOptions[`conjMode${set}`];
+	let days = gOptions[`days${set}`];
 
 	// Check for valid time data
 	if (!Array.isArray(timedata) || timedata.length != 5) {
@@ -643,14 +639,14 @@ function getUnblockTime(set) {
 function applyLockdown(set, endTime) {
 	//log("applyLockdown: " + set + " " + endTime);
 
-	let timedata = OPTIONS[`timedata${set}`];
+	let timedata = gOptions[`timedata${set}`];
 
 	// Apply lockdown only if it doesn't reduce any current lockdown
 	if (endTime > timedata[4]) {
 		timedata[4] = endTime;
 	}
 
-	OPTIONS[`timedata${set}`] = timedata;
+	gOptions[`timedata${set}`] = timedata;
 }
 
 // Cancel lockdown for specified set
@@ -658,7 +654,7 @@ function applyLockdown(set, endTime) {
 function cancelLockdown(set) {
 	//log("cancelLockdown: " + set);
 
-	OPTIONS[`timedata${set}`][4] = 0;
+	gOptions[`timedata${set}`][4] = 0;
 }
 
 // Open page blocked by delaying page
@@ -670,9 +666,9 @@ function openDelayedPage(id, url, set) {
 	let parsedURL = getParsedURL(url);
 
 	// Set parameters for allowing host
-	TABS[id].allowedHost = parsedURL.host;
-	if (!OPTIONS[`delayFirst${set}`]) {
-		TABS[id].allowedPath = parsedURL.path;
+	gTabs[id].allowedHost = parsedURL.host;
+	if (!gOptions[`delayFirst${set}`]) {
+		gTabs[id].allowedPath = parsedURL.path;
 	}
 
 	// Redirect page
@@ -682,7 +678,7 @@ function openDelayedPage(id, url, set) {
 // Add site to block set
 //
 function addSiteToSet(url, set) {
-	log("addSiteToSet: " + url + " " + set);
+	//log("addSiteToSet: " + url + " " + set);
 
 	if (!/^http/i.test(url) || set < 1 || set > NUM_SETS) {
 		return;
@@ -692,7 +688,7 @@ function addSiteToSet(url, set) {
 	let parsedURL = getParsedURL(url);
 
 	// Get sites for this set
-	let sites = OPTIONS[`sites${set}`];
+	let sites = gOptions[`sites${set}`];
 
 	// Add site if not already included
 	let site = parsedURL.host.replace(/^www\./, "");
@@ -706,10 +702,10 @@ function addSiteToSet(url, set) {
 		let regexps = getRegExpSites(sites);
 
 		// Update options
-		OPTIONS[`sites${set}`] = sites;
-		OPTIONS[`blockRE${set}`] = regexps.block;
-		OPTIONS[`allowRE${set}`] = regexps.allow;
-		OPTIONS[`keywordRE${set}`] = regexps.keyword;
+		gOptions[`sites${set}`] = sites;
+		gOptions[`blockRE${set}`] = regexps.block;
+		gOptions[`allowRE${set}`] = regexps.allow;
+		gOptions[`keywordRE${set}`] = regexps.keyword;
 
 		// Save updated options to local storage
 		let options = {};
@@ -778,9 +774,8 @@ function handleTabCreated(tab) {
 
 function handleTabUpdated(tabId, changeInfo, tab) {
 	//log("handleTabUpdated: " + tabId);
-	//console.log(listObjectProperties(changeInfo, "changeInfo"));
 
-	let isFocused = (tab.active && tab.windowId == focusedWindowId);
+	let isFocused = (tab.active && tab.windowId == gFocusedWindowId);
 
 	if (changeInfo.status && changeInfo.status == "complete") {
 		clockPageTime(tabId, true, isFocused);
@@ -791,7 +786,7 @@ function handleTabUpdated(tabId, changeInfo, tab) {
 function handleTabActivated(activeInfo) {
 	//log("handleTabActivated: " + activeInfo.tabId);
 
-	let isFocused = (activeInfo.windowId == focusedWindowId);
+	let isFocused = (activeInfo.windowId == gFocusedWindowId);
 
 	clockPageTime(activeInfo.tabId, true, isFocused);
 	updateTimerWidget(activeInfo.tabId);
@@ -816,7 +811,7 @@ function handleBeforeNavigate(navDetails) {
 function handleWinFocused(winId) {
 	//log("handleWinFocused: " + winId);
 
-	focusedWindowId = winId;
+	gFocusedWindowId = winId;
 }
 
 function handleAlarm(alarm) {
