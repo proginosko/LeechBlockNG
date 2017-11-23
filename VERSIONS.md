@@ -1,3 +1,6 @@
+### Version 0.5.1 (23 Nov 2017)
+* Under-the-hood improvements.
+
 ### Version 0.5 (19 Nov 2017)
 * Added access control options.
 * Added option to show/hide timer.
