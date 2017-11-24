@@ -665,6 +665,26 @@ function cancelLockdown(set) {
 	gOptions[`timedata${set}`][4] = 0;
 }
 
+// Open extension page (either create new tab or activate existing tab)
+//
+function openExtensionPage(url) {
+	let fullURL = browser.extension.getURL(url);
+
+	browser.tabs.query({ url: fullURL }).then(onGot, onError);
+
+	function onGot(tabs) {
+		if (tabs.length > 0) {
+			browser.tabs.update(tabs[0].id, { active: true });
+		} else {
+			browser.tabs.create({ url: fullURL });
+		}
+	}
+
+	function onError(error) {
+		browser.tabs.create({ url: fullURL });
+	}
+}
+
 // Open page blocked by delaying page
 //
 function openDelayedPage(id, url, set) {
@@ -727,18 +747,12 @@ function addSiteToSet(url, set) {
 
 /*** EVENT HANDLERS BEGIN HERE ***/
 
-function handleClick(tab) {
-	//log("handleClick: " + tab.id);
-
-	browser.runtime.openOptionsPage();	
-}
-
 function handleMenuClick(info, tab) {
 	let id = info.menuItemId;
 	if (id == "options") {
 		browser.runtime.openOptionsPage();
 	} else if (id == "lockdown") {
-		browser.tabs.create({ url: "lockdown.html" });
+		openExtensionPage("lockdown.html");
 	} else if (id.startsWith("addSite-")) {
 		addSiteToSet(info.pageUrl, id.substr(8));
 	}
@@ -834,8 +848,6 @@ retrieveOptions();
 
 browser.alarms.onAlarm.addListener(handleAlarm);
 browser.alarms.create("LBNG", { periodInMinutes: TICK_TIME });
-
-browser.browserAction.onClicked.addListener(handleClick);
 
 if (browser.menus) {
 	browser.menus.onClicked.addListener(handleMenuClick);

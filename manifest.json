@@ -42,12 +42,13 @@
 	],
 
 	"browser_action": {
-		"browser_style": true,
+		"browser_style": false,
 		"default_icon": {
 			"16": "icons/leechblock16.png",
 			"32": "icons/leechblock32.png"
 		},
-		"default_title": "LeechBlock NG"
+		"default_popup": "popup.html",
+		"default_title": "LeechBlock"
 	}
 
 }

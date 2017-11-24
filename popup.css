@@ -1,0 +1,17 @@
+/* LeechBlock popup CSS style */
+
+body {
+	background-color: #fff;
+	color: #000;
+	text-align: center;
+}
+
+#button-container {
+	display: inline-block;
+}
+
+button {
+	display: inline;
+	width: 100%;
+	margin: 2px;
+}
