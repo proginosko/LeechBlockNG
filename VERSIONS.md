@@ -1,4 +1,4 @@
-Version 0.5.2 (24 Nov 2017)
+### Version 0.5.2 (24 Nov 2017)
 * Added popup to browser button.
 
 ### Version 0.5.1 (23 Nov 2017)
