@@ -40,7 +40,7 @@ legend {
 	font: normal 14px monospace;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 800px) {
 	.ui-widget {
 		font-size: 12px;
 	}
