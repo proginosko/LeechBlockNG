@@ -78,6 +78,9 @@ function cleanOptions(options) {
 		if (typeof options[`keywordRE${set}`] !== "string") {
 			options[`keywordRE${set}`] = "";
 		}
+		if (typeof options[`lockdown${set}`] !== "boolean") {
+			options[`lockdown${set}`] = false;
+		}
 
 		// Update legacy values
 		if (options[`blockURL${set}`] == LEGACY_DEFAULT_BLOCK_URL) {
@@ -109,6 +112,12 @@ function cleanOptions(options) {
 	}
 	if (typeof options["warnSecs"] !== "string") {
 		options["warnSecs"] = ""; // default: no warning
+	}
+	if (typeof options["lockdownHours"] !== "string") {
+		options["lockdownHours"] = ""; // default: blank
+	}
+	if (typeof options["lockdownMins"] !== "string") {
+		options["lockdownMins"] = ""; // default: blank
 	}
 }
 
