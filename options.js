@@ -79,7 +79,7 @@ function saveOptions() {
 		let delaySecs = document.querySelector(`#delaySecs${set}`).value;
 		let prevOpts = document.querySelector(`#prevOpts${set}`).checked;
 		let prevAddons = document.querySelector(`#prevAddons${set}`).checked;
-		let prevConfig = document.querySelector(`#prevConfig${set}`).checked;
+		let prevSupport = document.querySelector(`#prevSupport${set}`).checked;
 
 		// Get regular expressions to match sites
 		let regexps = getRegExpSites(sites);
@@ -99,7 +99,7 @@ function saveOptions() {
 		options[`delaySecs${set}`] = delaySecs;
 		options[`prevOpts${set}`] = prevOpts;
 		options[`prevAddons${set}`] = prevAddons;
-		options[`prevConfig${set}`] = prevConfig;
+		options[`prevSupport${set}`] = prevSupport;
 		options[`blockRE${set}`] = regexps.block;
 		options[`allowRE${set}`] = regexps.allow;
 		options[`keywordRE${set}`] = regexps.keyword;
@@ -228,7 +228,7 @@ function retrieveOptions() {
 			let delaySecs = options[`delaySecs${set}`];
 			let prevOpts = options[`prevOpts${set}`];
 			let prevAddons = options[`prevAddons${set}`];
-			let prevConfig = options[`prevConfig${set}`];
+			let prevSupport = options[`prevSupport${set}`];
 			
 			// Apply custom set name to tab (if specified)
 			if (setName) {
@@ -254,7 +254,7 @@ function retrieveOptions() {
 			document.querySelector(`#delaySecs${set}`).value = delaySecs;
 			document.querySelector(`#prevOpts${set}`).checked = prevOpts;
 			document.querySelector(`#prevAddons${set}`).checked = prevAddons;
-			document.querySelector(`#prevConfig${set}`).checked = prevConfig;
+			document.querySelector(`#prevSupport${set}`).checked = prevSupport;
 		}
 
 		// General options
@@ -349,7 +349,7 @@ function exportOptions() {
 		let delaySecs = document.querySelector(`#delaySecs${set}`).value;
 		let prevOpts = document.querySelector(`#prevOpts${set}`).checked;
 		let prevAddons = document.querySelector(`#prevAddons${set}`).checked;
-		let prevConfig = document.querySelector(`#prevConfig${set}`).checked;
+		let prevSupport = document.querySelector(`#prevSupport${set}`).checked;
 
 		// Set option values
 		options[`setName${set}`] = setName;
@@ -366,7 +366,7 @@ function exportOptions() {
 		options[`delaySecs${set}`] = delaySecs;
 		options[`prevOpts${set}`] = prevOpts;
 		options[`prevAddons${set}`] = prevAddons;
-		options[`prevConfig${set}`] = prevConfig;
+		options[`prevSupport${set}`] = prevSupport;
 	}
 
 	// General options
@@ -440,7 +440,7 @@ function importOptions() {
 			let delaySecs = options[`delaySecs${set}`];
 			let prevOpts = options[`prevOpts${set}`];
 			let prevAddons = options[`prevAddons${set}`];
-			let prevConfig = options[`prevConfig${set}`];
+			let prevSupport = options[`prevSupport${set}`];
 
 			// Set component values
 			if (setName != undefined) {
@@ -535,10 +535,10 @@ function importOptions() {
 					element.checked = isTrue(prevAddons);
 				}
 			}
-			if (prevConfig != undefined) {
-				let element = document.querySelector(`#prevConfig${set}`);
+			if (prevSupport != undefined) {
+				let element = document.querySelector(`#prevSupport${set}`);
 				if (!element.disabled) {
-					element.checked = isTrue(prevConfig);
+					element.checked = isTrue(prevSupport);
 				}
 			}
 		}
@@ -583,7 +583,7 @@ function disableSetOptions(set) {
 		"day0", "day1", "day2", "day3", "day4", "day5", "day6",
 		"blockURL", "defaultPage", "delayingPage", "blankPage", "homePage",
 		"activeBlock", "countFocus", "delayFirst", "delaySecs",
-		"prevOpts", "prevAddons", "prevConfig", "cancelLockdown"
+		"prevOpts", "prevAddons", "prevSupport", "cancelLockdown"
 	];
 	for (let item of items) {
 		let element = document.querySelector(`#${item}${set}`);

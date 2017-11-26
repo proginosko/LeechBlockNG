@@ -66,8 +66,8 @@ function cleanOptions(options) {
 		if (typeof options[`prevAddons${set}`] !== "boolean") {
 			options[`prevAddons${set}`] = false;
 		}
-		if (typeof options[`prevConfig${set}`] !== "boolean") {
-			options[`prevConfig${set}`] = false;
+		if (typeof options[`prevSupport${set}`] !== "boolean") {
+			options[`prevSupport${set}`] = false;
 		}
 		if (typeof options[`blockRE${set}`] !== "string") {
 			options[`blockRE${set}`] = "";

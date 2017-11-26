@@ -201,14 +201,14 @@ function checkTab(id, url, isRepeat) {
 		let allowRE = gOptions[`allowRE${set}`];
 		let keywordRE = gOptions[`keywordRE${set}`];
 
-		// Get options for preventing access to about:addons and about:config
+		// Get options for preventing access to about:addons and about:support
 		let prevAddons = gOptions[`prevAddons${set}`];
-		let prevConfig = gOptions[`prevConfig${set}`];
+		let prevSupport = gOptions[`prevSupport${set}`];
 
 		// Test URL against block/allow regular expressions
 		if (testURL(pageURL, blockRE, allowRE)
 				|| (prevAddons && /^about:addons/i.test(pageURL))
-				|| (prevConfig && /^about:(config|support)/i.test(pageURL))) {
+				|| (prevSupport && /^about:support/i.test(pageURL))) {
 			// Get options for this set
 			let timedata = gOptions[`timedata${set}`];
 			let times = gOptions[`times${set}`];
