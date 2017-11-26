@@ -130,7 +130,7 @@ function processTabs() {
 			let blocked = checkTab(tab.id, tab.url, true);
 
 			if (!blocked) {
-				updateTimerWidget(tab.id);
+				updateTimer(tab.id);
 			}
 		}
 
@@ -292,7 +292,37 @@ function checkTab(id, url, isRepeat) {
 		}
 	}
 
+	checkWarning(id);
+			
 	return false; // not blocked
+}
+
+// Check for warning message (and display message if needed)
+//
+function checkWarning(id) {
+	let warnSecs = gOptions["warnSecs"];
+	if (warnSecs) {
+		let secsLeft = Math.round(gTabs[id].secsLeft);
+		if (secsLeft > warnSecs) {
+			gTabs[id].warned = false;
+		} else if (!gTabs[id].warned) {
+			gTabs[id].warned = true;
+
+			// Send message to tab
+			let set = gTabs[id].secsLeftSet;
+			let text = `Sites in Block Set ${set}`;
+			let setName = gOptions[`setName${set}`];
+			if (setName) {
+				text += ` (${setName})`;
+			}
+			text += ` will be blocked in ${secsLeft} seconds.`;
+			let message = {
+				type: "alert",
+				text: text
+			};
+			browser.tabs.sendMessage(id, message).catch(function (e) { gTabs[id].warned = false; });
+		}
+	}
 }
 
 // Clock time spent on page
@@ -434,9 +464,9 @@ function updateTimeData(url, secsOpen, secsFocus) {
 	}
 }
 
-// Update timer widget
+// Update timer
 //
-function updateTimerWidget(id) {
+function updateTimer(id) {
 	if (!gTabs[id] || !gTabs[id].blockable || /^about/i.test(gTabs[id].url)) {
 		return;
 	}
@@ -449,9 +479,9 @@ function updateTimerWidget(id) {
 		location: gOptions["timerLocation"]
 	};
 	if (!gOptions["timerVisible"] || secsLeft == undefined || secsLeft == Infinity) {
-		message.text = null; // hide widget
+		message.text = null; // hide timer
 	} else {
-		message.text = formatTime(secsLeft); // show widget with time left
+		message.text = formatTime(secsLeft); // show timer with time left
 	}
 	browser.tabs.sendMessage(id, message).catch(function (e) {});
 }
@@ -801,7 +831,7 @@ function handleTabUpdated(tabId, changeInfo, tab) {
 
 	if (changeInfo.status && changeInfo.status == "complete") {
 		clockPageTime(tabId, true, focus);
-		updateTimerWidget(tabId);
+		updateTimer(tabId);
 	}
 }
 
@@ -811,7 +841,7 @@ function handleTabActivated(activeInfo) {
 	let focus = (!gFocusWindowId || activeInfo.windowId == gFocusWindowId);
 
 	clockPageTime(activeInfo.tabId, true, focus);
-	updateTimerWidget(activeInfo.tabId);
+	updateTimer(activeInfo.tabId);
 }
 
 function handleTabRemoved(tabId, removeInfo) {

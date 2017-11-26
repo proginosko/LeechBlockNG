@@ -15,7 +15,7 @@ var gAccessRequiredInput;
 function saveOptions() {
 	//log("saveOptions");
 
-	// Check format for text fields
+	// Check format for text fields in block sets
 	for (let set = 1; set <= NUM_SETS; set++) {
 		// Get field values
 		let times = document.querySelector(`#times${set}`).value;
@@ -46,7 +46,15 @@ function saveOptions() {
 			return;
 		}
 	}
-	
+
+	// Check format for text fields in general options
+	let warnSecs = document.querySelector("#warnSecs").value;
+	if (!checkPosIntFormat(warnSecs)) {
+		$("#tabs").tabs("option", "active", NUM_SETS);
+		$("#alertBadSeconds").dialog("open");
+		return;
+	}
+
 	let options = {};
 
 	for (let set = 1; set <= NUM_SETS; set++) {
@@ -104,6 +112,7 @@ function saveOptions() {
 	options["timerVisible"] = document.querySelector("#timerVisible").checked;
 	options["timerSize"] = document.querySelector("#timerSize").value;
 	options["timerLocation"] = document.querySelector("#timerLocation").value;
+	options["warnSecs"] = document.querySelector("#warnSecs").value;
 
 	browser.storage.local.set(options);
 
@@ -255,6 +264,7 @@ function retrieveOptions() {
 		document.querySelector("#timerVisible").checked = options["timerVisible"];
 		document.querySelector("#timerSize").value = options["timerSize"];
 		document.querySelector("#timerLocation").value = options["timerLocation"];
+		document.querySelector("#warnSecs").value = options["warnSecs"];
 
 		confirmAccess(options);
 	}
@@ -366,6 +376,7 @@ function exportOptions() {
 	options["timerVisible"] = document.querySelector("#timerVisible").checked;
 	options["timerSize"] = document.querySelector("#timerSize").value;
 	options["timerLocation"] = document.querySelector("#timerLocation").value;
+	options["warnSecs"] = document.querySelector("#warnSecs").value;
 
 	// Convert options to text lines
 	let lines = [];
@@ -539,6 +550,7 @@ function importOptions() {
 		let timerVisible = options["timerVisible"];
 		let timerSize = options["timerSize"];
 		let timerLocation = options["timerLocation"];
+		let warnSecs = options["warnSecs"];
 		if (oa != undefined) {
 			document.querySelector("#optionsAccess").value = oa;
 		}
@@ -556,6 +568,9 @@ function importOptions() {
 		}
 		if (timerLocation != undefined) {
 			document.querySelector("#timerLocation").value = timerLocation;
+		}
+		if (warnSecs != undefined) {
+			document.querySelector("#warnSecs").value = warnSecs;
 		}
 	}
 }

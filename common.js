@@ -107,6 +107,9 @@ function cleanOptions(options) {
 	if (typeof options["timerLocation"] !== "string") {
 		options["timerLocation"] = "0"; // default: top left
 	}
+	if (typeof options["warnSecs"] !== "string") {
+		options["warnSecs"] = ""; // default: no warning
+	}
 }
 
 // Clean time data
