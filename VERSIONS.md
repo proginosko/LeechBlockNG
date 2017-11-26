@@ -1,3 +1,7 @@
+### Version 0.6 (26 Nov 2017)
+* Added warning message option.
+* Under-the-hood improvements.
+
 ### Version 0.5.2 (24 Nov 2017)
 * Added popup to browser button.
 
