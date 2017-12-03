@@ -69,6 +69,9 @@ function cleanOptions(options) {
 		if (typeof options[`prevSupport${set}`] !== "boolean") {
 			options[`prevSupport${set}`] = false;
 		}
+		if (typeof options[`sitesURL${set}`] !== "string") {
+			options[`sitesURL${set}`] = "";
+		}
 		if (typeof options[`blockRE${set}`] !== "string") {
 			options[`blockRE${set}`] = "";
 		}

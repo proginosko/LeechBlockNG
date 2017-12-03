@@ -76,10 +76,64 @@ function retrieveOptions() {
 		gOptions = options;
 		gSetCounted = Array(NUM_SETS).fill(false);
 		refreshMenus();
+		loadSiteLists();
 	}
 
 	function onError(error) {
 		warn("Cannot get options: " + error);
+	}
+}
+
+// Load lists of sites if URLs specified
+//
+function loadSiteLists() {
+	//log("loadSiteLists");
+
+	let time = Date.now();
+
+	for (let set = 1; set <= NUM_SETS; set++) {
+		// Get sites for block set from HTTP source (if specified)
+		let sitesURL = gOptions[`sitesURL${set}`];
+		if (sitesURL) {
+			sitesURL = sitesURL.replace(/\$S/, set).replace(/\$T/, time);
+			try {
+				let req = new XMLHttpRequest();
+				req.set = set;
+				req.open("GET", sitesURL, true);
+				req.overrideMimeType("text/plain");
+				req.onload = onLoad;
+				req.send();
+			} catch (e) {
+				warn("Cannot load sites from URL: " + sitesURL);
+			}
+		}
+	}
+
+	function onLoad(event) {
+		let req = event.target;
+		if (req.readyState == XMLHttpRequest.DONE && req.status == 200) {
+			let set = req.set;
+			let sites = req.responseText;
+			sites = sites.replace(/\s+/g, " ").replace(/(^ +)|( +$)|(\w+:\/+)/g, "");
+			sites = sites.split(" ").sort().join(" "); // sort alphabetically
+
+			// Get regular expressions to match sites
+			let regexps = getRegExpSites(sites);
+
+			// Update options
+			gOptions[`sites${set}`] = sites;
+			gOptions[`blockRE${set}`] = regexps.blockRE;
+			gOptions[`allowRE${set}`] = regexps.allowRE;
+			gOptions[`keywordRE${set}`] = regexps.keywordRE;
+
+			// Save updated options to local storage
+			let options = {};
+			options[`sites${set}`] = sites;
+			options[`blockRE${set}`] = regexps.block;
+			options[`allowRE${set}`] = regexps.allow;
+			options[`keywordRE${set}`] = regexps.keyword;
+			browser.storage.local.set(options);
+		}
 	}
 }
 
@@ -92,7 +146,6 @@ function saveTimeData() {
 	for (let set = 1; set <= NUM_SETS; set++) {
 		options[`timedata${set}`] = gOptions[`timedata${set}`];
 	}
-
 	browser.storage.local.set(options);
 }
 

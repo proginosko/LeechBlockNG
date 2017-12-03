@@ -137,10 +137,10 @@
 						<p>
 							<button id="showAdvOpts1" type="button">Show Advanced Options</button>
 						</p>
-						<fieldset id="advOpts1" style="display: none;">
+						<fieldset id="advOpts1">
 							<legend>Advanced Options</legend>
 							<p>
-								<em>Be sure you understand the consequences of these options before selecting any of them!</em>
+								<em>Be sure you understand the consequences of these options before changing any of them!</em>
 							</p>
 							<hr>
 							<p>
@@ -154,6 +154,11 @@
 							<p>
 								<input id="prevSupport1" type="checkbox">
 								<label for="prevSupport1">Prevent access to about:support at times when these sites are blocked</label>
+							</p>
+							<hr>
+							<p>
+								<label>Load list of sites from URL:</label>
+								<div><input id="sitesURL1" type="text" size="60" title="Use $S to pass block set number and $T to pass UTC timestamp in milliseconds"></div>
 							</p>
 							<hr>
 							<p>

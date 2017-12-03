@@ -63,7 +63,6 @@ function saveOptions() {
 		let sites = document.querySelector(`#sites${set}`).value;
 		sites = sites.replace(/\s+/g, " ").replace(/(^ +)|( +$)|(\w+:\/+)/g, "");
 		sites = sites.split(" ").sort().join(" "); // sort alphabetically
-		//let sitesURL = document.querySelector(`#sitesURL${set}`).value;
 		let times = document.querySelector(`#times${set}`).value;
 		let limitMins = document.querySelector(`#limitMins${set}`).value;
 		let limitPeriod = document.querySelector(`#limitPeriod${set}`).value;
@@ -80,6 +79,7 @@ function saveOptions() {
 		let prevOpts = document.querySelector(`#prevOpts${set}`).checked;
 		let prevAddons = document.querySelector(`#prevAddons${set}`).checked;
 		let prevSupport = document.querySelector(`#prevSupport${set}`).checked;
+		let sitesURL = document.querySelector(`#sitesURL${set}`).value;
 
 		// Get regular expressions to match sites
 		let regexps = getRegExpSites(sites);
@@ -100,9 +100,16 @@ function saveOptions() {
 		options[`prevOpts${set}`] = prevOpts;
 		options[`prevAddons${set}`] = prevAddons;
 		options[`prevSupport${set}`] = prevSupport;
+		options[`sitesURL${set}`] = sitesURL;
 		options[`blockRE${set}`] = regexps.block;
 		options[`allowRE${set}`] = regexps.allow;
 		options[`keywordRE${set}`] = regexps.keyword;
+
+		// Request permission to load sites from URL
+		if (sitesURL) {
+			let permissions = { origins: ["<all_urls>"] };
+			browser.permissions.request(permissions);
+		}
 	}
 
 	// General options
@@ -229,6 +236,7 @@ function retrieveOptions() {
 			let prevOpts = options[`prevOpts${set}`];
 			let prevAddons = options[`prevAddons${set}`];
 			let prevSupport = options[`prevSupport${set}`];
+			let sitesURL = options[`sitesURL${set}`];
 			
 			// Apply custom set name to tab (if specified)
 			if (setName) {
@@ -255,6 +263,7 @@ function retrieveOptions() {
 			document.querySelector(`#prevOpts${set}`).checked = prevOpts;
 			document.querySelector(`#prevAddons${set}`).checked = prevAddons;
 			document.querySelector(`#prevSupport${set}`).checked = prevSupport;
+			document.querySelector(`#sitesURL${set}`).value = sitesURL;
 		}
 
 		// General options
@@ -350,6 +359,7 @@ function exportOptions() {
 		let prevOpts = document.querySelector(`#prevOpts${set}`).checked;
 		let prevAddons = document.querySelector(`#prevAddons${set}`).checked;
 		let prevSupport = document.querySelector(`#prevSupport${set}`).checked;
+		let sitesURL = document.querySelector(`#sitesURL${set}`).value;
 
 		// Set option values
 		options[`setName${set}`] = setName;
@@ -367,6 +377,7 @@ function exportOptions() {
 		options[`prevOpts${set}`] = prevOpts;
 		options[`prevAddons${set}`] = prevAddons;
 		options[`prevSupport${set}`] = prevSupport;
+		options[`sitesURL${set}`] = sitesURL;
 	}
 
 	// General options
@@ -441,6 +452,7 @@ function importOptions() {
 			let prevOpts = options[`prevOpts${set}`];
 			let prevAddons = options[`prevAddons${set}`];
 			let prevSupport = options[`prevSupport${set}`];
+			let sitesURL = options[`sitesURL${set}`];
 
 			// Set component values
 			if (setName != undefined) {
@@ -541,6 +553,12 @@ function importOptions() {
 					element.checked = isTrue(prevSupport);
 				}
 			}
+			if (sitesURL != undefined) {
+				let element = document.querySelector(`#sitesURL${set}`);
+				if (!element.disabled) {
+					element.value = sitesURL;
+				}
+			}
 		}
 
 		// General options
@@ -579,11 +597,12 @@ function importOptions() {
 //
 function disableSetOptions(set) {
 	let items = [
-		"setName", "sites", "times", "allDay", "limitMins", "limitPeriod", "conjMode",
+		"setName", "sites",
+		"times", "allDay", "limitMins", "limitPeriod", "conjMode",
 		"day0", "day1", "day2", "day3", "day4", "day5", "day6",
 		"blockURL", "defaultPage", "delayingPage", "blankPage", "homePage",
 		"activeBlock", "countFocus", "delayFirst", "delaySecs",
-		"prevOpts", "prevAddons", "prevSupport", "cancelLockdown"
+		"prevOpts", "prevAddons", "prevSupport", "sitesURL", "cancelLockdown"
 	];
 	for (let item of items) {
 		let element = document.querySelector(`#${item}${set}`);
@@ -659,13 +678,14 @@ for (let set = 1; set <= NUM_SETS; set++) {
 	$(`#homePage${set}`).click(function (e) { $(`#blockURL${set}`).val("about:home"); });
 	$(`#showAdvOpts${set}`).click(function (e) {
 		$(`#showAdvOpts${set}`).css("display", "none");
-		$(`#advOpts${set}`).css("display", "inline");
+		$(`#advOpts${set}`).css("display", "block");
 	});
 	$(`#cancelLockdown${set}`).click(function (e) {
 		browser.runtime.sendMessage({ type: "lockdown", set: set });
 		this.disabled = true;
 		$("#alertLockdownCancel").dialog("open");
 	});
+	$(`#advOpts${set}`).css("display", "none");
 }
 $("#exportOptions").click(exportOptions);
 $("#importOptions").click(importOptions);
