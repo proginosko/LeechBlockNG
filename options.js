@@ -26,22 +26,26 @@ function saveOptions() {
 		// Check field values
 		if (!checkTimePeriodsFormat(times)) {
 			$("#tabs").tabs("option", "active", (set - 1));
+			$(`#times${set}`).focus();
 			$("#alertBadTimes").dialog("open");
 			return;
 		}
 		if (!checkPosIntFormat(limitMins)) {
 			$("#tabs").tabs("option", "active", (set - 1));
+			$(`#limitMins${set}`).focus();
 			$("#alertBadTimeLimit").dialog("open");
 			return;
 		}
 		if (!delaySecs || !checkPosIntFormat(delaySecs)) {
 			$("#tabs").tabs("option", "active", (set - 1));
+			$(`#delaySecs${set}`).focus();
 			$("#alertBadSeconds").dialog("open");
 			return;
 		}
 		if (blockURL != DEFAULT_BLOCK_URL && blockURL != DELAYED_BLOCK_URL
 				&& !getParsedURL(blockURL).page) {
 			$("#tabs").tabs("option", "active", (set - 1));
+			$(`#blockURL${set}`).focus();
 			$("#alertBadBlockURL").dialog("open");
 			return;
 		}
