@@ -22,7 +22,6 @@ function saveOptions() {
 		let limitMins = document.querySelector(`#limitMins${set}`).value;
 		let delaySecs = document.querySelector(`#delaySecs${set}`).value;
 		let blockURL = document.querySelector(`#blockURL${set}`).value;
-		let parsedURL = getParsedURL(blockURL);
 
 		// Check field values
 		if (!checkTimePeriodsFormat(times)) {
@@ -40,7 +39,8 @@ function saveOptions() {
 			$("#alertBadSeconds").dialog("open");
 			return;
 		}
-		if (blockURL != DEFAULT_BLOCK_URL && blockURL != DELAYED_BLOCK_URL && !parsedURL.page) {
+		if (blockURL != DEFAULT_BLOCK_URL && blockURL != DELAYED_BLOCK_URL
+				&& !getParsedURL(blockURL).page) {
 			$("#tabs").tabs("option", "active", (set - 1));
 			$("#alertBadBlockURL").dialog("open");
 			return;
