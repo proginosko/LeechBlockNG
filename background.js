@@ -103,7 +103,7 @@ function loadSiteLists() {
 				req.overrideMimeType("text/plain");
 				req.onload = onLoad;
 				req.send();
-			} catch (e) {
+			} catch (error) {
 				warn("Cannot load sites from URL: " + sitesURL);
 			}
 		}
@@ -314,24 +314,37 @@ function checkTab(id, url, isRepeat) {
 			// Check lockdown condition
 			let lockdown = (timedata[4] > now);
 
-			// Check for keywords
-			//let keywords = (keywordRE == "") || checkKeywords(doc, keywordRE);
-			let keywords = true;
-
 			// Determine whether this page should now be blocked
 			let doBlock = lockdown
-					|| (!conjMode && (withinTimePeriods || afterTimeLimit) && keywords)
-					|| (conjMode && (withinTimePeriods && afterTimeLimit) && keywords);
+					|| (!conjMode && (withinTimePeriods || afterTimeLimit))
+					|| (conjMode && (withinTimePeriods && afterTimeLimit));
 
 			// Redirect page if all relevant block conditions are fulfilled
 			if (doBlock && (!isRepeat || activeBlock)) {
 				// Get final URL for block page
 				blockURL = blockURL.replace(/\$S/g, set).replace(/\$U/g, pageURL);
 
-				// Redirect page
-				browser.tabs.update(id, { url: blockURL });
+				if (keywordRE) {
+					// Check for keyword(s) before blocking
+					let message = {
+						type: "keyword",
+						keywordRE: keywordRE
+					};
+					browser.tabs.sendMessage(id, message).then(
+						function (keyword) {
+							if (keyword) {
+								// Redirect page
+								browser.tabs.update(id, { url: blockURL });
+							}
+						},
+						function (error) {}
+					);
+				} else {
+					// Redirect page
+					browser.tabs.update(id, { url: blockURL });
 
-				return true; // blocked
+					return true; // blocked
+				}
 			}
 
 			// Update seconds left before block
@@ -346,7 +359,7 @@ function checkTab(id, url, isRepeat) {
 	}
 
 	checkWarning(id);
-			
+
 	return false; // not blocked
 }
 
@@ -373,7 +386,9 @@ function checkWarning(id) {
 				type: "alert",
 				text: text
 			};
-			browser.tabs.sendMessage(id, message).catch(function (e) { gTabs[id].warned = false; });
+			browser.tabs.sendMessage(id, message).catch(
+				function (error) { gTabs[id].warned = false; }
+			);
 		}
 	}
 }
@@ -536,7 +551,7 @@ function updateTimer(id) {
 	} else {
 		message.text = formatTime(secsLeft); // show timer with time left
 	}
-	browser.tabs.sendMessage(id, message).catch(function (e) {});
+	browser.tabs.sendMessage(id, message).catch(function (error) {});
 }
 
 // Create info for blocking/delaying page
@@ -909,7 +924,7 @@ function handleBeforeNavigate(navDetails) {
 	clockPageTime(navDetails.tabId, false, false);
 
 	if (navDetails.frameId == 0) {
-		let blocked = checkTab(navDetails.tabId, navDetails.url, false);
+		checkTab(navDetails.tabId, navDetails.url, false);
 	}
 }
 

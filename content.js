@@ -120,13 +120,37 @@ function hideAlert() {
 	}
 }
 
+// Check page for keyword(s)
+//
+function checkKeyword(keywordRE) {
+	// Create regular expression (case insensitive)
+	let regexp = new RegExp(keywordRE, "i");
+
+	// Get all text nodes in document
+	let textNodes = document.evaluate(
+		"//text()", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+
+	//console.log("Checking " + textNodes.snapshotLength + " text node(s) for keyword(s)...");
+
+	for (let i = 0; i < textNodes.snapshotLength; i++) {
+		if (regexp.test(textNodes.snapshotItem(i).data)) {
+			return true; // keyword(s) found
+		}
+	}
+
+	return false; // keyword(s) not found
+}
+
 /*** EVENT HANDLERS BEGIN HERE ***/
 
-function handleMessage(message, sender) {
+function handleMessage(message, sender, sendResponse) {
 	if (message.type == "timer") {
 		updateTimer(message.text, message.size, message.location);
-	} else if (message.type = "alert") {
+	} else if (message.type == "alert") {
 		showAlert(message.text);
+	} else if (message.type == "keyword") {
+		let keyword = checkKeyword(message.keywordRE);
+		sendResponse(keyword);
 	}
 }
 
