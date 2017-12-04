@@ -371,7 +371,7 @@ function checkWarning(id) {
 		let secsLeft = Math.round(gTabs[id].secsLeft);
 		if (secsLeft > warnSecs) {
 			gTabs[id].warned = false;
-		} else if (!gTabs[id].warned) {
+		} else if (secsLeft > 0 && !gTabs[id].warned) {
 			gTabs[id].warned = true;
 
 			// Send message to tab
