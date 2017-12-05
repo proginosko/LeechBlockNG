@@ -56,6 +56,10 @@ function updateTimer(text, size, location) {
 			// Create timer
 			gTimer = document.createElement("div");
 			gTimer.setAttribute("style", TIMER_DEFAULT_STYLE);
+		}
+
+		if (!document.body.contains(gTimer)) {
+			// Insert timer at end of document body
 			document.body.appendChild(gTimer);
 		}
 
