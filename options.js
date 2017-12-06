@@ -55,6 +55,7 @@ function saveOptions() {
 	let warnSecs = document.querySelector("#warnSecs").value;
 	if (!checkPosIntFormat(warnSecs)) {
 		$("#tabs").tabs("option", "active", NUM_SETS);
+		$("warnSecs").focus();
 		$("#alertBadSeconds").dialog("open");
 		return;
 	}
