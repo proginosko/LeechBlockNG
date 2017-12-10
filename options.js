@@ -12,7 +12,7 @@ function getElement(id) { return document.getElementById(id); }
 var gAccessConfirmed = false;
 var gAccessRequiredInput;
 
-// Save options to local storage
+// Save options to local storage (returns true if success)
 //
 function saveOptions() {
 	//log("saveOptions");
@@ -30,26 +30,26 @@ function saveOptions() {
 			$("#tabs").tabs("option", "active", (set - 1));
 			$(`#times${set}`).focus();
 			$("#alertBadTimes").dialog("open");
-			return;
+			return false;
 		}
 		if (!checkPosIntFormat(limitMins)) {
 			$("#tabs").tabs("option", "active", (set - 1));
 			$(`#limitMins${set}`).focus();
 			$("#alertBadTimeLimit").dialog("open");
-			return;
+			return false;
 		}
 		if (!delaySecs || !checkPosIntFormat(delaySecs)) {
 			$("#tabs").tabs("option", "active", (set - 1));
 			$(`#delaySecs${set}`).focus();
 			$("#alertBadSeconds").dialog("open");
-			return;
+			return false;
 		}
 		if (blockURL != DEFAULT_BLOCK_URL && blockURL != DELAYED_BLOCK_URL
 				&& !getParsedURL(blockURL).page) {
 			$("#tabs").tabs("option", "active", (set - 1));
 			$(`#blockURL${set}`).focus();
 			$("#alertBadBlockURL").dialog("open");
-			return;
+			return false;
 		}
 	}
 
@@ -59,7 +59,7 @@ function saveOptions() {
 		$("#tabs").tabs("option", "active", NUM_SETS);
 		$("warnSecs").focus();
 		$("#alertBadSeconds").dialog("open");
-		return;
+		return false;
 	}
 
 	let options = {};
@@ -134,13 +134,16 @@ function saveOptions() {
 	browser.runtime.sendMessage({ type: "options" });
 
 	$("#form").hide({ effect: "fade", complete: retrieveOptions });
+
+	return true;
 }
 
 // Save options and close tab
 //
 function saveOptionsClose() {
-	saveOptions();
-	closeOptions();
+	if (saveOptions()) {
+		closeOptions();
+	}
 }
 
 // Close options tab
