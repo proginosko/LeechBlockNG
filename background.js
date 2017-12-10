@@ -909,8 +909,13 @@ function handleTabUpdated(tabId, changeInfo, tab) {
 	let focus = tab.active && (!gFocusWindowId || tab.windowId == gFocusWindowId);
 
 	if (changeInfo.status && changeInfo.status == "complete") {
-		clockPageTime(tabId, true, focus);
-		updateTimer(tabId);
+		clockPageTime(tab.id, true, focus);
+
+		let blocked = checkTab(tab.id, tab.url, false);
+
+		if (!blocked) {
+			updateTimer(tab.id);
+		}
 	}
 }
 
