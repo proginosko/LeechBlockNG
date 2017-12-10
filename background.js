@@ -833,7 +833,7 @@ function addSiteToSet(url, set) {
 	if (patterns.indexOf(site) < 0) {
 		// Get sorted list of sites including new one
 		patterns.push(site);
-		sites = patterns.sort().join(" ");
+		sites = patterns.sort().join(" ").replace(/(^ +)|( +$)/g, "");
 
 		// Get regular expressions to match sites
 		let regexps = getRegExpSites(sites);
