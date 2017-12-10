@@ -7,6 +7,8 @@ const DEFAULT_OPTIONS_FILE = "LeechBlockOptions.txt";
 function log(message) { console.log("[LBNG] " + message); }
 function warn(message) { console.warn("[LBNG] " + message); }
 
+function getElement(id) { return document.getElementById(id); }
+
 var gAccessConfirmed = false;
 var gAccessRequiredInput;
 
@@ -18,10 +20,10 @@ function saveOptions() {
 	// Check format for text fields in block sets
 	for (let set = 1; set <= NUM_SETS; set++) {
 		// Get field values
-		let times = document.querySelector(`#times${set}`).value;
-		let limitMins = document.querySelector(`#limitMins${set}`).value;
-		let delaySecs = document.querySelector(`#delaySecs${set}`).value;
-		let blockURL = document.querySelector(`#blockURL${set}`).value;
+		let times = getElement(`times${set}`).value;
+		let limitMins = getElement(`limitMins${set}`).value;
+		let delaySecs = getElement(`delaySecs${set}`).value;
+		let blockURL = getElement(`blockURL${set}`).value;
 
 		// Check field values
 		if (!checkTimePeriodsFormat(times)) {
@@ -52,7 +54,7 @@ function saveOptions() {
 	}
 
 	// Check format for text fields in general options
-	let warnSecs = document.querySelector("#warnSecs").value;
+	let warnSecs = getElement("warnSecs").value;
 	if (!checkPosIntFormat(warnSecs)) {
 		$("#tabs").tabs("option", "active", NUM_SETS);
 		$("warnSecs").focus();
@@ -64,27 +66,27 @@ function saveOptions() {
 
 	for (let set = 1; set <= NUM_SETS; set++) {
 		// Get component values
-		let setName = document.querySelector(`#setName${set}`).value;
-		let sites = document.querySelector(`#sites${set}`).value;
+		let setName = getElement(`setName${set}`).value;
+		let sites = getElement(`sites${set}`).value;
 		sites = sites.replace(/\s+/g, " ").replace(/(^ +)|( +$)|(\w+:\/+)/g, "");
 		sites = sites.split(" ").sort().join(" "); // sort alphabetically
-		let times = document.querySelector(`#times${set}`).value;
-		let limitMins = document.querySelector(`#limitMins${set}`).value;
-		let limitPeriod = document.querySelector(`#limitPeriod${set}`).value;
-		let conjMode = document.querySelector(`#conjMode${set}`).selectedIndex == 1;
+		let times = getElement(`times${set}`).value;
+		let limitMins = getElement(`limitMins${set}`).value;
+		let limitPeriod = getElement(`limitPeriod${set}`).value;
+		let conjMode = getElement(`conjMode${set}`).selectedIndex == 1;
 		let days = [];
 		for (let i = 0; i < 7; i++) {
-			days.push(document.querySelector(`#day${i}${set}`).checked);
+			days.push(getElement(`day${i}${set}`).checked);
 		}
-		let blockURL = document.querySelector(`#blockURL${set}`).value;
-		let activeBlock = document.querySelector(`#activeBlock${set}`).checked;
-		let countFocus = document.querySelector(`#countFocus${set}`).checked;
-		let delayFirst = document.querySelector(`#delayFirst${set}`).checked;
-		let delaySecs = document.querySelector(`#delaySecs${set}`).value;
-		let prevOpts = document.querySelector(`#prevOpts${set}`).checked;
-		let prevAddons = document.querySelector(`#prevAddons${set}`).checked;
-		let prevSupport = document.querySelector(`#prevSupport${set}`).checked;
-		let sitesURL = document.querySelector(`#sitesURL${set}`).value;
+		let blockURL = getElement(`blockURL${set}`).value;
+		let activeBlock = getElement(`activeBlock${set}`).checked;
+		let countFocus = getElement(`countFocus${set}`).checked;
+		let delayFirst = getElement(`delayFirst${set}`).checked;
+		let delaySecs = getElement(`delaySecs${set}`).value;
+		let prevOpts = getElement(`prevOpts${set}`).checked;
+		let prevAddons = getElement(`prevAddons${set}`).checked;
+		let prevSupport = getElement(`prevSupport${set}`).checked;
+		let sitesURL = getElement(`sitesURL${set}`).value;
 
 		// Get regular expressions to match sites
 		let regexps = getRegExpSites(sites);
@@ -118,13 +120,13 @@ function saveOptions() {
 	}
 
 	// General options
-	options["oa"] = document.querySelector("#optionsAccess").value;
-	options["password"] = document.querySelector("#accessPassword").value;
-	options["hpp"] = document.querySelector("#hidePassword").checked;
-	options["timerVisible"] = document.querySelector("#timerVisible").checked;
-	options["timerSize"] = document.querySelector("#timerSize").value;
-	options["timerLocation"] = document.querySelector("#timerLocation").value;
-	options["warnSecs"] = document.querySelector("#warnSecs").value;
+	options["oa"] = getElement("optionsAccess").value;
+	options["password"] = getElement("accessPassword").value;
+	options["hpp"] = getElement("hidePassword").checked;
+	options["timerVisible"] = getElement("timerVisible").checked;
+	options["timerSize"] = getElement("timerSize").value;
+	options["timerLocation"] = getElement("timerLocation").value;
+	options["warnSecs"] = getElement("warnSecs").value;
 
 	browser.storage.local.set(options);
 
@@ -169,7 +171,7 @@ function retrieveOptions() {
 		for (let set = 1; set <= NUM_SETS; set++) {
 			let timedata = options[`timedata${set}`];
 			let lockdown = (timedata[4] > now);
-			document.querySelector(`#cancelLockdown${set}`).disabled = !lockdown;
+			getElement(`cancelLockdown${set}`).disabled = !lockdown;
 		}
 
 		// Check whether access to options should be prevented
@@ -245,40 +247,40 @@ function retrieveOptions() {
 			
 			// Apply custom set name to tab (if specified)
 			if (setName) {
-				document.querySelector(`#blockSetName${set}`).innerText = setName;
+				getElement(`blockSetName${set}`).innerText = setName;
 			} else {
-				document.querySelector(`#blockSetName${set}`).innerText = `Block Set ${set}`;
+				getElement(`blockSetName${set}`).innerText = `Block Set ${set}`;
 			}
 
 			// Set component values
-			document.querySelector(`#setName${set}`).value = setName;
-			document.querySelector(`#sites${set}`).value = sites;
-			document.querySelector(`#times${set}`).value = times;
-			document.querySelector(`#limitMins${set}`).value = limitMins;
-			document.querySelector(`#limitPeriod${set}`).value = limitPeriod;
-			document.querySelector(`#conjMode${set}`).selectedIndex = conjMode ? 1 : 0;
+			getElement(`setName${set}`).value = setName;
+			getElement(`sites${set}`).value = sites;
+			getElement(`times${set}`).value = times;
+			getElement(`limitMins${set}`).value = limitMins;
+			getElement(`limitPeriod${set}`).value = limitPeriod;
+			getElement(`conjMode${set}`).selectedIndex = conjMode ? 1 : 0;
 			for (let i = 0; i < 7; i++) {
-				document.querySelector(`#day${i}${set}`).checked = days[i];
+				getElement(`day${i}${set}`).checked = days[i];
 			}
-			document.querySelector(`#blockURL${set}`).value = blockURL;
-			document.querySelector(`#activeBlock${set}`).checked = activeBlock;
-			document.querySelector(`#countFocus${set}`).checked = countFocus;
-			document.querySelector(`#delayFirst${set}`).checked = delayFirst;
-			document.querySelector(`#delaySecs${set}`).value = delaySecs;
-			document.querySelector(`#prevOpts${set}`).checked = prevOpts;
-			document.querySelector(`#prevAddons${set}`).checked = prevAddons;
-			document.querySelector(`#prevSupport${set}`).checked = prevSupport;
-			document.querySelector(`#sitesURL${set}`).value = sitesURL;
+			getElement(`blockURL${set}`).value = blockURL;
+			getElement(`activeBlock${set}`).checked = activeBlock;
+			getElement(`countFocus${set}`).checked = countFocus;
+			getElement(`delayFirst${set}`).checked = delayFirst;
+			getElement(`delaySecs${set}`).value = delaySecs;
+			getElement(`prevOpts${set}`).checked = prevOpts;
+			getElement(`prevAddons${set}`).checked = prevAddons;
+			getElement(`prevSupport${set}`).checked = prevSupport;
+			getElement(`sitesURL${set}`).value = sitesURL;
 		}
 
 		// General options
-		document.querySelector("#optionsAccess").value = options["oa"];
-		document.querySelector("#accessPassword").value = options["password"];
-		document.querySelector("#hidePassword").checked = options["hpp"];
-		document.querySelector("#timerVisible").checked = options["timerVisible"];
-		document.querySelector("#timerSize").value = options["timerSize"];
-		document.querySelector("#timerLocation").value = options["timerLocation"];
-		document.querySelector("#warnSecs").value = options["warnSecs"];
+		getElement("optionsAccess").value = options["oa"];
+		getElement("accessPassword").value = options["password"];
+		getElement("hidePassword").checked = options["hpp"];
+		getElement("timerVisible").checked = options["timerVisible"];
+		getElement("timerSize").value = options["timerSize"];
+		getElement("timerLocation").value = options["timerLocation"];
+		getElement("warnSecs").value = options["warnSecs"];
 
 		confirmAccess(options);
 	}
@@ -346,26 +348,26 @@ function exportOptions() {
 
 	for (let set = 1; set <= NUM_SETS; set++) {
 		// Get component values
-		let setName = document.querySelector(`#setName${set}`).value;
-		let sites = document.querySelector(`#sites${set}`).value;
+		let setName = getElement(`setName${set}`).value;
+		let sites = getElement(`sites${set}`).value;
 		sites = sites.replace(/\s+/g, " ").replace(/(^ +)|( +$)|(\w+:\/+)/g, "");
-		let times = document.querySelector(`#times${set}`).value;
-		let limitMins = document.querySelector(`#limitMins${set}`).value;
-		let limitPeriod = document.querySelector(`#limitPeriod${set}`).value;
-		let conjMode = document.querySelector(`#conjMode${set}`).selectedIndex == 1;
+		let times = getElement(`times${set}`).value;
+		let limitMins = getElement(`limitMins${set}`).value;
+		let limitPeriod = getElement(`limitPeriod${set}`).value;
+		let conjMode = getElement(`conjMode${set}`).selectedIndex == 1;
 		let days = [];
 		for (let i = 0; i < 7; i++) {
-			days.push(document.querySelector(`#day${i}${set}`).checked);
+			days.push(getElement(`day${i}${set}`).checked);
 		}
-		let blockURL = document.querySelector(`#blockURL${set}`).value;
-		let activeBlock = document.querySelector(`#activeBlock${set}`).checked;
-		let countFocus = document.querySelector(`#countFocus${set}`).checked;
-		let delayFirst = document.querySelector(`#delayFirst${set}`).checked;
-		let delaySecs = document.querySelector(`#delaySecs${set}`).value;
-		let prevOpts = document.querySelector(`#prevOpts${set}`).checked;
-		let prevAddons = document.querySelector(`#prevAddons${set}`).checked;
-		let prevSupport = document.querySelector(`#prevSupport${set}`).checked;
-		let sitesURL = document.querySelector(`#sitesURL${set}`).value;
+		let blockURL = getElement(`blockURL${set}`).value;
+		let activeBlock = getElement(`activeBlock${set}`).checked;
+		let countFocus = getElement(`countFocus${set}`).checked;
+		let delayFirst = getElement(`delayFirst${set}`).checked;
+		let delaySecs = getElement(`delaySecs${set}`).value;
+		let prevOpts = getElement(`prevOpts${set}`).checked;
+		let prevAddons = getElement(`prevAddons${set}`).checked;
+		let prevSupport = getElement(`prevSupport${set}`).checked;
+		let sitesURL = getElement(`sitesURL${set}`).value;
 
 		// Set option values
 		options[`setName${set}`] = setName;
@@ -387,13 +389,13 @@ function exportOptions() {
 	}
 
 	// General options
-	options["oa"] = document.querySelector("#optionsAccess").value;
-	options["password"] = document.querySelector("#accessPassword").value;
-	options["hpp"] = document.querySelector("#hidePassword").checked;
-	options["timerVisible"] = document.querySelector("#timerVisible").checked;
-	options["timerSize"] = document.querySelector("#timerSize").value;
-	options["timerLocation"] = document.querySelector("#timerLocation").value;
-	options["warnSecs"] = document.querySelector("#warnSecs").value;
+	options["oa"] = getElement("optionsAccess").value;
+	options["password"] = getElement("accessPassword").value;
+	options["hpp"] = getElement("hidePassword").checked;
+	options["timerVisible"] = getElement("timerVisible").checked;
+	options["timerSize"] = getElement("timerSize").value;
+	options["timerLocation"] = getElement("timerLocation").value;
+	options["warnSecs"] = getElement("warnSecs").value;
 
 	// Convert options to text lines
 	let lines = [];
@@ -410,7 +412,7 @@ function exportOptions() {
 // Import options
 //
 function importOptions() {
-	let file = document.querySelector("#importFile").files[0];
+	let file = getElement("importFile").files[0];
 	if (!file) {
 		$("#alertNoImportFile").dialog("open");
 		return;
@@ -462,42 +464,42 @@ function importOptions() {
 
 			// Set component values
 			if (setName != undefined) {
-				let element = document.querySelector(`#setName${set}`);
+				let element = getElement(`setName${set}`);
 				if (!element.disabled) {
 					element.value = setName;
 					if (setName) {
-						document.querySelector(`#blockSetName${set}`).innerText = setName;
+						getElement(`blockSetName${set}`).innerText = setName;
 					} else {
-						document.querySelector(`#blockSetName${set}`).innerText = `Block Set ${set}`;
+						getElement(`blockSetName${set}`).innerText = `Block Set ${set}`;
 					}
 				}
 			}
 			if (sites != undefined) {
-				let element = document.querySelector(`#sites${set}`);
+				let element = getElement(`sites${set}`);
 				if (!element.disabled) {
 					element.value = sites.replace(/\s+/g, "\n");
 				}
 			}
 			if (times != undefined) {
-				let element = document.querySelector(`#times${set}`);
+				let element = getElement(`times${set}`);
 				if (!element.disabled) {
 					element.value = times;
 				}
 			}
 			if (limitMins != undefined) {
-				let element = document.querySelector(`#limitMins${set}`);
+				let element = getElement(`limitMins${set}`);
 				if (!element.disabled) {
 					element.value = limitMins;
 				}
 			}
 			if (limitPeriod != undefined) {
-				let element = document.querySelector(`#limitPeriod${set}`);
+				let element = getElement(`limitPeriod${set}`);
 				if (!element.disabled) {
 					element.value = limitPeriod;
 				}
 			}
 			if (conjMode != undefined) {
-				let element = document.querySelector(`#conjMode${set}`);
+				let element = getElement(`conjMode${set}`);
 				if (!element.disabled) {
 					element.selectedIndex = isTrue(conjMode) ? 1 : 0;
 				}
@@ -505,62 +507,62 @@ function importOptions() {
 			if (days != undefined) {
 				days = decodeDays(days);
 				for (let i = 0; i < 7; i++) {
-					let element = document.querySelector(`#day${i}${set}`);
+					let element = getElement(`day${i}${set}`);
 					if (!element.disabled) {
 						element.checked = days[i];
 					}
 				}
 			}
 			if (blockURL != undefined) {
-				let element = document.querySelector(`#blockURL${set}`);
+				let element = getElement(`blockURL${set}`);
 				if (!element.disabled) {
 					element.value = blockURL;
 				}
 			}
 			if (activeBlock != undefined) {
-				let element = document.querySelector(`#activeBlock${set}`);
+				let element = getElement(`activeBlock${set}`);
 				if (!element.disabled) {
 					element.checked = isTrue(activeBlock);
 				}
 			}
 			if (countFocus != undefined) {
-				let element = document.querySelector(`#countFocus${set}`);
+				let element = getElement(`countFocus${set}`);
 				if (!element.disabled) {
 					element.checked = isTrue(countFocus);
 				}
 			}
 			if (delayFirst != undefined) {
-				let element = document.querySelector(`#delayFirst${set}`);
+				let element = getElement(`delayFirst${set}`);
 				if (!element.disabled) {
 					element.checked = isTrue(delayFirst);
 				}
 			}
 			if (delaySecs != undefined) {
-				let element = document.querySelector(`#delaySecs${set}`);
+				let element = getElement(`delaySecs${set}`);
 				if (!element.disabled) {
 					element.value = delaySecs;
 				}
 			}
 			if (prevOpts != undefined) {
-				let element = document.querySelector(`#prevOpts${set}`);
+				let element = getElement(`prevOpts${set}`);
 				if (!element.disabled) {
 					element.checked = isTrue(prevOpts);
 				}
 			}
 			if (prevAddons != undefined) {
-				let element = document.querySelector(`#prevAddons${set}`);
+				let element = getElement(`prevAddons${set}`);
 				if (!element.disabled) {
 					element.checked = isTrue(prevAddons);
 				}
 			}
 			if (prevSupport != undefined) {
-				let element = document.querySelector(`#prevSupport${set}`);
+				let element = getElement(`prevSupport${set}`);
 				if (!element.disabled) {
 					element.checked = isTrue(prevSupport);
 				}
 			}
 			if (sitesURL != undefined) {
-				let element = document.querySelector(`#sitesURL${set}`);
+				let element = getElement(`sitesURL${set}`);
 				if (!element.disabled) {
 					element.value = sitesURL;
 				}
@@ -576,25 +578,25 @@ function importOptions() {
 		let timerLocation = options["timerLocation"];
 		let warnSecs = options["warnSecs"];
 		if (oa != undefined) {
-			document.querySelector("#optionsAccess").value = oa;
+			getElement("optionsAccess").value = oa;
 		}
 		if (password != undefined) {
-			document.querySelector("#accessPassword").value = password;
+			getElement("accessPassword").value = password;
 		}
 		if (hpp != undefined) {
-			document.querySelector("#hidePassword").checked = hpp;
+			getElement("hidePassword").checked = hpp;
 		}
 		if (timerVisible != undefined) {
-			document.querySelector("#timerVisible").checked = timerVisible;
+			getElement("timerVisible").checked = timerVisible;
 		}
 		if (timerSize != undefined) {
-			document.querySelector("#timerSize").value = timerSize;
+			getElement("timerSize").value = timerSize;
 		}
 		if (timerLocation != undefined) {
-			document.querySelector("#timerLocation").value = timerLocation;
+			getElement("timerLocation").value = timerLocation;
 		}
 		if (warnSecs != undefined) {
-			document.querySelector("#warnSecs").value = warnSecs;
+			getElement("warnSecs").value = warnSecs;
 		}
 	}
 }
@@ -611,7 +613,7 @@ function disableSetOptions(set) {
 		"prevOpts", "prevAddons", "prevSupport", "sitesURL", "cancelLockdown"
 	];
 	for (let item of items) {
-		let element = document.querySelector(`#${item}${set}`);
+		let element = getElement(`${item}${set}`);
 		if (element) {
 			element.disabled = true;
 		}

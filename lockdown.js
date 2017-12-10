@@ -5,6 +5,8 @@
 function log(message) { console.log("[LBNG] " + message); }
 function warn(message) { console.warn("[LBNG] " + message); }
 
+function getElement(id) { return document.getElementById(id); }
+
 // Initialize form
 //
 function initializeForm() {
@@ -15,24 +17,24 @@ function initializeForm() {
 	function onGot(options) {
 		let lockdownHours = options["lockdownHours"];
 		if (lockdownHours > 0) {
-			document.querySelector("#hours").value = lockdownHours;
+			getElement("hours").value = lockdownHours;
 		}
 
 		let lockdownMins = options["lockdownMins"];
 		if (lockdownMins > 0) {
-			document.querySelector("#mins").value = lockdownMins;
+			getElement("mins").value = lockdownMins;
 		}
 
 		for (let set = 1; set <= NUM_SETS; set++) {
 			let lockdown = options[`lockdown${set}`];
 			if (lockdown) {
-				document.querySelector(`#blockSet${set}`).checked = lockdown;
+				getElement(`blockSet${set}`).checked = lockdown;
 			}
 
 			// Append custom set name to check box label (if specified)
 			let setName = options[`setName${set}`];
 			if (setName) {
-				document.querySelector(`#blockSetLabel${set}`).innerText += ` (${setName})`;
+				getElement(`blockSetLabel${set}`).innerText += ` (${setName})`;
 			}
 		}
 	}
@@ -48,8 +50,8 @@ function onActivate() {
 	//log("onActivate");
 
 	// Get lockdown duration
-	let hours = document.querySelector("#hours").value;
-	let mins = document.querySelector("#mins").value;
+	let hours = getElement("hours").value;
+	let mins = getElement("mins").value;
 	let duration = hours * 3600 + mins * 60;
 
 	if (!duration || duration < 0) {
@@ -63,7 +65,7 @@ function onActivate() {
 	// Request lockdown for each selected set
 	let noneSelected = true;
 	for (let set = 1; set <= NUM_SETS; set++) {
-		let selected = document.querySelector(`#blockSet${set}`).checked;
+		let selected = getElement(`blockSet${set}`).checked;
 		if (selected) {
 			noneSelected = false;
 			let message = {
@@ -86,7 +88,7 @@ function onActivate() {
 	options["lockdownHours"] = hours;
 	options["lockdownMins"] = mins;
 	for (let set = 1; set <= NUM_SETS; set++) {
-		options[`lockdown${set}`] = document.querySelector(`#blockSet${set}`).checked;
+		options[`lockdown${set}`] = getElement(`blockSet${set}`).checked;
 	}
 	browser.storage.local.set(options);
 
