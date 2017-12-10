@@ -285,6 +285,7 @@ function retrieveOptions() {
 
 	function onError(error) {
 		warn("Cannot get options: " + error);
+		$("#alertRetrieveError").dialog("open");
 	}
 }
 
