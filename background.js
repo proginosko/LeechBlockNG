@@ -4,6 +4,7 @@
 
 const TICK_TIME = (1 / 60); // update every second
 
+var gGotOptions = false;
 var gOptions = {};
 var gTabs = [];
 var gSetCounted = [];
@@ -71,15 +72,17 @@ function retrieveOptions() {
 	browser.storage.local.get().then(onGot, onError);
 
 	function onGot(options) {
-		cleanOptions(options);
-		cleanTimeData(options);
-		gOptions = options;
+		gGotOptions = true;
+		gOptions = Object.assign({}, options); // clone
+		cleanOptions(gOptions);
+		cleanTimeData(gOptions);
 		gSetCounted = Array(NUM_SETS).fill(false);
 		refreshMenus();
 		loadSiteLists();
 	}
 
 	function onError(error) {
+		gGotOptions = false;
 		warn("Cannot get options: " + error);
 	}
 }
@@ -141,6 +144,10 @@ function loadSiteLists() {
 //
 function saveTimeData() {
 	//log("saveTimeData");
+
+	if (!gGotOptions) {
+		return;
+	}
 
 	let options = {};
 	for (let set = 1; set <= NUM_SETS; set++) {
@@ -810,6 +817,10 @@ function addSiteToSet(url, set) {
 		return;
 	}
 
+	if (!gGotOptions) {
+		return;
+	}
+
 	// Get parsed URL for this page
 	let parsedURL = getParsedURL(url);
 
@@ -937,12 +948,14 @@ function handleWinFocused(winId) {
 function handleAlarm(alarm) {
 	//log("handleAlarm: " + alarm.name);
 
-	processTabs();
+	if (!gGotOptions) {
+		retrieveOptions();
+	} else {
+		processTabs();
+	}
 }
 
 /*** STARTUP CODE BEGINS HERE ***/
-
-retrieveOptions();
 
 browser.alarms.onAlarm.addListener(handleAlarm);
 browser.alarms.create("LBNG", { periodInMinutes: TICK_TIME });
