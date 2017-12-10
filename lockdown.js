@@ -41,6 +41,7 @@ function initializeForm() {
 
 	function onError(error) {
 		warn("Cannot get options: " + error);
+		$("#alertRetrieveError").dialog("open");
 	}
 }
 
@@ -122,16 +123,15 @@ $("#activate").click(onActivate);
 $("#cancel").button();
 $("#cancel").click(onCancel);
 
-let alerts = ["alertNoDuration", "alertNoSets"];
-for (let alert of alerts) {
-	$(`#${alert}`).dialog({
-		autoOpen: false,
-		modal: true,
-		buttons: {
-			OK: function() { $(this).dialog("close"); }
-		}
-	});
-}
+// Initialize alert dialogs
+$("div[id^='alert']").dialog({
+	autoOpen: false,
+	modal: true,
+	width: 500,
+	buttons: {
+		OK: function () { $(this).dialog("close"); }
+	}
+});
 
 $("#form").show();
 
