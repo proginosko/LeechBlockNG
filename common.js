@@ -116,6 +116,9 @@ function cleanOptions(options) {
 	if (typeof options["warnSecs"] !== "string") {
 		options["warnSecs"] = ""; // default: no warning
 	}
+	if (typeof options["contextMenu"] !== "boolean") {
+		options["contextMenu"] = true; // default: enabled
+	}
 	if (typeof options["lockdownHours"] !== "string") {
 		options["lockdownHours"] = ""; // default: blank
 	}

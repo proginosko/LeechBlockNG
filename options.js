@@ -127,6 +127,7 @@ function saveOptions() {
 	options["timerSize"] = getElement("timerSize").value;
 	options["timerLocation"] = getElement("timerLocation").value;
 	options["warnSecs"] = getElement("warnSecs").value;
+	options["contextMenu"] = getElement("contextMenu").checked;
 
 	browser.storage.local.set(options);
 
@@ -284,6 +285,7 @@ function retrieveOptions() {
 		getElement("timerSize").value = options["timerSize"];
 		getElement("timerLocation").value = options["timerLocation"];
 		getElement("warnSecs").value = options["warnSecs"];
+		getElement("contextMenu").checked = options["contextMenu"];
 
 		confirmAccess(options);
 	}
@@ -399,6 +401,7 @@ function exportOptions() {
 	options["timerSize"] = getElement("timerSize").value;
 	options["timerLocation"] = getElement("timerLocation").value;
 	options["warnSecs"] = getElement("warnSecs").value;
+	options["contextMenu"] = getElement("contextMenu").checked;
 
 	// Convert options to text lines
 	let lines = [];
@@ -580,6 +583,7 @@ function importOptions() {
 		let timerSize = options["timerSize"];
 		let timerLocation = options["timerLocation"];
 		let warnSecs = options["warnSecs"];
+		let contextMenu = options["contextMenu"];
 		if (oa != undefined) {
 			getElement("optionsAccess").value = oa;
 		}
@@ -600,6 +604,9 @@ function importOptions() {
 		}
 		if (warnSecs != undefined) {
 			getElement("warnSecs").value = warnSecs;
+		}
+		if (contextMenu != undefined) {
+			getElement("contextMenu").checked = contextMenu;
 		}
 	}
 }

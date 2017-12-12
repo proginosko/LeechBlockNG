@@ -22,30 +22,32 @@ function refreshMenus() {
 
 	browser.menus.removeAll();
 
+	let context = gOptions["contextMenu"] ? "all" : "browser_action";
+
 	// Options
 	browser.menus.create({
 		id: "options",
 		title: "Options",
-		contexts: ["all", "tools_menu"]
+		contexts: [context, "tools_menu"]
 	});
 
 	// Lockdown
 	browser.menus.create({
 		id: "lockdown",
 		title: "Lockdown",
-		contexts: ["all", "tools_menu"]
+		contexts: [context, "tools_menu"]
 	});
 
 	browser.menus.create({
 		type: "separator",
-		contexts: ["all"]
+		contexts: [context]
 	});
 
 	// Add Site
 	browser.menus.create({
 		id: "addSite",
 		title: "Add Site",
-		contexts: ["all"]
+		contexts: [context]
 	});
 
 	// Add Site submenu
@@ -59,7 +61,7 @@ function refreshMenus() {
 			id: `addSite-${set}`,
 			parentId: "addSite",
 			title: title,
-			contexts: ["all", "tools_menu"]
+			contexts: [context, "tools_menu"]
 		});
 	}
 }
