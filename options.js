@@ -129,7 +129,9 @@ function saveOptions() {
 	options["warnSecs"] = getElement("warnSecs").value;
 	options["contextMenu"] = getElement("contextMenu").checked;
 
-	browser.storage.local.set(options);
+	browser.storage.local.set(options).catch(
+		function (error) { warn("Cannot set options: " + error); }
+	);
 
 	// Notify extension that options have been updated
 	browser.runtime.sendMessage({ type: "options" });

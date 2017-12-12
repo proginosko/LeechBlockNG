@@ -137,7 +137,9 @@ function loadSiteLists() {
 			options[`blockRE${set}`] = regexps.block;
 			options[`allowRE${set}`] = regexps.allow;
 			options[`keywordRE${set}`] = regexps.keyword;
-			browser.storage.local.set(options);
+			browser.storage.local.set(options).catch(
+				function (error) { warn("Cannot set options: " + error); }
+			);
 		}
 	}
 }
@@ -155,7 +157,9 @@ function saveTimeData() {
 	for (let set = 1; set <= NUM_SETS; set++) {
 		options[`timedata${set}`] = gOptions[`timedata${set}`];
 	}
-	browser.storage.local.set(options);
+	browser.storage.local.set(options).catch(
+		function (error) { warn("Cannot set options: " + error); }
+	);
 }
 
 // Update ID of focused window
@@ -852,7 +856,9 @@ function addSiteToSet(url, set) {
 		options[`blockRE${set}`] = regexps.block;
 		options[`allowRE${set}`] = regexps.allow;
 		options[`keywordRE${set}`] = regexps.keyword;
-		browser.storage.local.set(options);
+		browser.storage.local.set(options).catch(
+			function (error) { warn("Cannot set options: " + error); }
+		);
 	}	
 }
 
