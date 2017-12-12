@@ -127,9 +127,9 @@ function loadSiteLists() {
 
 			// Update options
 			gOptions[`sites${set}`] = sites;
-			gOptions[`blockRE${set}`] = regexps.blockRE;
-			gOptions[`allowRE${set}`] = regexps.allowRE;
-			gOptions[`keywordRE${set}`] = regexps.keywordRE;
+			gOptions[`blockRE${set}`] = regexps.block;
+			gOptions[`allowRE${set}`] = regexps.allow;
+			gOptions[`keywordRE${set}`] = regexps.keyword;
 
 			// Save updated options to local storage
 			let options = {};
