@@ -1,3 +1,10 @@
+### Version 0.7 (13 Dec 2017)
+* Added "Load sites from URL" option.
+* Added option to show/hide context menu.
+* Added keyword-based blocking (experimental feature).
+* Changed behavior of delaying page to match legacy version.
+* Various bug fixes and under-the-hood improvements.
+
 ### Version 0.6 (26 Nov 2017)
 * Added warning message option.
 * Under-the-hood improvements.
