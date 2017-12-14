@@ -7,12 +7,12 @@
 function processBlockInfo(info) {
 	if (!info) return;
 
-	let blockedURLSpan = document.getElementById("leechblockBlockedURLSpan");
-	if (info.blockedURL && blockedURLSpan) {
+	let blockedURL = document.getElementById("leechblockBlockedURL");
+	if (info.blockedURL && blockedURL) {
 		if (info.blockedURL.length > 60) {
-			blockedURLSpan.innerText = info.blockedURL.substring(0, 57) + "...";
+			blockedURL.innerText = info.blockedURL.substring(0, 57) + "...";
 		} else {
-			blockedURLSpan.innerText = info.blockedURL;
+			blockedURL.innerText = info.blockedURL;
 		}
 	}
 
@@ -21,23 +21,23 @@ function processBlockInfo(info) {
 		blockedURLLink.setAttribute("href", info.blockedURL);
 	}
 
-	let blockedSetSpan = document.getElementById("leechblockBlockedSetSpan");
-	if (info.blockedSet && info.blockedSetName && blockedSetSpan) {
+	let blockedSet = document.getElementById("leechblockBlockedSet");
+	if (info.blockedSet && info.blockedSetName && blockedSet) {
 		if (info.blockedSetName != "") {
-			blockedSetSpan.innerText = info.blockedSetName;
+			blockedSet.innerText = info.blockedSetName;
 		} else {
-			blockedSetSpan.innerText += " " + info.blockedSet;
+			blockedSet.innerText += " " + info.blockedSet;
 		}
 	}
 
-	let unblockTimeSpan = document.getElementById("leechblockUnblockTimeSpan");
-	if (info.unblockTime && unblockTimeSpan) {
-		unblockTimeSpan.innerText = info.unblockTime;
+	let unblockTime = document.getElementById("leechblockUnblockTime");
+	if (info.unblockTime && unblockTime) {
+		unblockTime.innerText = info.unblockTime;
 	}
 
-	let delaySecsSpan = document.getElementById("leechblockDelaySecondsSpan");
-	if (info.delaySecs && delaySecsSpan) {
-		delaySecsSpan.innerText = info.delaySecs;
+	let delaySecs = document.getElementById("leechblockDelaySeconds");
+	if (info.delaySecs && delaySecs) {
+		delaySecs.innerText = info.delaySecs;
 
 		// Start countdown timer
 		let countdown = {
@@ -52,15 +52,26 @@ function processBlockInfo(info) {
 // Handle countdown on delaying page
 //
 function onCountdownTimer(countdown) {
-	// Advance countdown if document has focus
-	if (document.hasFocus()) {
-		countdown.delaySecs--;
+	// Cancel countdown if document not focused
+	if (!document.hasFocus()) {
+		// Clear countdown timer
+		window.clearInterval(countdown.interval);
+
+		// Strike through countdown text
+		let countdownText = document.getElementById("leechblockCountdownText");
+		if (countdownText) {
+			countdownText.style.textDecoration = "line-through";
+		}
+
+		return;
 	}
 
+	countdown.delaySecs--;
+
 	// Update countdown seconds on page
-	let delaySecsSpan = document.getElementById("leechblockDelaySecondsSpan");
-	if (delaySecsSpan) {
-		delaySecsSpan.innerText = countdown.delaySecs;
+	let delaySecs = document.getElementById("leechblockDelaySeconds");
+	if (delaySecs) {
+		delaySecs.innerText = countdown.delaySecs;
 	}
 
 	if (countdown.delaySecs == 0) {
