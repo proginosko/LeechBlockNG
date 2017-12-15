@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-const TICK_TIME = (1 / 60); // update every second
+const TICK_TIME = 1000; // update every second
 
 var gGotOptions = false;
 var gOptions = {};
@@ -958,8 +958,8 @@ function handleWinFocused(winId) {
 	gFocusWindowId = winId;
 }
 
-function handleAlarm(alarm) {
-	//log("handleAlarm: " + alarm.name);
+function onInterval() {
+	//log("onInterval");
 
 	if (!gGotOptions) {
 		retrieveOptions();
@@ -969,9 +969,6 @@ function handleAlarm(alarm) {
 }
 
 /*** STARTUP CODE BEGINS HERE ***/
-
-browser.alarms.onAlarm.addListener(handleAlarm);
-browser.alarms.create("LBNG", { periodInMinutes: TICK_TIME });
 
 if (browser.menus) {
 	browser.menus.onClicked.addListener(handleMenuClick);
@@ -989,3 +986,5 @@ browser.webNavigation.onBeforeNavigate.addListener(handleBeforeNavigate);
 if (browser.windows) {
 	browser.windows.onFocusChanged.addListener(handleWinFocused);
 }
+
+window.setInterval(onInterval, TICK_TIME);
