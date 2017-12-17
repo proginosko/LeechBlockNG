@@ -434,7 +434,7 @@ function importOptions() {
 	function processImportFile(event) {
 		let text = event.target.result;
 		if (!text) {
-			warn("Cannot import options from file.");
+			$("#alertImportError").dialog("open");
 			return;
 		}
 
@@ -444,11 +444,18 @@ function importOptions() {
 		let regexp = /^(\w+)=(.*)$/;
 		let lines = text.split(/[\n\r]+/);
 		let options = {};
+		let hasOptions = false;
 		for (let line of lines) {
 			let results = regexp.exec(line);
 			if (results) {
 				options[results[1]] = results[2];
+				hasOptions = true;
 			}
+		}
+
+		if (!hasOptions) {
+			$("#alertImportError").dialog("open");
+			return;
 		}
 
 		for (let set = 1; set <= NUM_SETS; set++) {
@@ -610,6 +617,8 @@ function importOptions() {
 		if (contextMenu != undefined) {
 			getElement("contextMenu").checked = contextMenu;
 		}
+
+		$("#alertImportSuccess").dialog("open");
 	}
 }
 
