@@ -198,7 +198,7 @@ function retrieveOptions() {
 
 				// Check time periods
 				let withinTimePeriods = false;
-				if (onSelectedDay && times != "") {
+				if (onSelectedDay && times) {
 					// Get number of minutes elapsed since midnight
 					let mins = timedate.getHours() * 60 + timedate.getMinutes();
 
@@ -212,7 +212,7 @@ function retrieveOptions() {
 
 				// Check time limit
 				let afterTimeLimit = false;
-				if (onSelectedDay && limitMins != "" && limitPeriod != "") {
+				if (onSelectedDay && limitMins && limitPeriod) {
 					// Check time period and time limit
 					if (timedata[2] == periodStart && timedata[3] >= (limitMins * 60)) {
 						afterTimeLimit = true;
