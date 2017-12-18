@@ -263,7 +263,7 @@ function checkTab(id, url, isRepeat) {
 	for (let set = 1; set <= NUM_SETS; set++) {
 		// Get regular expressions for matching sites to block/allow
 		let blockRE = gOptions[`blockRE${set}`];
-		if (blockRE == "") continue; // no block for this set
+		if (!blockRE) continue; // no block for this set
 		let allowRE = gOptions[`allowRE${set}`];
 		let keywordRE = gOptions[`keywordRE${set}`];
 
@@ -292,7 +292,7 @@ function checkTab(id, url, isRepeat) {
 
 			// Check time periods
 			let secsLeftBeforePeriod = Infinity;
-			if (onSelectedDay && times != "") {
+			if (onSelectedDay && times) {
 				// Get number of minutes elapsed since midnight
 				let mins = timedate.getHours() * 60 + timedate.getMinutes();
 
@@ -312,7 +312,7 @@ function checkTab(id, url, isRepeat) {
 
 			// Check time limit
 			let secsLeftBeforeLimit = Infinity;
-			if (onSelectedDay && limitMins != "" && limitPeriod != "") {
+			if (onSelectedDay && limitMins && limitPeriod) {
 				// Compute exact seconds before this time limit expires
 				secsLeftBeforeLimit = limitMins * 60;
 				if (timedata[2] == periodStart) {
@@ -476,7 +476,7 @@ function updateTimeData(url, secsOpen, secsFocus) {
 	for (let set = 1; set <= NUM_SETS; set++) {
 		// Get regular expressions for matching sites to block/allow
 		let blockRE = gOptions[`blockRE${set}`];
-		if (blockRE == "") continue; // no block for this set
+		if (!blockRE) continue; // no block for this set
 		let allowRE = gOptions[`allowRE${set}`];
 
 		// Test URL against block/allow regular expressions
@@ -685,7 +685,7 @@ function getUnblockTime(set) {
 	}
 
 	let timePeriods = (times != "");
-	let timeLimit = (limitMins != "" && limitPeriod != "");
+	let timeLimit = (limitMins && limitPeriod);
 
 	if (timePeriods && !timeLimit) {
 		// Case 1: within time periods (no time limit)

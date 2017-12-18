@@ -23,7 +23,7 @@ function processBlockInfo(info) {
 
 	let blockedSet = document.getElementById("leechblockBlockedSet");
 	if (info.blockedSet && info.blockedSetName && blockedSet) {
-		if (info.blockedSetName != "") {
+		if (info.blockedSetName) {
 			blockedSet.innerText = info.blockedSetName;
 		} else {
 			blockedSet.innerText += " " + info.blockedSet;
