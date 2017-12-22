@@ -1,3 +1,7 @@
+### Version 0.7.1 (21 Dec 2017)
+* Added "About" pane to options page.
+* User interface tweaks.
+
 ### Version 0.7 (13 Dec 2017)
 * Added "Load sites from URL" option.
 * Added option to show/hide context menu.
