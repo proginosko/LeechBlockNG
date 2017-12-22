@@ -10,15 +10,26 @@ body {
 	font-size: 14px;
 }
 
-hr {
-	background-color: #888;
-	color: #888;
-	border: none;
-	height: 1px;
+.ui-widget hr {
+	height: 0px;
+	margin: 0px;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom: 1px solid #888;
 }
 
-legend {
+.ui-widget legend {
 	font-weight: bold;
+}
+
+.ui-widget a {
+    color: #2ca089;
+    text-decoration: none;
+}
+
+.ui-widget a:hover {
+    text-decoration: underline;
 }
 
 #form-container {
@@ -29,6 +40,12 @@ legend {
 
 #tabs {
 	display: inline-block;
+}
+
+#paneAbout {
+	color: #2e3436;
+	text-align: center;
+	line-height: 1.5em;
 }
 
 #promptAccessCodeText {

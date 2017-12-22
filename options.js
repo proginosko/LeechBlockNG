@@ -694,7 +694,7 @@ for (let set = 2; set <= NUM_SETS; set++) {
 	let nextSetHTML = setHTML
 			.replace(/(id|for)="(\w+)1"/g, `$1="$2${set}"`);
 	$("#tabGeneral").before(`<li id="tabBlockSet${set}">${nextTabHTML}</li>`);
-	$("#generalOptions").before(`<div id="blockSet${set}">${nextSetHTML}</div>`);
+	$("#paneGeneral").before(`<div id="blockSet${set}">${nextSetHTML}</div>`);
 }
 
 // Set up JQuery UI widgets
