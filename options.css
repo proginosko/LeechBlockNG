@@ -32,6 +32,11 @@ body {
     text-decoration: underline;
 }
 
+.ui-widget th, td {
+	text-align: center;
+	padding: 4px 12px;
+}
+
 #form-container {
 	display: flex;
 	justify-content: center;

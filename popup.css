@@ -9,6 +9,7 @@ body {
 
 #button-container {
 	display: inline-block;
+	width: 150px;
 }
 
 button {

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html lang="us">
+
+	<head>
+		<meta charset="utf-8">
+		<title>LeechBlock Statistics</title>
+		<link href="jquery-ui/jquery-ui.min.css" rel="stylesheet">
+		<link href="options.css" rel="stylesheet">
+		<link href="icons/leechblock16.ico" rel="icon" type="image/x-icon">
+		<link href="icons/leechblock16.ico" rel="shortcut icon" type="image/x-icon">
+	</head>
+
+	<body>
+
+		<div id="form-container">
+
+			<form id="form" style="display: none;">
+
+				<fieldset class="ui-widget ui-widget-content">
+					<legend>LeechBlock Statistics</legend>
+					<table id="statsTable" border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
+						<tr id="statsRow0">
+							<th>Block Set</th>
+							<th>Start Date/Time</th>
+							<th>Time Spent<br>Since Start</th>
+							<th>Time Spent<br>Per Week</th>
+							<th>Time Spent<br>Per Day</th>
+							<th>Time Left in<br>Limit Period</th>
+							<th><button id="restartAll" type="button">Restart All</button></th>
+						</tr>
+						<tr id="statsRow1">
+							<td id="blockSetName1">Block Set 1</td>
+							<td id="startTime1">N/A</td>
+							<td id="totalTime1">N/A</td>
+							<td id="perWeekTime1">N/A</td>
+							<td id="perDayTime1">N/A</td>
+							<td id="timeLeft1">N/A</td>
+							<td><button id="restart1" type="button">Restart</button></td>
+						</tr>
+					</table>
+				</fieldset>
+
+			</form>
+
+		</div>
+
+		<script src="jquery-ui/external/jquery/jquery.js"></script>
+		<script src="jquery-ui/jquery-ui.min.js"></script>
+	    <script src="common.js"></script>
+	    <script src="stats.js"></script>
+
+	</body>
+
+</html>
