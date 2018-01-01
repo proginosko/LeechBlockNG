@@ -77,13 +77,13 @@ function handleClick(e) {
 
 	if (id == "restartAll") {
 		// Request restart time data for all sets
-		browser.runtime.sendMessage({ type: "restart", set: 0 });
+		let message = { type: "restart", set: 0 };
+		browser.runtime.sendMessage(message).then(statsRefresh);
 	} else if (/restart\d+/.test(id)) {
 		// Request restart time data for specific set
-		browser.runtime.sendMessage({ type: "restart", set: +id.substr(7) });
+		let message = { type: "restart", set: +id.substr(7) };
+		browser.runtime.sendMessage(message).then(statsRefresh);
 	}
-
-	window.setTimeout(statsRefresh, 100);
 }
 
 /*** STARTUP CODE BEGINS HERE ***/

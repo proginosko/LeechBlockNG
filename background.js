@@ -939,6 +939,7 @@ function handleMessage(message, sender, sendResponse) {
 	} else if (message.type == "restart") {
 		// Restart time data requested by statistics page
 		restartTimeData(message.set);
+		sendResponse();
 	} else if (message.type == "blocked") {
 		// Block info requested by blocking/delaying page
 		let info = createBlockInfo(sender.url);
