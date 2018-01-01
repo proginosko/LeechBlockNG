@@ -72,6 +72,12 @@ function cleanOptions(options) {
 		if (typeof options[`sitesURL${set}`] !== "string") {
 			options[`sitesURL${set}`] = "";
 		}
+		if (typeof options[`regexpBlock${set}`] !== "string") {
+			options[`regexpBlock${set}`] = "";
+		}
+		if (typeof options[`regexpAllow${set}`] !== "string") {
+			options[`regexpAllow${set}`] = "";
+		}
 		if (typeof options[`blockRE${set}`] !== "string") {
 			options[`blockRE${set}`] = "";
 		}

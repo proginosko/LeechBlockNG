@@ -295,9 +295,9 @@ function checkTab(id, url, isRepeat) {
 
 	for (let set = 1; set <= NUM_SETS; set++) {
 		// Get regular expressions for matching sites to block/allow
-		let blockRE = gOptions[`blockRE${set}`];
+		let blockRE = gOptions[`regexpBlock${set}`] || gOptions[`blockRE${set}`];
 		if (!blockRE) continue; // no block for this set
-		let allowRE = gOptions[`allowRE${set}`];
+		let allowRE = gOptions[`regexpAllow${set}`] || gOptions[`allowRE${set}`];
 		let keywordRE = gOptions[`keywordRE${set}`];
 
 		// Get options for preventing access to about:addons and about:support
@@ -508,9 +508,9 @@ function updateTimeData(url, secsOpen, secsFocus) {
 
 	for (let set = 1; set <= NUM_SETS; set++) {
 		// Get regular expressions for matching sites to block/allow
-		let blockRE = gOptions[`blockRE${set}`];
+		let blockRE = gOptions[`regexpBlock${set}`] || gOptions[`blockRE${set}`];
 		if (!blockRE) continue; // no block for this set
-		let allowRE = gOptions[`allowRE${set}`];
+		let allowRE = gOptions[`regexpAllow${set}`] || gOptions[`allowRE${set}`];
 
 		// Test URL against block/allow regular expressions
 		if (testURL(pageURL, blockRE, allowRE)) {

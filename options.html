@@ -163,6 +163,24 @@
 								<div><input id="sitesURL1" type="text" size="60" title="Use $S to pass block set number and $T to pass UTC timestamp in milliseconds">
 								&nbsp;&nbsp;<a href="http://www.proginosko.com/leechblock/faq/load-from-url/" target="_blank">What does this do?</a></div>
 							</p>
+							<p>
+								<label>Use <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank">regular expression</a>
+								to match URLs to <strong>block</strong> (overrides list of sites):</label>
+								<div>
+									<input id="regexpBlock1" type="text" size="60">
+									<button id="clearRegExpBlock1" type="button">Clear</button>
+									<button id="genRegExpBlock1" type="button">Generate From Site List</button>
+								</div>
+							</p>
+							<p>
+								<label>Use <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank">regular expression</a>
+								to match URLs to <strong>allow</strong> (overrides exceptions in list of sites):</label>
+								<div>
+									<input id="regexpAllow1" type="text" size="60">
+									<button id="clearRegExpAllow1" type="button">Clear</button>
+									<button id="genRegExpAllow1" type="button">Generate From Site List</button>
+								</div>
+							</p>
 							<hr>
 							<p>
 								<button id="cancelLockdown1" type="button" disabled="true">Cancel Active Lockdown</button>
