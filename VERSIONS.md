@@ -1,3 +1,8 @@
+### Version 0.8 (05 Jan 2018)
+* Added statistics page.
+* Added options to use regular expressions to block/allow URLs.
+* Added new wildcard option (\*+ matches one or more characters).
+
 ### Version 0.7.1 (21 Dec 2017)
 * Added "About" pane to options page.
 * User interface tweaks.
