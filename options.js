@@ -130,6 +130,7 @@ function saveOptions() {
 	options["timerVisible"] = getElement("timerVisible").checked;
 	options["timerSize"] = getElement("timerSize").value;
 	options["timerLocation"] = getElement("timerLocation").value;
+	options["timerBadge"] = getElement("timerBadge").checked;
 	options["warnSecs"] = getElement("warnSecs").value;
 	options["contextMenu"] = getElement("contextMenu").checked;
 
@@ -294,6 +295,7 @@ function retrieveOptions() {
 		getElement("timerVisible").checked = options["timerVisible"];
 		getElement("timerSize").value = options["timerSize"];
 		getElement("timerLocation").value = options["timerLocation"];
+		getElement("timerBadge").checked = options["timerBadge"];
 		getElement("warnSecs").value = options["warnSecs"];
 		getElement("contextMenu").checked = options["contextMenu"];
 
@@ -414,6 +416,7 @@ function exportOptions() {
 	options["timerVisible"] = getElement("timerVisible").checked;
 	options["timerSize"] = getElement("timerSize").value;
 	options["timerLocation"] = getElement("timerLocation").value;
+	options["timerBadge"] = getElement("timerBadge").checked;
 	options["warnSecs"] = getElement("warnSecs").value;
 	options["contextMenu"] = getElement("contextMenu").checked;
 
@@ -617,6 +620,7 @@ function importOptions() {
 		let timerVisible = options["timerVisible"];
 		let timerSize = options["timerSize"];
 		let timerLocation = options["timerLocation"];
+		let timerBadge= options["timerBadge"];
 		let warnSecs = options["warnSecs"];
 		let contextMenu = options["contextMenu"];
 		if (oa != undefined) {
@@ -636,6 +640,9 @@ function importOptions() {
 		}
 		if (timerLocation != undefined) {
 			getElement("timerLocation").value = timerLocation;
+		}
+		if (timerBadge != undefined) {
+			getElement("timerBadge").checked = timerBadge;
 		}
 		if (warnSecs != undefined) {
 			getElement("warnSecs").value = warnSecs;

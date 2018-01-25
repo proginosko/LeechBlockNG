@@ -215,9 +215,9 @@
 							<legend>Countdown Timer</legend>
 							<p>
 								<input id="timerVisible" type="checkbox">
-								<label for="timerVisible">Show timer</label>
+								<label for="timerVisible">Show timer over page</label>
 								&nbsp;&nbsp;&nbsp;&nbsp;
-								<label>Timer size:</label>
+								<label>Size:</label>
 								<select id="timerSize">
 									<option value="0">small</option>
 									<option value="1">medium</option>
@@ -225,13 +225,17 @@
 									<option value="3">extra large</option>
 								</select>
 								&nbsp;&nbsp;&nbsp;&nbsp;
-								<label>Timer location:</label>
+								<label>Location:</label>
 								<select id="timerLocation">
 									<option value="0">top left</option>
 									<option value="1">top right</option>
 									<option value="2">bottom right</option>
 									<option value="3">bottom left</option>
 								</select>
+							</p>
+							<p>
+								<input id="timerBadge" type="checkbox">
+								<label for="timerBadge">Show timer as icon badge (if time left is less than 10 minutes)</label>
 							</p>
 						</fieldset>
 						<fieldset>

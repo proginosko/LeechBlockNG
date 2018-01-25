@@ -598,6 +598,17 @@ function updateTimer(id) {
 		message.text = formatTime(secsLeft); // show timer with time left
 	}
 	browser.tabs.sendMessage(id, message).catch(function (error) {});
+
+	// Set badge timer (if option selected)
+	if (gOptions["timerBadge"] && secsLeft < 600) {
+		let m = Math.floor(secsLeft / 60);
+		let s = Math.floor(secsLeft) % 60;
+		let text = m + ":" + ((s < 10) ? "0" + s : s);
+		browser.browserAction.setBadgeBackgroundColor({ color: "#666" });
+		browser.browserAction.setBadgeText({ text: text, tabId: id });
+	} else {
+		browser.browserAction.setBadgeText({ text: "", tabId: id });
+	}
 }
 
 // Create info for blocking/delaying page
