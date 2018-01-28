@@ -279,12 +279,6 @@ function checkTab(id, url, isRepeat) {
 		gTabs[id].allowedPath = null;
 	}
 
-	// Get URL without hash part (unless it's a hash-bang part)
-	let pageURL = parsedURL.page;
-	if (parsedURL.hash != null && /^!/.test(parsedURL.hash)) {
-		pageURL += "#" + parsedURL.hash;
-	}
-
 	// Get current time/date
 	let timedate = new Date();
 
@@ -294,6 +288,14 @@ function checkTab(id, url, isRepeat) {
 	gTabs[id].secsLeft = Infinity;
 
 	for (let set = 1; set <= NUM_SETS; set++) {
+		// Get URL of page (possibly with hash part)
+		let pageURL = parsedURL.page;
+		if (parsedURL.hash != null) {
+			if (/^!/.test(parsedURL.hash) || !gOptions[`ignoreHash${set}`]) {
+				pageURL += "#" + parsedURL.hash;
+			}
+		}
+
 		// Get regular expressions for matching sites to block/allow
 		let blockRE = gOptions[`regexpBlock${set}`] || gOptions[`blockRE${set}`];
 		if (!blockRE) continue; // no block for this set

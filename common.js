@@ -87,6 +87,9 @@ function cleanOptions(options) {
 		if (typeof options[`keywordRE${set}`] !== "string") {
 			options[`keywordRE${set}`] = "";
 		}
+		if (typeof options[`ignoreHash${set}`] !== "boolean") {
+			options[`ignoreHash${set}`] = true;
+		}
 		if (typeof options[`lockdown${set}`] !== "boolean") {
 			options[`lockdown${set}`] = false;
 		}
