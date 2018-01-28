@@ -1,3 +1,7 @@
+### Version 0.8.1 (28 Jan 2018)
+* Added option to show timer as icon badge (enabled by default).
+* Added option to ignore/include URL fragment (hash part).
+
 ### Version 0.8 (05 Jan 2018)
 * Added statistics page.
 * Added options to use regular expressions to block/allow URLs.
