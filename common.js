@@ -123,7 +123,7 @@ function cleanOptions(options) {
 		options["timerLocation"] = "0"; // default: top left
 	}
 	if (typeof options["timerBadge"] !== "boolean") {
-		options["timerBadge"] = false; // default: disabled
+		options["timerBadge"] = true; // default: enabled
 	}
 	if (typeof options["warnSecs"] !== "string") {
 		options["warnSecs"] = ""; // default: no warning
