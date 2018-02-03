@@ -289,7 +289,6 @@ function checkTab(id, url, isRepeat) {
 
 	// Get override end time
 	let overrideEndTime = gOptions["oret"];
-	let overrideActive = (overrideEndTime > now);
 
 	gTabs[id].secsLeft = Infinity;
 
@@ -301,10 +300,6 @@ function checkTab(id, url, isRepeat) {
 				pageURL += "#" + parsedURL.hash;
 			}
 		}
-
-		// Check for override
-		let allowOverride = gOptions[`allowOverride${set}`];
-		if (overrideActive && allowOverride) continue; // no block for this set
 
 		// Get regular expressions for matching sites to block/allow
 		let blockRE = gOptions[`regexpBlock${set}`] || gOptions[`blockRE${set}`];
@@ -331,6 +326,7 @@ function checkTab(id, url, isRepeat) {
 			let days = gOptions[`days${set}`];
 			let blockURL = gOptions[`blockURL${set}`];
 			let activeBlock = gOptions[`activeBlock${set}`];
+			let allowOverride = gOptions[`allowOverride${set}`];
 
 			// Check day
 			let onSelectedDay = days[timedate.getDay()];
@@ -372,13 +368,16 @@ function checkTab(id, url, isRepeat) {
 			// Check lockdown condition
 			let lockdown = (timedata[4] > now);
 
+			// Check override condition
+			let override = (overrideEndTime > now) && allowOverride;
+
 			// Determine whether this page should now be blocked
 			let doBlock = lockdown
 					|| (!conjMode && (withinTimePeriods || afterTimeLimit))
 					|| (conjMode && (withinTimePeriods && afterTimeLimit));
 
 			// Redirect page if all relevant block conditions are fulfilled
-			if (doBlock && (!isRepeat || activeBlock)) {
+			if (!override && doBlock && (!isRepeat || activeBlock)) {
 				// Get final URL for block page
 				blockURL = blockURL.replace(/\$S/g, set).replace(/\$U/g, pageURL);
 
@@ -409,6 +408,9 @@ function checkTab(id, url, isRepeat) {
 			let secsLeft = conjMode
 					? (secsLeftBeforePeriod + secsLeftBeforeLimit)
 					: Math.min(secsLeftBeforePeriod, secsLeftBeforeLimit);
+			if (override) {
+				secsLeft = (overrideEndTime - now);
+			}
 			if (secsLeft < gTabs[id].secsLeft) {
 				gTabs[id].secsLeft = secsLeft;
 				gTabs[id].secsLeftSet = set;
