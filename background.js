@@ -409,7 +409,7 @@ function checkTab(id, url, isRepeat) {
 					? (secsLeftBeforePeriod + secsLeftBeforeLimit)
 					: Math.min(secsLeftBeforePeriod, secsLeftBeforeLimit);
 			if (override) {
-				secsLeft = (overrideEndTime - now);
+				secsLeft = Math.max(secsLeft, overrideEndTime - now);
 			}
 			if (secsLeft < gTabs[id].secsLeft) {
 				gTabs[id].secsLeft = secsLeft;
