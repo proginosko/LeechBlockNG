@@ -135,6 +135,10 @@
 							<p>
 								Delay access to sites by <input id="delaySecs1" type="text" size="2"> seconds when delaying page is used
 							</p>
+							<p>
+								<input id="allowOverride1" type="checkbox">
+								<label for="allowOverride1">Allow temporary override for these sites</label>
+							</p>
 						</fieldset>
 						<p>
 							<button id="showAdvOpts1" type="button">Show Advanced Options</button>
@@ -240,6 +244,24 @@
 							<p>
 								<input id="timerBadge" type="checkbox">
 								<label for="timerBadge">Show timer as icon badge (if time left is less than 10 minutes)</label>
+							</p>
+						</fieldset>
+						<fieldset>
+							<legend>Temporary Override</legend>
+							<p>
+								Allow blocking to be suspended for a period of <input id="overrideMins" type="text" size="2" title="Leave blank for no override"> minutes
+							</p>
+							<p>
+								<label>Select the requirement for activating the override:</label><br>
+								<div>
+									<select id="overrideAccess">
+										<option value="0">Don't require the user to enter any password or access code</option>
+										<option value="1">Require the user to enter the access control password</option>
+										<option value="2">Require the user to enter a random 32-character access code</option>
+										<option value="3">Require the user to enter a random 64-character access code</option>
+										<option value="4">Require the user to enter a random 128-character access code</option>
+									</select>
+								</div>
 							</p>
 						</fieldset>
 						<fieldset>

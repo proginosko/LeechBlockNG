@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html lang="us">
+
+	<head>
+		<meta charset="utf-8">
+		<title>LeechBlock Override</title>
+		<link href="jquery-ui/jquery-ui.min.css" rel="stylesheet">
+		<link href="options.css" rel="stylesheet">
+		<link href="icons/leechblock16.ico" rel="icon" type="image/x-icon">
+		<link href="icons/leechblock16.ico" rel="shortcut icon" type="image/x-icon">
+	</head>
+
+	<body>
+
+		<div id="alerts" style="display: none;">
+			<div id="alertRetrieveError" title="LeechBlock Override">
+				<p><strong>Error:</strong> Unable to retrieve options from browser storage.</p>
+			</div>
+			<div id="alertNoOverride" title="LeechBlock Override">
+				<p>Override unavailable. No override period has been set in the options.</p>
+			</div>
+			<div id="alertOverrideActivated" title="LeechBlock Override">
+				<p>Override activated. Blocking will be suspended until <strong><span id="alertOverrideEndTime"></span></strong>.</p>
+			</div>
+		</div>
+
+		<div id="prompts" style="display: none;">
+			<div id="promptPassword" title="LeechBlock Override">
+				<p>Enter the password to activate override:</p>
+				<p><input id="promptPasswordInput" type="text" size="60"></p>
+			</div>
+			<div id="promptAccessCode" title="LeechBlock Override">
+				<p>Enter the following code to activate override:</p>
+				<p id="promptAccessCodeText"></p>
+				<p><input id="promptAccessCodeInput" type="text" size="64"></p>
+			</div>
+		</div>
+
+		<script src="jquery-ui/external/jquery/jquery.js"></script>
+		<script src="jquery-ui/jquery-ui.min.js"></script>
+	    <script src="common.js"></script>
+	    <script src="override.js"></script>
+
+	</body>
+
+</html>

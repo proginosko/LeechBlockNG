@@ -9,6 +9,7 @@ var gOptions = {};
 var gTabs = [];
 var gSetCounted = [];
 var gFocusWindowId = 0;
+var gOverrideIcon = false;
 
 function log(message) { console.log("[LBNG] " + message); }
 function warn(message) { console.warn("[LBNG] " + message); }
@@ -88,6 +89,7 @@ function retrieveOptions() {
 		gSetCounted = Array(NUM_SETS).fill(false);
 		refreshMenus();
 		loadSiteLists();
+		updateIcon();
 	}
 
 	function onError(error) {
@@ -285,6 +287,10 @@ function checkTab(id, url, isRepeat) {
 	// Get current time in seconds
 	let now = Math.floor(Date.now() / 1000);
 
+	// Get override end time
+	let overrideEndTime = gOptions["oret"];
+	let overrideActive = (overrideEndTime > now);
+
 	gTabs[id].secsLeft = Infinity;
 
 	for (let set = 1; set <= NUM_SETS; set++) {
@@ -295,6 +301,10 @@ function checkTab(id, url, isRepeat) {
 				pageURL += "#" + parsedURL.hash;
 			}
 		}
+
+		// Check for override
+		let allowOverride = gOptions[`allowOverride${set}`];
+		if (overrideActive && allowOverride) continue; // no block for this set
 
 		// Get regular expressions for matching sites to block/allow
 		let blockRE = gOptions[`regexpBlock${set}`] || gOptions[`blockRE${set}`];
@@ -613,6 +623,25 @@ function updateTimer(id) {
 	}
 }
 
+// Update button icon
+//
+function updateIcon() {
+	// Get current time in seconds
+	let now = Math.floor(Date.now() / 1000);
+
+	// Get override end time
+	let overrideEndTime = gOptions["oret"];
+
+	// Change icon only if override status has changed
+	if (!gOverrideIcon && overrideEndTime > now) {
+		browser.browserAction.setIcon({ path: OVERRIDE_ICON });
+		gOverrideIcon = true;
+	} else if (gOverrideIcon && overrideEndTime <= now) {
+		browser.browserAction.setIcon({ path: DEFAULT_ICON });
+		gOverrideIcon = false;
+	}
+}
+
 // Create info for blocking/delaying page
 //
 function createBlockInfo(url) {
@@ -826,6 +855,34 @@ function cancelLockdown(set) {
 	gOptions[`timedata${set}`][4] = 0;
 }
 
+// Apply override
+//
+function applyOverride() {
+	//log("applyOverride");
+
+	if (!gGotOptions) {
+		return;
+	}
+
+	let overrideMins = gOptions["orm"];
+	if (overrideMins) {
+		// Calculate end time
+		let overrideEndTime = Math.floor(Date.now() / 1000) + (overrideMins * 60);
+
+		// Update option
+		gOptions["oret"] = overrideEndTime;
+
+		// Save updated option to local storage
+		let options = {};
+		options["oret"] = overrideEndTime;
+		browser.storage.local.set(options).catch(
+			function (error) { warn("Cannot set options: " + error); }
+		);
+
+		updateIcon();
+	}
+}
+
 // Open extension page (either create new tab or activate existing tab)
 //
 function openExtensionPage(url) {
@@ -949,6 +1006,9 @@ function handleMessage(message, sender, sendResponse) {
 			// Lockdown requested
 			applyLockdown(message.set, message.endTime);
 		}
+	} else if (message.type == "override") {
+		// Override requested
+		applyOverride();
 	} else if (message.type == "restart") {
 		// Restart time data requested by statistics page
 		restartTimeData(message.set);
@@ -1021,6 +1081,7 @@ function onInterval() {
 		retrieveOptions();
 	} else {
 		processTabs();
+		updateIcon();
 	}
 }
 
