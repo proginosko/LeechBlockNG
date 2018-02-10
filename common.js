@@ -128,9 +128,9 @@ function cleanOptions(options) {
 	if (typeof options["warnSecs"] !== "string") {
 		options["warnSecs"] = ""; // default: no warning
 	}
-    if (typeof options["warnImmediate"] !== "boolean") {
-        options["warnImmediate"] = true; // default: warn only when for immediate block
-    }
+	if (typeof options["warnImmediate"] !== "boolean") {
+		options["warnImmediate"] = true; // default: warn only when for immediate block
+	}
 	if (typeof options["contextMenu"] !== "boolean") {
 		options["contextMenu"] = true; // default: enabled
 	}

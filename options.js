@@ -134,7 +134,7 @@ function saveOptions() {
 	options["timerLocation"] = getElement("timerLocation").value;
 	options["timerBadge"] = getElement("timerBadge").checked;
 	options["warnSecs"] = getElement("warnSecs").value;
-    options["warnImmediate"] = getElement("warnImmediate").checked;
+	options["warnImmediate"] = getElement("warnImmediate").checked;
 	options["contextMenu"] = getElement("contextMenu").checked;
 
 	browser.storage.local.set(options).catch(
@@ -302,7 +302,7 @@ function retrieveOptions() {
 		getElement("timerLocation").value = options["timerLocation"];
 		getElement("timerBadge").checked = options["timerBadge"];
 		getElement("warnSecs").value = options["warnSecs"];
-        getElement("warnImmediate").checked = options["warnImmediate"];
+		getElement("warnImmediate").checked = options["warnImmediate"];
 		getElement("contextMenu").checked = options["contextMenu"];
 
 		confirmAccess(options);
@@ -426,7 +426,7 @@ function exportOptions() {
 	options["timerLocation"] = getElement("timerLocation").value;
 	options["timerBadge"] = getElement("timerBadge").checked;
 	options["warnSecs"] = getElement("warnSecs").value;
-    options["warnImmediate"] = getElement("warnImmediate").checked;
+	options["warnImmediate"] = getElement("warnImmediate").checked;
 	options["contextMenu"] = getElement("contextMenu").checked;
 
 	// Convert options to text lines
@@ -638,7 +638,7 @@ function importOptions() {
 		let timerLocation = options["timerLocation"];
 		let timerBadge= options["timerBadge"];
 		let warnSecs = options["warnSecs"];
-        let warnImmediate = options["warnImmediate"];
+		let warnImmediate = options["warnImmediate"];
 		let contextMenu = options["contextMenu"];
 		if (oa != undefined) {
 			getElement("optionsAccess").value = oa;
@@ -664,9 +664,9 @@ function importOptions() {
 		if (warnSecs != undefined) {
 			getElement("warnSecs").value = warnSecs;
 		}
-        if (warnImmediate != undefined) {
-            getElement("warnImmediate").value = warnImmediate;
-        }
+		if (warnImmediate != undefined) {
+			getElement("warnImmediate").value = warnImmediate;
+		}
 		if (contextMenu != undefined) {
 			getElement("contextMenu").checked = contextMenu;
 		}

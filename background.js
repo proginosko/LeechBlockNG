@@ -414,9 +414,9 @@ function checkTab(id, url, isRepeat) {
 // Check for warning message (and display message if needed)
 //
 function checkWarning(id) {
-    let set = gTabs[id].secsLeftSet;
+	let set = gTabs[id].secsLeftSet;
 	let warnSecs = gOptions["warnSecs"];
-    let canWarn = !gOptions["warnImmediate"] || gOptions[`activeBlock${set}`]
+	let canWarn = !gOptions["warnImmediate"] || gOptions[`activeBlock${set}`]
 
 	if (warnSecs && canWarn) {
 		let secsLeft = Math.round(gTabs[id].secsLeft);
