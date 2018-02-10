@@ -414,8 +414,11 @@ function checkTab(id, url, isRepeat) {
 // Check for warning message (and display message if needed)
 //
 function checkWarning(id) {
+    let set = gTabs[id].secsLeftSet;
 	let warnSecs = gOptions["warnSecs"];
-	if (warnSecs) {
+    let canWarn = !gOptions["warnImmediate"] || gOptions[`activeBlock${set}`]
+
+	if (warnSecs && canWarn) {
 		let secsLeft = Math.round(gTabs[id].secsLeft);
 		if (secsLeft > warnSecs) {
 			gTabs[id].warned = false;
@@ -423,7 +426,6 @@ function checkWarning(id) {
 			gTabs[id].warned = true;
 
 			// Send message to tab
-			let set = gTabs[id].secsLeftSet;
 			let text = `Sites in Block Set ${set}`;
 			let setName = gOptions[`setName${set}`];
 			if (setName) {
