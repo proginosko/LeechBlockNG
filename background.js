@@ -130,7 +130,7 @@ function loadSiteLists() {
 			sites = sites.split(" ").sort().join(" "); // sort alphabetically
 
 			// Get regular expressions to match sites
-			let regexps = getRegExpSites(sites);
+			let regexps = getRegExpSites(sites, gOptions["matchSubdomains"]);
 
 			// Update options
 			gOptions[`sites${set}`] = sites;
@@ -892,7 +892,7 @@ function addSiteToSet(url, set) {
 		sites = patterns.sort().join(" ").replace(/(^ +)|( +$)/g, "");
 
 		// Get regular expressions to match sites
-		let regexps = getRegExpSites(sites);
+		let regexps = getRegExpSites(sites, gOptions["matchSubdomains"]);
 
 		// Update options
 		gOptions[`sites${set}`] = sites;
