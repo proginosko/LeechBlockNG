@@ -64,6 +64,19 @@ function saveOptions() {
 
 	let options = {};
 
+	// General options
+	options["oa"] = getElement("optionsAccess").value;
+	options["password"] = getElement("accessPassword").value;
+	options["hpp"] = getElement("hidePassword").checked;
+	options["timerVisible"] = getElement("timerVisible").checked;
+	options["timerSize"] = getElement("timerSize").value;
+	options["timerLocation"] = getElement("timerLocation").value;
+	options["timerBadge"] = getElement("timerBadge").checked;
+	options["warnSecs"] = getElement("warnSecs").value;
+	options["warnImmediate"] = getElement("warnImmediate").checked;
+  options["contextMenu"] = getElement("contextMenu").checked;
+	options["matchSubdomains"] = getElement("matchSubdomains").checked;
+
 	for (let set = 1; set <= NUM_SETS; set++) {
 		// Get component values
 		let setName = getElement(`setName${set}`).value;
@@ -92,7 +105,7 @@ function saveOptions() {
 		let ignoreHash = getElement(`ignoreHash${set}`).checked;
 
 		// Get regular expressions to match sites
-		let regexps = getRegExpSites(sites);
+		let regexps = getRegExpSites(sites, options["matchSubdomains"]);
 
 		// Set option values
 		options[`setName${set}`] = setName;
@@ -124,18 +137,6 @@ function saveOptions() {
 			browser.permissions.request(permissions);
 		}
 	}
-
-	// General options
-	options["oa"] = getElement("optionsAccess").value;
-	options["password"] = getElement("accessPassword").value;
-	options["hpp"] = getElement("hidePassword").checked;
-	options["timerVisible"] = getElement("timerVisible").checked;
-	options["timerSize"] = getElement("timerSize").value;
-	options["timerLocation"] = getElement("timerLocation").value;
-	options["timerBadge"] = getElement("timerBadge").checked;
-	options["warnSecs"] = getElement("warnSecs").value;
-	options["warnImmediate"] = getElement("warnImmediate").checked;
-	options["contextMenu"] = getElement("contextMenu").checked;
 
 	browser.storage.local.set(options).catch(
 		function (error) { warn("Cannot set options: " + error); }
@@ -304,6 +305,7 @@ function retrieveOptions() {
 		getElement("warnSecs").value = options["warnSecs"];
 		getElement("warnImmediate").checked = options["warnImmediate"];
 		getElement("contextMenu").checked = options["contextMenu"];
+		getElement("matchSubdomains").checked = options["matchSubdomains"];
 
 		confirmAccess(options);
 	}
@@ -428,6 +430,7 @@ function exportOptions() {
 	options["warnSecs"] = getElement("warnSecs").value;
 	options["warnImmediate"] = getElement("warnImmediate").checked;
 	options["contextMenu"] = getElement("contextMenu").checked;
+	options["matchSubdomins"] = getElement("matchSubdomains").checked;
 
 	// Convert options to text lines
 	let lines = [];
@@ -640,6 +643,7 @@ function importOptions() {
 		let warnSecs = options["warnSecs"];
 		let warnImmediate = options["warnImmediate"];
 		let contextMenu = options["contextMenu"];
+		let matchSubdomains = options["matchSubdomains"]
 		if (oa != undefined) {
 			getElement("optionsAccess").value = oa;
 		}
@@ -669,6 +673,9 @@ function importOptions() {
 		}
 		if (contextMenu != undefined) {
 			getElement("contextMenu").checked = contextMenu;
+		}
+		if (matchSubdomains != undefined) {
+			getElement("matchSubdomains").checked = matchSubdomains;
 		}
 
 		$("#alertImportSuccess").dialog("open");
@@ -768,12 +775,14 @@ for (let set = 1; set <= NUM_SETS; set++) {
 	$(`#clearRegExpBlock${set}`).click(function (e) { $(`#regexpBlock${set}`).val(""); });
 	$(`#genRegExpBlock${set}`).click(function (e) {
 		let sites = $(`#sites${set}`).val();
-		$(`#regexpBlock${set}`).val(getRegExpSites(sites).block);
+		let matchSubdomains = getElement("matchSubdomains").checked;
+		$(`#regexpBlock${set}`).val(getRegExpSites(sites, matchSubdomains).block);
 	});
 	$(`#clearRegExpAllow${set}`).click(function (e) { $(`#regexpAllow${set}`).val(""); });
 	$(`#genRegExpAllow${set}`).click(function (e) {
 		let sites = $(`#sites${set}`).val();
-		$(`#regexpAllow${set}`).val(getRegExpSites(sites).allow);
+		let matchSubdomains = getElement("matchSubdomains").checked;
+		$(`#regexpAllow${set}`).val(getRegExpSites(sites, matchSubdomains).allow);
 	});
 	$(`#cancelLockdown${set}`).click(function (e) {
 		browser.runtime.sendMessage({ type: "lockdown", set: set });

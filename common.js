@@ -134,6 +134,9 @@ function cleanOptions(options) {
 	if (typeof options["contextMenu"] !== "boolean") {
 		options["contextMenu"] = true; // default: enabled
 	}
+	if (typeof options["matchSubdomains"] !== "boolean") {
+		options["matchSubdomains"] = false; // default: disabled for backwards compatibility
+	}
 	if (typeof options["lockdownHours"] !== "string") {
 		options["lockdownHours"] = ""; // default: blank
 	}
@@ -203,7 +206,7 @@ function getParsedURL(url) {
 
 // Create regular expressions for matching sites to block/allow
 //
-function getRegExpSites(sites) {
+function getRegExpSites(sites, matchSubdomains) {
 	if (!sites) {
 		return {
 			block: "",
@@ -229,10 +232,10 @@ function getRegExpSites(sites) {
 			keywords.push(keywordToRegExp(pattern.substr(1)));
 		} else if (pattern.charAt(0) == "+") {
 			// Add a regexp to allow site(s) as exception(s)
-			allows.push(patternToRegExp(pattern.substr(1)));
+			allows.push(patternToRegExp(pattern.substr(1), matchSubdomains));
 		} else if (pattern.charAt(0) != "#") {
 			// Add a regexp to block site(s)
-			blocks.push(patternToRegExp(pattern));
+			blocks.push(patternToRegExp(pattern, matchSubdomains));
 		}
 	}
 	return {
@@ -248,9 +251,10 @@ function getRegExpSites(sites) {
 
 // Convert site pattern to regular expression
 //
-function patternToRegExp(pattern) {
+function patternToRegExp(pattern, matchSubdomains) {
 	let special = /[\.\|\?\:\+\-\^\$\(\)\[\]\{\}\\]/g;
-	return "(www\\.)?" + pattern				// assume optional www prefix
+	let subdomains = matchSubdomains ? "([^/]*\\.)?" : "(www\\.)?"
+	return subdomains + pattern
 			.replace(special, "\\$&")			// fix special chars
 			.replace(/^www\\\./, "")			// remove existing www prefix
 			.replace(/\*\\\+/g, ".+")			// convert plus-wildcards
