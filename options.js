@@ -74,7 +74,7 @@ function saveOptions() {
 	options["timerBadge"] = getElement("timerBadge").checked;
 	options["warnSecs"] = getElement("warnSecs").value;
 	options["warnImmediate"] = getElement("warnImmediate").checked;
-  options["contextMenu"] = getElement("contextMenu").checked;
+	options["contextMenu"] = getElement("contextMenu").checked;
 	options["matchSubdomains"] = getElement("matchSubdomains").checked;
 
 	for (let set = 1; set <= NUM_SETS; set++) {
