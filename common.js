@@ -129,10 +129,13 @@ function cleanOptions(options) {
 		options["warnSecs"] = ""; // default: no warning
 	}
 	if (typeof options["warnImmediate"] !== "boolean") {
-		options["warnImmediate"] = true; // default: warn only when for immediate block
+		options["warnImmediate"] = true; // default: warn only for immediate block
 	}
 	if (typeof options["contextMenu"] !== "boolean") {
 		options["contextMenu"] = true; // default: enabled
+	}
+	if (typeof options["toolsMenu"] !== "boolean") {
+		options["toolsMenu"] = true; // default: enabled
 	}
 	if (typeof options["matchSubdomains"] !== "boolean") {
 		options["matchSubdomains"] = false; // default: disabled for backwards compatibility

@@ -75,6 +75,7 @@ function saveOptions() {
 	options["warnSecs"] = getElement("warnSecs").value;
 	options["warnImmediate"] = getElement("warnImmediate").checked;
 	options["contextMenu"] = getElement("contextMenu").checked;
+	options["toolsMenu"] = getElement("toolsMenu").checked;
 	options["matchSubdomains"] = getElement("matchSubdomains").checked;
 
 	for (let set = 1; set <= NUM_SETS; set++) {
@@ -305,6 +306,7 @@ function retrieveOptions() {
 		getElement("warnSecs").value = options["warnSecs"];
 		getElement("warnImmediate").checked = options["warnImmediate"];
 		getElement("contextMenu").checked = options["contextMenu"];
+		getElement("toolsMenu").checked = options["toolsMenu"];
 		getElement("matchSubdomains").checked = options["matchSubdomains"];
 
 		confirmAccess(options);
@@ -430,6 +432,7 @@ function exportOptions() {
 	options["warnSecs"] = getElement("warnSecs").value;
 	options["warnImmediate"] = getElement("warnImmediate").checked;
 	options["contextMenu"] = getElement("contextMenu").checked;
+	options["toolsMenu"] = getElement("toolsMenu").checked;
 	options["matchSubdomins"] = getElement("matchSubdomains").checked;
 
 	// Convert options to text lines
@@ -643,6 +646,7 @@ function importOptions() {
 		let warnSecs = options["warnSecs"];
 		let warnImmediate = options["warnImmediate"];
 		let contextMenu = options["contextMenu"];
+		let toolsMenu = options["toolsMenu"];
 		let matchSubdomains = options["matchSubdomains"]
 		if (oa != undefined) {
 			getElement("optionsAccess").value = oa;
@@ -673,6 +677,9 @@ function importOptions() {
 		}
 		if (contextMenu != undefined) {
 			getElement("contextMenu").checked = contextMenu;
+		}
+		if (toolsMenu != undefined) {
+			getElement("toolsMenu").checked = toolsMenu;
 		}
 		if (matchSubdomains != undefined) {
 			getElement("matchSubdomains").checked = matchSubdomains;
