@@ -73,7 +73,8 @@ function saveOptions() {
 	options["timerLocation"] = getElement("timerLocation").value;
 	options["timerBadge"] = getElement("timerBadge").checked;
 	options["warnSecs"] = getElement("warnSecs").value;
-	options["contextMenu"] = getElement("contextMenu").checked;
+	options["warnImmediate"] = getElement("warnImmediate").checked;
+  options["contextMenu"] = getElement("contextMenu").checked;
 	options["matchSubdomains"] = getElement("matchSubdomains").checked;
 
 	for (let set = 1; set <= NUM_SETS; set++) {
@@ -302,6 +303,7 @@ function retrieveOptions() {
 		getElement("timerLocation").value = options["timerLocation"];
 		getElement("timerBadge").checked = options["timerBadge"];
 		getElement("warnSecs").value = options["warnSecs"];
+		getElement("warnImmediate").checked = options["warnImmediate"];
 		getElement("contextMenu").checked = options["contextMenu"];
 		getElement("matchSubdomains").checked = options["matchSubdomains"];
 
@@ -426,6 +428,7 @@ function exportOptions() {
 	options["timerLocation"] = getElement("timerLocation").value;
 	options["timerBadge"] = getElement("timerBadge").checked;
 	options["warnSecs"] = getElement("warnSecs").value;
+	options["warnImmediate"] = getElement("warnImmediate").checked;
 	options["contextMenu"] = getElement("contextMenu").checked;
 	options["matchSubdomins"] = getElement("matchSubdomains").checked;
 
@@ -638,6 +641,7 @@ function importOptions() {
 		let timerLocation = options["timerLocation"];
 		let timerBadge= options["timerBadge"];
 		let warnSecs = options["warnSecs"];
+		let warnImmediate = options["warnImmediate"];
 		let contextMenu = options["contextMenu"];
 		let matchSubdomains = options["matchSubdomains"]
 		if (oa != undefined) {
@@ -663,6 +667,9 @@ function importOptions() {
 		}
 		if (warnSecs != undefined) {
 			getElement("warnSecs").value = warnSecs;
+		}
+		if (warnImmediate != undefined) {
+			getElement("warnImmediate").value = warnImmediate;
 		}
 		if (contextMenu != undefined) {
 			getElement("contextMenu").checked = contextMenu;
