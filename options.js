@@ -54,10 +54,15 @@ function saveOptions() {
 	}
 
 	// Check format for text fields in general options
-	let warnSecs = getElement("warnSecs").value;
-	if (!checkPosIntFormat(warnSecs)) {
+	if (!checkPosIntFormat($("#overrideMins").val())) {
 		$("#tabs").tabs("option", "active", NUM_SETS);
-		$("warnSecs").focus();
+		$("#overrideMins").focus();
+		$("#alertBadMinutes").dialog("open");
+		return false;
+	}
+	if (!checkPosIntFormat($("#warnSecs").val())) {
+		$("#tabs").tabs("option", "active", NUM_SETS);
+		$("#warnSecs").focus();
 		$("#alertBadSeconds").dialog("open");
 		return false;
 	}
