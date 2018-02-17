@@ -1,3 +1,9 @@
+### Version 0.9 (17 Feb 2018)
+* Added options to allow temporary override.
+* Added option to match all subdomains (not just www).
+* Added option to display warning only if page will be immediately blocked.
+* Added option to show/hide tools menu.
+
 ### Version 0.8.1 (28 Jan 2018)
 * Added option to show timer as icon badge (enabled by default).
 * Added option to ignore/include URL fragment (hash part).
