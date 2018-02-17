@@ -15,6 +15,12 @@ function openLockdown() {
 	openExtensionPage("lockdown.html");
 }
 
+// Open override page
+//
+function openOverride() {
+	openExtensionPage("override.html");
+}
+
 // Open stats page
 //
 function openStats() {
@@ -45,4 +51,5 @@ function openExtensionPage(url) {
 
 document.querySelector("#options").addEventListener("click", openOptions);
 document.querySelector("#lockdown").addEventListener("click", openLockdown);
+document.querySelector("#override").addEventListener("click", openOverride);
 document.querySelector("#stats").addEventListener("click", openStats);

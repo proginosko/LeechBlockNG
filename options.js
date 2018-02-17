@@ -72,6 +72,8 @@ function saveOptions() {
 	options["timerSize"] = getElement("timerSize").value;
 	options["timerLocation"] = getElement("timerLocation").value;
 	options["timerBadge"] = getElement("timerBadge").checked;
+	options["orm"] = getElement("overrideMins").value;
+	options["ora"] = getElement("overrideAccess").value;
 	options["warnSecs"] = getElement("warnSecs").value;
 	options["warnImmediate"] = getElement("warnImmediate").checked;
 	options["contextMenu"] = getElement("contextMenu").checked;
@@ -97,6 +99,7 @@ function saveOptions() {
 		let countFocus = getElement(`countFocus${set}`).checked;
 		let delayFirst = getElement(`delayFirst${set}`).checked;
 		let delaySecs = getElement(`delaySecs${set}`).value;
+		let allowOverride = getElement(`allowOverride${set}`).checked;
 		let prevOpts = getElement(`prevOpts${set}`).checked;
 		let prevAddons = getElement(`prevAddons${set}`).checked;
 		let prevSupport = getElement(`prevSupport${set}`).checked;
@@ -121,6 +124,7 @@ function saveOptions() {
 		options[`countFocus${set}`] = countFocus;
 		options[`delayFirst${set}`] = delayFirst;
 		options[`delaySecs${set}`] = delaySecs;
+		options[`allowOverride${set}`] = allowOverride;
 		options[`prevOpts${set}`] = prevOpts;
 		options[`prevAddons${set}`] = prevAddons;
 		options[`prevSupport${set}`] = prevSupport;
@@ -256,6 +260,7 @@ function retrieveOptions() {
 			let countFocus = options[`countFocus${set}`];
 			let delayFirst = options[`delayFirst${set}`];
 			let delaySecs = options[`delaySecs${set}`];
+			let allowOverride = options[`allowOverride${set}`];
 			let prevOpts = options[`prevOpts${set}`];
 			let prevAddons = options[`prevAddons${set}`];
 			let prevSupport = options[`prevSupport${set}`];
@@ -286,6 +291,7 @@ function retrieveOptions() {
 			getElement(`countFocus${set}`).checked = countFocus;
 			getElement(`delayFirst${set}`).checked = delayFirst;
 			getElement(`delaySecs${set}`).value = delaySecs;
+			getElement(`allowOverride${set}`).checked = allowOverride;
 			getElement(`prevOpts${set}`).checked = prevOpts;
 			getElement(`prevAddons${set}`).checked = prevAddons;
 			getElement(`prevSupport${set}`).checked = prevSupport;
@@ -303,6 +309,8 @@ function retrieveOptions() {
 		getElement("timerSize").value = options["timerSize"];
 		getElement("timerLocation").value = options["timerLocation"];
 		getElement("timerBadge").checked = options["timerBadge"];
+		getElement("overrideMins").value = options["orm"];
+		getElement("overrideAccess").value = options["ora"];
 		getElement("warnSecs").value = options["warnSecs"];
 		getElement("warnImmediate").checked = options["warnImmediate"];
 		getElement("contextMenu").checked = options["contextMenu"];
@@ -391,6 +399,7 @@ function exportOptions() {
 		let countFocus = getElement(`countFocus${set}`).checked;
 		let delayFirst = getElement(`delayFirst${set}`).checked;
 		let delaySecs = getElement(`delaySecs${set}`).value;
+		let allowOverride = getElement(`allowOverride${set}`).checked;
 		let prevOpts = getElement(`prevOpts${set}`).checked;
 		let prevAddons = getElement(`prevAddons${set}`).checked;
 		let prevSupport = getElement(`prevSupport${set}`).checked;
@@ -412,6 +421,7 @@ function exportOptions() {
 		options[`countFocus${set}`] = countFocus;
 		options[`delayFirst${set}`] = delayFirst;
 		options[`delaySecs${set}`] = delaySecs;
+		options[`allowOverride${set}`] = allowOverride;
 		options[`prevOpts${set}`] = prevOpts;
 		options[`prevAddons${set}`] = prevAddons;
 		options[`prevSupport${set}`] = prevSupport;
@@ -429,6 +439,8 @@ function exportOptions() {
 	options["timerSize"] = getElement("timerSize").value;
 	options["timerLocation"] = getElement("timerLocation").value;
 	options["timerBadge"] = getElement("timerBadge").checked;
+	options["orm"] = getElement("overrideMins").value;
+	options["ora"] = getElement("overrideAccess").value;
 	options["warnSecs"] = getElement("warnSecs").value;
 	options["warnImmediate"] = getElement("warnImmediate").checked;
 	options["contextMenu"] = getElement("contextMenu").checked;
@@ -502,6 +514,7 @@ function importOptions() {
 			let countFocus = options[`countFocus${set}`];
 			let delayFirst = options[`delayFirst${set}`];
 			let delaySecs = options[`delaySecs${set}`];
+			let allowOverride = options[`allowOverride${set}`];
 			let prevOpts = options[`prevOpts${set}`];
 			let prevAddons = options[`prevAddons${set}`];
 			let prevSupport = options[`prevSupport${set}`];
@@ -591,6 +604,12 @@ function importOptions() {
 					element.value = delaySecs;
 				}
 			}
+			if (allowOverride != undefined) {
+				let element = getElement(`allowOverride${set}`);
+				if (!element.disabled) {
+					element.checked = isTrue(allowOverride);
+				}
+			}
 			if (prevOpts != undefined) {
 				let element = getElement(`prevOpts${set}`);
 				if (!element.disabled) {
@@ -643,6 +662,8 @@ function importOptions() {
 		let timerSize = options["timerSize"];
 		let timerLocation = options["timerLocation"];
 		let timerBadge= options["timerBadge"];
+		let orm = options["orm"];
+		let ora = options["ora"];
 		let warnSecs = options["warnSecs"];
 		let warnImmediate = options["warnImmediate"];
 		let contextMenu = options["contextMenu"];
@@ -668,6 +689,12 @@ function importOptions() {
 		}
 		if (timerBadge != undefined) {
 			getElement("timerBadge").checked = timerBadge;
+		}
+		if (orm != undefined) {
+			getElement("overrideMins").value = orm;
+		}
+		if (ora != undefined) {
+			getElement("overrideAccess").value = ora;
 		}
 		if (warnSecs != undefined) {
 			getElement("warnSecs").value = warnSecs;
@@ -697,7 +724,7 @@ function disableSetOptions(set) {
 		"times", "allDay", "limitMins", "limitPeriod", "conjMode",
 		"day0", "day1", "day2", "day3", "day4", "day5", "day6",
 		"blockURL", "defaultPage", "delayingPage", "blankPage", "homePage",
-		"activeBlock", "countFocus", "delayFirst", "delaySecs",
+		"activeBlock", "countFocus", "delayFirst", "delaySecs", "allowOverride",
 		"prevOpts", "prevAddons", "prevSupport", "sitesURL",
 		"regexpBlock", "clearRegExpBlock", "genRegExpBlock",
 		"regexpAllow", "clearRegExpAllow", "genRegExpAllow",

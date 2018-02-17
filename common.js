@@ -8,6 +8,8 @@ const DEFAULT_BLOCK_URL = "blocked.html?$S&$U";
 const DELAYED_BLOCK_URL = "delayed.html?$S&$U";
 const LEGACY_DEFAULT_BLOCK_URL = "chrome://leechblock/content/blocked.xhtml?$S&$U";
 const LEGACY_DELAYED_BLOCK_URL = "chrome://leechblock/content/delayed.xhtml?$S&$U";
+const DEFAULT_ICON = { 16: "icons/leechblock16.png", 32: "icons/leechblock32.png" };
+const OVERRIDE_ICON = { 16: "icons/leechblock16o.png", 32: "icons/leechblock32o.png" };
 
 const PARSE_URL = /^((([\w-]+):\/*(\w+(?::\w+)?@)?([\w-\.]+)(?::(\d*))?)([^\?#]*))(\?[^#]*)?(#.*)?$/;
 
@@ -59,6 +61,9 @@ function cleanOptions(options) {
 		}
 		if (typeof options[`delaySecs${set}`] !== "string") {
 			options[`delaySecs${set}`] = "60";
+		}
+		if (typeof options[`allowOverride${set}`] !== "boolean") {
+			options[`allowOverride${set}`] = true;
 		}
 		if (typeof options[`prevOpts${set}`] !== "boolean") {
 			options[`prevOpts${set}`] = false;
@@ -124,6 +129,12 @@ function cleanOptions(options) {
 	}
 	if (typeof options["timerBadge"] !== "boolean") {
 		options["timerBadge"] = true; // default: enabled
+	}
+	if (typeof options["orm"] !== "string") {
+		options["orm"] = ""; // default: no override
+	}
+	if (typeof options["ora"] !== "string") {
+		options["ora"] = "0"; // default: no password or code
 	}
 	if (typeof options["warnSecs"] !== "string") {
 		options["warnSecs"] = ""; // default: no warning

@@ -9,6 +9,7 @@ var gOptions = {};
 var gTabs = [];
 var gSetCounted = [];
 var gFocusWindowId = 0;
+var gOverrideIcon = false;
 
 function log(message) { console.log("[LBNG] " + message); }
 function warn(message) { console.warn("[LBNG] " + message); }
@@ -89,6 +90,7 @@ function retrieveOptions() {
 		gSetCounted = Array(NUM_SETS).fill(false);
 		refreshMenus();
 		loadSiteLists();
+		updateIcon();
 	}
 
 	function onError(error) {
@@ -286,6 +288,9 @@ function checkTab(id, url, isRepeat) {
 	// Get current time in seconds
 	let now = Math.floor(Date.now() / 1000);
 
+	// Get override end time
+	let overrideEndTime = gOptions["oret"];
+
 	gTabs[id].secsLeft = Infinity;
 
 	for (let set = 1; set <= NUM_SETS; set++) {
@@ -322,6 +327,7 @@ function checkTab(id, url, isRepeat) {
 			let days = gOptions[`days${set}`];
 			let blockURL = gOptions[`blockURL${set}`];
 			let activeBlock = gOptions[`activeBlock${set}`];
+			let allowOverride = gOptions[`allowOverride${set}`];
 
 			// Check day
 			let onSelectedDay = days[timedate.getDay()];
@@ -363,13 +369,16 @@ function checkTab(id, url, isRepeat) {
 			// Check lockdown condition
 			let lockdown = (timedata[4] > now);
 
+			// Check override condition
+			let override = (overrideEndTime > now) && allowOverride;
+
 			// Determine whether this page should now be blocked
 			let doBlock = lockdown
 					|| (!conjMode && (withinTimePeriods || afterTimeLimit))
 					|| (conjMode && (withinTimePeriods && afterTimeLimit));
 
 			// Redirect page if all relevant block conditions are fulfilled
-			if (doBlock && (!isRepeat || activeBlock)) {
+			if (!override && doBlock && (!isRepeat || activeBlock)) {
 				// Get final URL for block page
 				blockURL = blockURL.replace(/\$S/g, set).replace(/\$U/g, pageURL);
 
@@ -400,6 +409,9 @@ function checkTab(id, url, isRepeat) {
 			let secsLeft = conjMode
 					? (secsLeftBeforePeriod + secsLeftBeforeLimit)
 					: Math.min(secsLeftBeforePeriod, secsLeftBeforeLimit);
+			if (override) {
+				secsLeft = Math.max(secsLeft, overrideEndTime - now);
+			}
 			if (secsLeft < gTabs[id].secsLeft) {
 				gTabs[id].secsLeft = secsLeft;
 				gTabs[id].secsLeftSet = set;
@@ -616,6 +628,25 @@ function updateTimer(id) {
 	}
 }
 
+// Update button icon
+//
+function updateIcon() {
+	// Get current time in seconds
+	let now = Math.floor(Date.now() / 1000);
+
+	// Get override end time
+	let overrideEndTime = gOptions["oret"];
+
+	// Change icon only if override status has changed
+	if (!gOverrideIcon && overrideEndTime > now) {
+		browser.browserAction.setIcon({ path: OVERRIDE_ICON });
+		gOverrideIcon = true;
+	} else if (gOverrideIcon && overrideEndTime <= now) {
+		browser.browserAction.setIcon({ path: DEFAULT_ICON });
+		gOverrideIcon = false;
+	}
+}
+
 // Create info for blocking/delaying page
 //
 function createBlockInfo(url) {
@@ -829,6 +860,34 @@ function cancelLockdown(set) {
 	gOptions[`timedata${set}`][4] = 0;
 }
 
+// Apply override
+//
+function applyOverride() {
+	//log("applyOverride");
+
+	if (!gGotOptions) {
+		return;
+	}
+
+	let overrideMins = gOptions["orm"];
+	if (overrideMins) {
+		// Calculate end time
+		let overrideEndTime = Math.floor(Date.now() / 1000) + (overrideMins * 60);
+
+		// Update option
+		gOptions["oret"] = overrideEndTime;
+
+		// Save updated option to local storage
+		let options = {};
+		options["oret"] = overrideEndTime;
+		browser.storage.local.set(options).catch(
+			function (error) { warn("Cannot set options: " + error); }
+		);
+
+		updateIcon();
+	}
+}
+
 // Open extension page (either create new tab or activate existing tab)
 //
 function openExtensionPage(url) {
@@ -952,6 +1011,9 @@ function handleMessage(message, sender, sendResponse) {
 			// Lockdown requested
 			applyLockdown(message.set, message.endTime);
 		}
+	} else if (message.type == "override") {
+		// Override requested
+		applyOverride();
 	} else if (message.type == "restart") {
 		// Restart time data requested by statistics page
 		restartTimeData(message.set);
@@ -1024,6 +1086,7 @@ function onInterval() {
 		retrieveOptions();
 	} else {
 		processTabs();
+		updateIcon();
 	}
 }
 
