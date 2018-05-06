@@ -151,6 +151,9 @@ function cleanOptions(options) {
 	if (typeof options["matchSubdomains"] !== "boolean") {
 		options["matchSubdomains"] = false; // default: disabled for backwards compatibility
 	}
+	if (typeof options["processActiveTabs"] !== "boolean") {
+		options["processActiveTabs"] = false; // default: disabled for backwards compatibility
+	}
 	if (typeof options["lockdownHours"] !== "string") {
 		options["lockdownHours"] = ""; // default: blank
 	}

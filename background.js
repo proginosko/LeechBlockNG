@@ -213,15 +213,20 @@ function updateFocusedWindowId() {
 
 // Process tabs: update time spent and check for blocks
 // 
-function processTabs() {
-	//log("processTabs");
+function processTabs(active) {
+	//log("processTabs: " + active);
 
 	gSetCounted.fill(false);
 
-	browser.tabs.query({}).then(onGot, onError);
+	if (active) {
+		// Process only active tabs
+		browser.tabs.query({ active: true }).then(onGot, onError);
+	} else {
+		// Process all tabs
+		browser.tabs.query({}).then(onGot, onError);
+	}
 
 	function onGot(tabs) {
-		// Process all tabs
 		for (let tab of tabs) {
 			let focus = tab.active && (!gFocusWindowId || tab.windowId == gFocusWindowId);
 
@@ -1053,6 +1058,12 @@ function handleTabUpdated(tabId, changeInfo, tab) {
 function handleTabActivated(activeInfo) {
 	//log("handleTabActivated: " + activeInfo.tabId);
 
+	if (gOptions["processActiveTabs"]) {
+		// Process all tabs to ensure time counted correctly
+		processTabs(false);
+		return;
+	}
+
 	let focus = (!gFocusWindowId || activeInfo.windowId == gFocusWindowId);
 
 	clockPageTime(activeInfo.tabId, true, focus);
@@ -1087,7 +1098,7 @@ function onInterval() {
 	if (!gGotOptions) {
 		retrieveOptions();
 	} else {
-		processTabs();
+		processTabs(gOptions["processActiveTabs"]);
 		updateIcon();
 	}
 }
