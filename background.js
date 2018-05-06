@@ -296,9 +296,11 @@ function checkTab(id, url, isRepeat) {
 	for (let set = 1; set <= NUM_SETS; set++) {
 		// Get URL of page (possibly with hash part)
 		let pageURL = parsedURL.page;
+		let pageURLWithHash = parsedURL.page;
 		if (parsedURL.hash != null) {
+			pageURLWithHash +=  "#" + parsedURL.hash;
 			if (/^!/.test(parsedURL.hash) || !gOptions[`ignoreHash${set}`]) {
-				pageURL += "#" + parsedURL.hash;
+				pageURL = pageURLWithHash;
 			}
 		}
 
@@ -380,7 +382,7 @@ function checkTab(id, url, isRepeat) {
 			// Redirect page if all relevant block conditions are fulfilled
 			if (!override && doBlock && (!isRepeat || activeBlock)) {
 				// Get final URL for block page
-				blockURL = blockURL.replace(/\$S/g, set).replace(/\$U/g, pageURL);
+				blockURL = blockURL.replace(/\$S/g, set).replace(/\$U/g, pageURLWithHash);
 
 				if (keywordRE) {
 					// Check for keyword(s) before blocking
