@@ -148,8 +148,9 @@ $("div[id^='alert']").dialog({
 	modal: true,
 	width: 500,
 	buttons: {
-		OK: function () { $(this).dialog("close"); closePage(); }
-	}
+		OK: function () { $(this).dialog("close"); }
+	},
+	close: function (event, ui) { closePage(); }
 });
 
 // Initialize access control prompts
