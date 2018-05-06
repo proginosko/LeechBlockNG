@@ -1,3 +1,7 @@
+### Version 0.9.1 (06 May 2018)
+* Added option to process only active tabs (improves performance when multiple tabs open).
+* Bug fixes and under-the-hood improvements.
+
 ### Version 0.9 (17 Feb 2018)
 * Added options to allow temporary override.
 * Added option to block/allow all subdomains (not just www).
