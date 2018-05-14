@@ -41,6 +41,13 @@ function refreshMenus() {
 		contexts: contexts
 	});
 
+	// Override
+	browser.menus.create({
+		id: "override",
+		title: "Override",
+		contexts: contexts
+	});
+
 	// Statistics
 	browser.menus.create({
 		id: "stats",
@@ -994,6 +1001,8 @@ function handleMenuClick(info, tab) {
 		browser.runtime.openOptionsPage();
 	} else if (id == "lockdown") {
 		openExtensionPage("lockdown.html");
+	} else if (id == "override") {
+		openExtensionPage("override.html");
 	} else if (id == "stats") {
 		openExtensionPage("stats.html");
 	} else if (id.startsWith("addSite-")) {
