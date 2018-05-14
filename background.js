@@ -4,6 +4,7 @@
 
 const TICK_TIME = 1000; // update every second
 
+var gIsAndroid = false;
 var gGotOptions = false;
 var gOptions = {};
 var gTabs = [];
@@ -624,7 +625,7 @@ function updateTimer(id) {
 	browser.tabs.sendMessage(id, message).catch(function (error) {});
 
 	// Set badge timer (if option selected)
-	if (gOptions["timerBadge"] && secsLeft < 600) {
+	if (!gIsAndroid && gOptions["timerBadge"] && secsLeft < 600) {
 		let m = Math.floor(secsLeft / 60);
 		let s = Math.floor(secsLeft) % 60;
 		let text = m + ":" + ((s < 10) ? "0" + s : s);
@@ -638,6 +639,10 @@ function updateTimer(id) {
 // Update button icon
 //
 function updateIcon() {
+	if (gIsAndroid) {
+		return; // icon not supported yet
+	}
+
 	// Get current time in seconds
 	let now = Math.floor(Date.now() / 1000);
 
@@ -1105,7 +1110,9 @@ function onInterval() {
 
 /*** STARTUP CODE BEGINS HERE ***/
 
-browser.browserAction.setIcon({ path: DEFAULT_ICON });
+browser.runtime.getPlatformInfo().then(
+	function (info) { gIsAndroid = (info.os == "android"); }
+);
 
 if (browser.menus) {
 	browser.menus.onClicked.addListener(handleMenuClick);
