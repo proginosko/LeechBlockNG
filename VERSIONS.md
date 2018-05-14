@@ -1,3 +1,6 @@
+### Version 0.9.2 (13 May 2018)
+* Fixed bug that broke Android version.
+
 ### Version 0.9.1 (06 May 2018)
 * Added option to process only active tabs (improves performance when multiple tabs open).
 * Bug fixes and under-the-hood improvements.
