@@ -291,13 +291,6 @@ function keywordToRegExp(keyword) {
 			+ "\\b";
 }
 
-// Test URL against block/allow regular expressions
-//
-function testURL(pageURL, blockRE, allowRE) {
-	return (blockRE && (new RegExp(blockRE, "i")).test(pageURL)
-			&& !(allowRE && (new RegExp(allowRE, "i")).test(pageURL)));
-}
-
 // Check time periods format
 //
 function checkTimePeriodsFormat(times) {

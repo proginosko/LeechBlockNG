@@ -9,11 +9,49 @@ var gGotOptions = false;
 var gOptions = {};
 var gTabs = [];
 var gSetCounted = [];
+var gRegExps = [];
 var gFocusWindowId = 0;
 var gOverrideIcon = false;
 
 function log(message) { console.log("[LBNG] " + message); }
 function warn(message) { console.warn("[LBNG] " + message); }
+
+// Create (precompile) regular expressions
+//
+function createRegExps() {
+	// Create new array if necessary
+	if (!gRegExps || gRegExps.length != NUM_SETS) {
+		gRegExps = [];
+		for (let set = 1; set <= NUM_SETS; set++) {
+			gRegExps.push({ block: null, allow: null, keyword: null });
+		}
+	}
+
+	// Create new RegExp objects
+	for (let set = 1; set <= NUM_SETS; set++) {
+		let blockRE = gOptions[`regexpBlock${set}`] || gOptions[`blockRE${set}`];
+		if (blockRE) {
+			gRegExps[set - 1].block = new RegExp(blockRE, "i");
+		}
+
+		let allowRE = gOptions[`regexpAllow${set}`] || gOptions[`allowRE${set}`];
+		if (allowRE) {
+			gRegExps[set - 1].allow = new RegExp(allowRE, "i");
+		}
+
+		let keywordRE = gOptions[`keywordRE${set}`];
+		if (keywordRE) {
+			gRegExps[set - 1].keyword = new RegExp(keywordRE, "i");
+		}
+	}
+}
+
+// Test URL against block/allow regular expressions
+//
+function testURL(pageURL, blockRE, allowRE) {
+	return (blockRE && blockRE.test(pageURL)
+			&& !(allowRE && allowRE.test(pageURL)));
+}
 
 // Refresh menus
 //
@@ -96,6 +134,7 @@ function retrieveOptions() {
 		cleanOptions(gOptions);
 		cleanTimeData(gOptions);
 		gSetCounted = Array(NUM_SETS).fill(false);
+		createRegExps();
 		refreshMenus();
 		loadSiteLists();
 		updateIcon();
@@ -148,6 +187,8 @@ function loadSiteLists() {
 			gOptions[`blockRE${set}`] = regexps.block;
 			gOptions[`allowRE${set}`] = regexps.allow;
 			gOptions[`keywordRE${set}`] = regexps.keyword;
+
+			createRegExps();
 
 			// Save updated options to local storage
 			let options = {};
@@ -318,10 +359,10 @@ function checkTab(id, url, isRepeat) {
 		}
 
 		// Get regular expressions for matching sites to block/allow
-		let blockRE = gOptions[`regexpBlock${set}`] || gOptions[`blockRE${set}`];
+		let blockRE = gRegExps[set - 1].block;
 		if (!blockRE) continue; // no block for this set
-		let allowRE = gOptions[`regexpAllow${set}`] || gOptions[`allowRE${set}`];
-		let keywordRE = gOptions[`keywordRE${set}`];
+		let allowRE = gRegExps[set - 1].allow;
+		let keywordRE = gRegExps[set - 1].keyword;
 
 		// Get options for preventing access to about:addons and about:support
 		let prevAddons = gOptions[`prevAddons${set}`];
@@ -540,9 +581,9 @@ function updateTimeData(url, secsOpen, secsFocus) {
 
 	for (let set = 1; set <= NUM_SETS; set++) {
 		// Get regular expressions for matching sites to block/allow
-		let blockRE = gOptions[`regexpBlock${set}`] || gOptions[`blockRE${set}`];
+		let blockRE = gRegExps[set - 1].block;
 		if (!blockRE) continue; // no block for this set
-		let allowRE = gOptions[`regexpAllow${set}`] || gOptions[`allowRE${set}`];
+		let allowRE = gRegExps[set - 1].allow;
 
 		// Test URL against block/allow regular expressions
 		if (testURL(pageURL, blockRE, allowRE)) {
@@ -980,6 +1021,8 @@ function addSiteToSet(url, set) {
 		gOptions[`blockRE${set}`] = regexps.block;
 		gOptions[`allowRE${set}`] = regexps.allow;
 		gOptions[`keywordRE${set}`] = regexps.keyword;
+
+		createRegExps();
 
 		// Save updated options to local storage
 		let options = {};
