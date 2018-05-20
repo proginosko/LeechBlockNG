@@ -56,6 +56,7 @@ function updateTimer(text, size, location) {
 			// Create timer
 			gTimer = document.createElement("div");
 			gTimer.setAttribute("style", TIMER_DEFAULT_STYLE);
+			gTimer.addEventListener("dblclick", function (e) { this.style.display = "none"; });
 		}
 
 		if (!document.body.contains(gTimer)) {
