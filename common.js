@@ -74,6 +74,9 @@ function cleanOptions(options) {
 		if (typeof options[`prevSupport${set}`] !== "boolean") {
 			options[`prevSupport${set}`] = false;
 		}
+		if (typeof options[`showTimer${set}`] !== "boolean") {
+			options[`showTimer${set}`] = true;
+		}
 		if (typeof options[`sitesURL${set}`] !== "string") {
 			options[`sitesURL${set}`] = "";
 		}

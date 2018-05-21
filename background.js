@@ -384,6 +384,7 @@ function checkTab(id, url, isRepeat) {
 			let blockURL = gOptions[`blockURL${set}`];
 			let activeBlock = gOptions[`activeBlock${set}`];
 			let allowOverride = gOptions[`allowOverride${set}`];
+			let showTimer = gOptions[`showTimer${set}`];
 
 			// Check day
 			let onSelectedDay = days[timedate.getDay()];
@@ -468,7 +469,7 @@ function checkTab(id, url, isRepeat) {
 			if (override) {
 				secsLeft = Math.max(secsLeft, overrideEndTime - now);
 			}
-			if (secsLeft < gTabs[id].secsLeft) {
+			if (showTimer && secsLeft < gTabs[id].secsLeft) {
 				gTabs[id].secsLeft = secsLeft;
 				gTabs[id].secsLeftSet = set;
 			}
