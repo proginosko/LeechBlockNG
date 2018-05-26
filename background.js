@@ -304,6 +304,12 @@ function processTabs(active) {
 function checkTab(id, url, isRepeat) {
 	//log("checkTab: " + id + " " + url + " " + isRepeat);
 
+	function isSameHost(host1, host2) {
+		return (host1 == host2)
+				|| (host1 == "www." + host2)
+				|| (host2 == "www." + host1);
+	}
+
 	// Quick exit for about:blank
 	if (url == "about:blank") {
 		return false; // not blocked
@@ -327,7 +333,7 @@ function checkTab(id, url, isRepeat) {
 	let parsedURL = getParsedURL(url);
 
 	// Check for allowed host/path
-	let ah = (gTabs[id].allowedHost == parsedURL.host);
+	let ah = isSameHost(gTabs[id].allowedHost, parsedURL.host);
 	let ap = !gTabs[id].allowedPath || (gTabs[id].allowedPath == parsedURL.path);
 	if (ah && ap) {
 		return false; // not blocked
