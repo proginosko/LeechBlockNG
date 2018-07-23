@@ -11,6 +11,7 @@ function getElement(id) { return document.getElementById(id); }
 
 function isTrue(str) { return /^true$/i.test(str); }
 
+var gIsAndroid = false;
 var gAccessConfirmed = false;
 var gAccessRequiredInput;
 
@@ -350,6 +351,13 @@ function retrieveOptions() {
 		getElement("matchSubdomains").checked = options["matchSubdomains"];
 		getElement("processActiveTabs").checked = options["processActiveTabs"];
 		getElement("syncStorage").value = options["sync"];
+
+		if (gIsAndroid) {
+			// Disable sync options (sync storage not supported on Android yet)
+			getElement("syncStorage").disabled = true;
+			getElement("exportOptionsSync").disabled = true;
+			getElement("importOptionsSync").disabled = true;
+		}
 
 		confirmAccess(options);
 	}
@@ -879,6 +887,10 @@ function initAccessControlPrompt(prompt) {
 }
 
 /*** STARTUP CODE BEGINS HERE ***/
+
+browser.runtime.getPlatformInfo().then(
+	function (info) { gIsAndroid = (info.os == "android"); }
+);
 
 // Use HTML for first block set to create other block sets
 let tabHTML = $("#tabBlockSet1").html();
