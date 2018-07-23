@@ -4,6 +4,10 @@
 
 const TICK_TIME = 1000; // update every second
 
+function log(message) { console.log("[LBNG] " + message); }
+function warn(message) { console.warn("[LBNG] " + message); }
+
+var gStorage = browser.storage.local;
 var gIsAndroid = false;
 var gGotOptions = false;
 var gOptions = {};
@@ -12,9 +16,6 @@ var gSetCounted = [];
 var gRegExps = [];
 var gFocusWindowId = 0;
 var gOverrideIcon = false;
-
-function log(message) { console.log("[LBNG] " + message); }
-function warn(message) { console.warn("[LBNG] " + message); }
 
 // Create (precompile) regular expressions
 //
@@ -121,12 +122,20 @@ function refreshMenus() {
 	}
 }
 
-// Retrieve options from local storage
+// Retrieve options from storage
 //
 function retrieveOptions() {
 	//log("retrieveOptions");
 
-	browser.storage.local.get().then(onGot, onError);
+	browser.storage.local.get("sync").then(onGotSync, onError);
+
+	function onGotSync(options) {
+		gStorage = options["sync"]
+				? browser.storage.sync
+				: browser.storage.local;
+
+		gStorage.get().then(onGot, onError);
+	}
 
 	function onGot(options) {
 		gGotOptions = true;
@@ -196,7 +205,7 @@ function loadSiteLists() {
 			options[`blockRE${set}`] = regexps.block;
 			options[`allowRE${set}`] = regexps.allow;
 			options[`keywordRE${set}`] = regexps.keyword;
-			browser.storage.local.set(options).catch(
+			gStorage.set(options).catch(
 				function (error) { warn("Cannot set options: " + error); }
 			);
 		}
@@ -216,7 +225,7 @@ function saveTimeData() {
 	for (let set = 1; set <= NUM_SETS; set++) {
 		options[`timedata${set}`] = gOptions[`timedata${set}`];
 	}
-	browser.storage.local.set(options).catch(
+	gStorage.set(options).catch(
 		function (error) { warn("Cannot set options: " + error); }
 	);
 }
@@ -947,7 +956,7 @@ function applyOverride() {
 		// Save updated option to local storage
 		let options = {};
 		options["oret"] = overrideEndTime;
-		browser.storage.local.set(options).catch(
+		gStorage.set(options).catch(
 			function (error) { warn("Cannot set options: " + error); }
 		);
 
@@ -1037,7 +1046,7 @@ function addSiteToSet(url, set) {
 		options[`blockRE${set}`] = regexps.block;
 		options[`allowRE${set}`] = regexps.allow;
 		options[`keywordRE${set}`] = regexps.keyword;
-		browser.storage.local.set(options).catch(
+		gStorage.set(options).catch(
 			function (error) { warn("Cannot set options: " + error); }
 		);
 	}	

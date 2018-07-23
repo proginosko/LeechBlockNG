@@ -7,12 +7,22 @@ function warn(message) { console.warn("[LBNG] " + message); }
 
 function getElement(id) { return document.getElementById(id); }
 
+var gStorage = browser.storage.local;
+
 // Initialize form
 //
 function initializeForm() {
 	//log("initializeForm");
 
-	browser.storage.local.get().then(onGot, onError);
+	browser.storage.local.get("sync").then(onGotSync, onError);
+
+	function onGotSync(options) {
+		gStorage = options["sync"]
+				? browser.storage.sync
+				: browser.storage.local;
+
+		gStorage.get().then(onGot, onError);
+	}
 
 	function onGot(options) {
 		let lockdownHours = options["lockdownHours"];
@@ -91,7 +101,7 @@ function onActivate() {
 	for (let set = 1; set <= NUM_SETS; set++) {
 		options[`lockdown${set}`] = getElement(`blockSet${set}`).checked;
 	}
-	browser.storage.local.set(options).catch(
+	gStorage.set(options).catch(
 		function (error) { warn("Cannot set options: " + error); }
 	);
 

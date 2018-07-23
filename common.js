@@ -112,6 +112,9 @@ function cleanOptions(options) {
 	}
 
 	// General options
+	if (typeof options["sync"] !== "boolean") {
+		options["sync"] = false; // default: use local storage
+	}
 	if (typeof options["oa"] !== "string") {
 		options["oa"] = "0"; // default: no password or code
 	}
