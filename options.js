@@ -9,6 +9,7 @@ function warn(message) { console.warn("[LBNG] " + message); }
 
 function getElement(id) { return document.getElementById(id); }
 
+var gIsAndroid = false;
 var gAccessConfirmed = false;
 var gAccessRequiredInput;
 
@@ -470,7 +471,20 @@ function exportOptions() {
 	// Create blob and download it
 	let blob = new Blob(lines, { type: "text/plain", endings: "native" });
 	var url = URL.createObjectURL(blob);
-	browser.downloads.download({ url: url, filename: DEFAULT_OPTIONS_FILE, saveAs: true });
+	let downloadOptions = { url: url, filename: DEFAULT_OPTIONS_FILE };
+	if (!gIsAndroid) {
+		downloadOptions.saveAs = true;
+	}
+	browser.downloads.download(downloadOptions).then(onSuccess, onError);
+
+	function onSuccess() {
+		$("#alertExportSuccess").dialog("open");
+	}
+
+	function onError(error) {
+		warn("Cannot download options: " + error);
+		$("#alertExportError").dialog("open");
+	}
 }
 
 // Import options
@@ -805,6 +819,10 @@ function initAccessControlPrompt(prompt) {
 }
 
 /*** STARTUP CODE BEGINS HERE ***/
+
+browser.runtime.getPlatformInfo().then(
+	function (info) { gIsAndroid = (info.os == "android"); }
+);
 
 // Use HTML for first block set to create other block sets
 let tabHTML = $("#tabBlockSet1").html();
