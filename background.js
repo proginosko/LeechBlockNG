@@ -124,8 +124,8 @@ function refreshMenus() {
 
 // Retrieve options from storage
 //
-function retrieveOptions() {
-	//log("retrieveOptions");
+function retrieveOptions(update) {
+	//log("retrieveOptions: " + update);
 
 	browser.storage.local.get("sync").then(onGotSync, onError);
 
@@ -138,8 +138,14 @@ function retrieveOptions() {
 	}
 
 	function onGot(options) {
+		// Copy retrieved options (exclude timedata if update)
+		for (let option in options) {
+			if (!update || !/^timedata/.test(option)) {
+				gOptions[option] = options[option];
+			}
+		}
 		gGotOptions = true;
-		gOptions = Object.assign({}, options); // clone
+
 		cleanOptions(gOptions);
 		cleanTimeData(gOptions);
 		gSetCounted = Array(NUM_SETS).fill(false);
@@ -1082,7 +1088,7 @@ function handleMessage(message, sender, sendResponse) {
 		browser.tabs.remove(sender.tab.id);
 	} else if (message.type == "options") {
 		// Options updated
-		retrieveOptions();
+		retrieveOptions(true);
 	} else if (message.type == "lockdown") {
 		if (!message.endTime) {
 			// Lockdown canceled
