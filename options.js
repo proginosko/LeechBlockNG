@@ -350,7 +350,7 @@ function retrieveOptions() {
 		getElement("toolsMenu").checked = options["toolsMenu"];
 		getElement("matchSubdomains").checked = options["matchSubdomains"];
 		getElement("processActiveTabs").checked = options["processActiveTabs"];
-		getElement("syncStorage").value = options["sync"];
+		getElement("syncStorage").checked = options["sync"];
 
 		if (gIsAndroid) {
 			// Disable sync options (sync storage not supported on Android yet)
