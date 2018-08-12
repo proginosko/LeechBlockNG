@@ -1,3 +1,7 @@
+### Version 0.9.4 (12 Aug 2018)
+* Fixed export function for Android.
+* Removed "Home Page" button (Firefox no longer allows extensions to open about:home).
+
 ### Version 0.9.3 (26 May 2018)
 * Added per-set option to show/hide countdown timer.
 * Countdown timer can now be hidden by double-clicking it (e.g., before printing page).
