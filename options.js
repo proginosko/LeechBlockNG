@@ -152,7 +152,7 @@ function saveOptions() {
 		}
 	}
 
-	browser.storage.local.set(options).catch(
+	browser.storage.sync.set(options).catch(
 		function (error) { warn("Cannot set options: " + error); }
 	);
 
@@ -184,7 +184,7 @@ function closeOptions() {
 function retrieveOptions() {
 	//log("retrieveOptions");
 
-	browser.storage.local.get().then(onGot, onError);
+	browser.storage.sync.get().then(onGot, onError);
 
 	function onGot(options) {
 		cleanOptions(options);
