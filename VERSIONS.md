@@ -1,3 +1,6 @@
+### Version 0.9.5 (19 Aug 2018)
+* Added sync storage options (experimental feature).
+
 ### Version 0.9.4 (12 Aug 2018)
 * Fixed export function for Android.
 * Removed "Home Page" button (Firefox no longer allows extensions to open about:home).
