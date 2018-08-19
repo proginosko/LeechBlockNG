@@ -9,6 +9,8 @@ function warn(message) { console.warn("[LBNG] " + message); }
 
 function getElement(id) { return document.getElementById(id); }
 
+function isTrue(str) { return /^true$/i.test(str); }
+
 var gIsAndroid = false;
 var gAccessConfirmed = false;
 var gAccessRequiredInput;
@@ -86,6 +88,7 @@ function saveOptions() {
 	options["toolsMenu"] = getElement("toolsMenu").checked;
 	options["matchSubdomains"] = getElement("matchSubdomains").checked;
 	options["processActiveTabs"] = getElement("processActiveTabs").checked;
+	options["sync"] = getElement("syncStorage").checked;
 
 	for (let set = 1; set <= NUM_SETS; set++) {
 		// Get component values
@@ -152,9 +155,18 @@ function saveOptions() {
 		}
 	}
 
-	browser.storage.local.set(options).catch(
-		function (error) { warn("Cannot set options: " + error); }
-	);
+	if (options["sync"]) {
+		// Set sync option in local storage and all options in sync storage
+		browser.storage.local.set({ sync: true });
+		browser.storage.sync.set(options).catch(
+			function (error) { warn("Cannot set options: " + error); }
+		);
+	} else {
+		// Set all options in local storage
+		browser.storage.local.set(options).catch(
+			function (error) { warn("Cannot set options: " + error); }
+		);
+	}
 
 	// Notify extension that options have been updated
 	browser.runtime.sendMessage({ type: "options" });
@@ -184,7 +196,17 @@ function closeOptions() {
 function retrieveOptions() {
 	//log("retrieveOptions");
 
-	browser.storage.local.get().then(onGot, onError);
+	browser.storage.local.get("sync").then(onGotSync, onError);
+
+	function onGotSync(options) {
+		if(options["sync"]) {
+			// Get all options from sync storage
+			browser.storage.sync.get().then(onGot, onError);
+		} else {
+			// Get all options from local storage
+			browser.storage.local.get().then(onGot, onError);
+		}
+	}
 
 	function onGot(options) {
 		cleanOptions(options);
@@ -328,6 +350,14 @@ function retrieveOptions() {
 		getElement("toolsMenu").checked = options["toolsMenu"];
 		getElement("matchSubdomains").checked = options["matchSubdomains"];
 		getElement("processActiveTabs").checked = options["processActiveTabs"];
+		getElement("syncStorage").checked = options["sync"];
+
+		if (gIsAndroid) {
+			// Disable sync options (sync storage not supported on Android yet)
+			getElement("syncStorage").disabled = true;
+			getElement("exportOptionsSync").disabled = true;
+			getElement("importOptionsSync").disabled = true;
+		}
 
 		confirmAccess(options);
 	}
@@ -388,9 +418,9 @@ function confirmAccess(options) {
 	}
 }
 
-// Export options
+// Compile options for export
 //
-function exportOptions() {
+function compileExportOptions() {
 	let options = {};
 
 	for (let set = 1; set <= NUM_SETS; set++) {
@@ -461,6 +491,246 @@ function exportOptions() {
 	options["toolsMenu"] = getElement("toolsMenu").checked;
 	options["matchSubdomins"] = getElement("matchSubdomains").checked;
 	options["processActiveTabs"] = getElement("processActiveTabs").checked;
+	options["sync"] = getElement("syncStorage").checked;
+
+	return options;
+}
+
+// Apply imported options
+//
+function applyImportOptions(options) {
+	for (let set = 1; set <= NUM_SETS; set++) {
+		// Get option values
+		let setName = options[`setName${set}`];
+		let sites = options[`sites${set}`];
+		let times = options[`times${set}`];
+		let limitMins = options[`limitMins${set}`];
+		let limitPeriod = options[`limitPeriod${set}`];
+		let conjMode = options[`conjMode${set}`];
+		let days = options[`days${set}`];
+		let blockURL = options[`blockURL${set}`];
+		let activeBlock = options[`activeBlock${set}`];
+		let countFocus = options[`countFocus${set}`];
+		let delayFirst = options[`delayFirst${set}`];
+		let delaySecs = options[`delaySecs${set}`];
+		let allowOverride = options[`allowOverride${set}`];
+		let prevOpts = options[`prevOpts${set}`];
+		let prevAddons = options[`prevAddons${set}`];
+		let prevSupport = options[`prevSupport${set}`];
+		let showTimer = options[`showTimer${set}`];
+		let sitesURL = options[`sitesURL${set}`];
+		let regexpBlock = options[`regexpBlock${set}`];
+		let regexpAllow = options[`regexpAllow${set}`];
+		let ignoreHash = options[`ignoreHash${set}`];
+
+		// Set component values
+		if (setName != undefined) {
+			let element = getElement(`setName${set}`);
+			if (!element.disabled) {
+				element.value = setName;
+				if (setName) {
+					getElement(`blockSetName${set}`).innerText = setName;
+				} else {
+					getElement(`blockSetName${set}`).innerText = `Block Set ${set}`;
+				}
+			}
+		}
+		if (sites != undefined) {
+			let element = getElement(`sites${set}`);
+			if (!element.disabled) {
+				element.value = sites.replace(/\s+/g, "\n");
+			}
+		}
+		if (times != undefined) {
+			let element = getElement(`times${set}`);
+			if (!element.disabled) {
+				element.value = times;
+			}
+		}
+		if (limitMins != undefined) {
+			let element = getElement(`limitMins${set}`);
+			if (!element.disabled) {
+				element.value = limitMins;
+			}
+		}
+		if (limitPeriod != undefined) {
+			let element = getElement(`limitPeriod${set}`);
+			if (!element.disabled) {
+				element.value = limitPeriod;
+			}
+		}
+		if (conjMode != undefined) {
+			let element = getElement(`conjMode${set}`);
+			if (!element.disabled) {
+				element.selectedIndex = isTrue(conjMode) ? 1 : 0;
+			}
+		}
+		if (days != undefined) {
+			days = decodeDays(days);
+			for (let i = 0; i < 7; i++) {
+				let element = getElement(`day${i}${set}`);
+				if (!element.disabled) {
+					element.checked = days[i];
+				}
+			}
+		}
+		if (blockURL != undefined) {
+			let element = getElement(`blockURL${set}`);
+			if (!element.disabled) {
+				element.value = blockURL;
+			}
+		}
+		if (activeBlock != undefined) {
+			let element = getElement(`activeBlock${set}`);
+			if (!element.disabled) {
+				element.checked = isTrue(activeBlock);
+			}
+		}
+		if (countFocus != undefined) {
+			let element = getElement(`countFocus${set}`);
+			if (!element.disabled) {
+				element.checked = isTrue(countFocus);
+			}
+		}
+		if (delayFirst != undefined) {
+			let element = getElement(`delayFirst${set}`);
+			if (!element.disabled) {
+				element.checked = isTrue(delayFirst);
+			}
+		}
+		if (delaySecs != undefined) {
+			let element = getElement(`delaySecs${set}`);
+			if (!element.disabled) {
+				element.value = delaySecs;
+			}
+		}
+		if (allowOverride != undefined) {
+			let element = getElement(`allowOverride${set}`);
+			if (!element.disabled) {
+				element.checked = isTrue(allowOverride);
+			}
+		}
+		if (prevOpts != undefined) {
+			let element = getElement(`prevOpts${set}`);
+			if (!element.disabled) {
+				element.checked = isTrue(prevOpts);
+			}
+		}
+		if (prevAddons != undefined) {
+			let element = getElement(`prevAddons${set}`);
+			if (!element.disabled) {
+				element.checked = isTrue(prevAddons);
+			}
+		}
+		if (prevSupport != undefined) {
+			let element = getElement(`prevSupport${set}`);
+			if (!element.disabled) {
+				element.checked = isTrue(prevSupport);
+			}
+		}
+		if (showTimer != undefined) {
+			let element = getElement(`showTimer${set}`);
+			if (!element.disabled) {
+				element.checked = isTrue(showTimer);
+			}
+		}
+		if (sitesURL != undefined) {
+			let element = getElement(`sitesURL${set}`);
+			if (!element.disabled) {
+				element.value = sitesURL;
+			}
+		}
+		if (regexpBlock != undefined) {
+			let element = getElement(`regexpBlock${set}`);
+			if (!element.disabled) {
+				element.value = regexpBlock;
+			}
+		}
+		if (regexpAllow != undefined) {
+			let element = getElement(`regexpAllow${set}`);
+			if (!element.disabled) {
+				element.value = regexpAllow;
+			}
+		}
+		if (ignoreHash != undefined) {
+			let element = getElement(`ignoreHash${set}`);
+			if (!element.disabled) {
+				element.checked = isTrue(ignoreHash);
+			}
+		}
+	}
+
+	// General options
+	let oa = options["oa"];
+	let password = options["password"];
+	let hpp = options["hpp"];
+	let timerVisible = options["timerVisible"];
+	let timerSize = options["timerSize"];
+	let timerLocation = options["timerLocation"];
+	let timerBadge= options["timerBadge"];
+	let orm = options["orm"];
+	let ora = options["ora"];
+	let warnSecs = options["warnSecs"];
+	let warnImmediate = options["warnImmediate"];
+	let contextMenu = options["contextMenu"];
+	let toolsMenu = options["toolsMenu"];
+	let matchSubdomains = options["matchSubdomains"];
+	let processActiveTabs = options["processActiveTabs"];
+	let sync = options["sync"];
+	if (oa != undefined) {
+		getElement("optionsAccess").value = oa;
+	}
+	if (password != undefined) {
+		getElement("accessPassword").value = password;
+	}
+	if (hpp != undefined) {
+		getElement("hidePassword").checked = isTrue(hpp);
+	}
+	if (timerVisible != undefined) {
+		getElement("timerVisible").checked = isTrue(timerVisible);
+	}
+	if (timerSize != undefined) {
+		getElement("timerSize").value = timerSize;
+	}
+	if (timerLocation != undefined) {
+		getElement("timerLocation").value = timerLocation;
+	}
+	if (timerBadge != undefined) {
+		getElement("timerBadge").checked = isTrue(timerBadge);
+	}
+	if (orm != undefined) {
+		getElement("overrideMins").value = orm;
+	}
+	if (ora != undefined) {
+		getElement("overrideAccess").value = ora;
+	}
+	if (warnSecs != undefined) {
+		getElement("warnSecs").value = warnSecs;
+	}
+	if (warnImmediate != undefined) {
+		getElement("warnImmediate").value = warnImmediate;
+	}
+	if (contextMenu != undefined) {
+		getElement("contextMenu").checked = isTrue(contextMenu);
+	}
+	if (toolsMenu != undefined) {
+		getElement("toolsMenu").checked = isTrue(toolsMenu);
+	}
+	if (matchSubdomains != undefined) {
+		getElement("matchSubdomains").checked = isTrue(matchSubdomains);
+	}
+	if (processActiveTabs != undefined) {
+		getElement("processActiveTabs").checked = isTrue(processActiveTabs);
+	}
+	if (sync != undefined) {
+		getElement("syncStorage").checked = isTrue(sync);
+	}
+}
+
+// Export options to file
+//
+function exportOptions() {
+	let options = compileExportOptions();
 
 	// Convert options to text lines
 	let lines = [];
@@ -487,7 +757,7 @@ function exportOptions() {
 	}
 }
 
-// Import options
+// Import options from file
 //
 function importOptions() {
 	let file = getElement("importFile").files[0];
@@ -508,8 +778,6 @@ function importOptions() {
 			return;
 		}
 
-		function isTrue(str) { return /^true$/i.test(str); }
-
 		// Extract options from text
 		let regexp = /^(\w+)=(.*)$/;
 		let lines = text.split(/[\n\r]+/);
@@ -528,230 +796,43 @@ function importOptions() {
 			return;
 		}
 
-		for (let set = 1; set <= NUM_SETS; set++) {
-			// Get option values
-			let setName = options[`setName${set}`];
-			let sites = options[`sites${set}`];
-			let times = options[`times${set}`];
-			let limitMins = options[`limitMins${set}`];
-			let limitPeriod = options[`limitPeriod${set}`];
-			let conjMode = options[`conjMode${set}`];
-			let days = options[`days${set}`];
-			let blockURL = options[`blockURL${set}`];
-			let activeBlock = options[`activeBlock${set}`];
-			let countFocus = options[`countFocus${set}`];
-			let delayFirst = options[`delayFirst${set}`];
-			let delaySecs = options[`delaySecs${set}`];
-			let allowOverride = options[`allowOverride${set}`];
-			let prevOpts = options[`prevOpts${set}`];
-			let prevAddons = options[`prevAddons${set}`];
-			let prevSupport = options[`prevSupport${set}`];
-			let showTimer = options[`showTimer${set}`];
-			let sitesURL = options[`sitesURL${set}`];
-			let regexpBlock = options[`regexpBlock${set}`];
-			let regexpAllow = options[`regexpAllow${set}`];
-			let ignoreHash = options[`ignoreHash${set}`];
-
-			// Set component values
-			if (setName != undefined) {
-				let element = getElement(`setName${set}`);
-				if (!element.disabled) {
-					element.value = setName;
-					if (setName) {
-						getElement(`blockSetName${set}`).innerText = setName;
-					} else {
-						getElement(`blockSetName${set}`).innerText = `Block Set ${set}`;
-					}
-				}
-			}
-			if (sites != undefined) {
-				let element = getElement(`sites${set}`);
-				if (!element.disabled) {
-					element.value = sites.replace(/\s+/g, "\n");
-				}
-			}
-			if (times != undefined) {
-				let element = getElement(`times${set}`);
-				if (!element.disabled) {
-					element.value = times;
-				}
-			}
-			if (limitMins != undefined) {
-				let element = getElement(`limitMins${set}`);
-				if (!element.disabled) {
-					element.value = limitMins;
-				}
-			}
-			if (limitPeriod != undefined) {
-				let element = getElement(`limitPeriod${set}`);
-				if (!element.disabled) {
-					element.value = limitPeriod;
-				}
-			}
-			if (conjMode != undefined) {
-				let element = getElement(`conjMode${set}`);
-				if (!element.disabled) {
-					element.selectedIndex = isTrue(conjMode) ? 1 : 0;
-				}
-			}
-			if (days != undefined) {
-				days = decodeDays(days);
-				for (let i = 0; i < 7; i++) {
-					let element = getElement(`day${i}${set}`);
-					if (!element.disabled) {
-						element.checked = days[i];
-					}
-				}
-			}
-			if (blockURL != undefined) {
-				let element = getElement(`blockURL${set}`);
-				if (!element.disabled) {
-					element.value = blockURL;
-				}
-			}
-			if (activeBlock != undefined) {
-				let element = getElement(`activeBlock${set}`);
-				if (!element.disabled) {
-					element.checked = isTrue(activeBlock);
-				}
-			}
-			if (countFocus != undefined) {
-				let element = getElement(`countFocus${set}`);
-				if (!element.disabled) {
-					element.checked = isTrue(countFocus);
-				}
-			}
-			if (delayFirst != undefined) {
-				let element = getElement(`delayFirst${set}`);
-				if (!element.disabled) {
-					element.checked = isTrue(delayFirst);
-				}
-			}
-			if (delaySecs != undefined) {
-				let element = getElement(`delaySecs${set}`);
-				if (!element.disabled) {
-					element.value = delaySecs;
-				}
-			}
-			if (allowOverride != undefined) {
-				let element = getElement(`allowOverride${set}`);
-				if (!element.disabled) {
-					element.checked = isTrue(allowOverride);
-				}
-			}
-			if (prevOpts != undefined) {
-				let element = getElement(`prevOpts${set}`);
-				if (!element.disabled) {
-					element.checked = isTrue(prevOpts);
-				}
-			}
-			if (prevAddons != undefined) {
-				let element = getElement(`prevAddons${set}`);
-				if (!element.disabled) {
-					element.checked = isTrue(prevAddons);
-				}
-			}
-			if (prevSupport != undefined) {
-				let element = getElement(`prevSupport${set}`);
-				if (!element.disabled) {
-					element.checked = isTrue(prevSupport);
-				}
-			}
-			if (showTimer != undefined) {
-				let element = getElement(`showTimer${set}`);
-				if (!element.disabled) {
-					element.checked = isTrue(showTimer);
-				}
-			}
-			if (sitesURL != undefined) {
-				let element = getElement(`sitesURL${set}`);
-				if (!element.disabled) {
-					element.value = sitesURL;
-				}
-			}
-			if (regexpBlock != undefined) {
-				let element = getElement(`regexpBlock${set}`);
-				if (!element.disabled) {
-					element.value = regexpBlock;
-				}
-			}
-			if (regexpAllow != undefined) {
-				let element = getElement(`regexpAllow${set}`);
-				if (!element.disabled) {
-					element.value = regexpAllow;
-				}
-			}
-			if (ignoreHash != undefined) {
-				let element = getElement(`ignoreHash${set}`);
-				if (!element.disabled) {
-					element.checked = isTrue(ignoreHash);
-				}
-			}
-		}
-
-		// General options
-		let oa = options["oa"];
-		let password = options["password"];
-		let hpp = options["hpp"];
-		let timerVisible = options["timerVisible"];
-		let timerSize = options["timerSize"];
-		let timerLocation = options["timerLocation"];
-		let timerBadge= options["timerBadge"];
-		let orm = options["orm"];
-		let ora = options["ora"];
-		let warnSecs = options["warnSecs"];
-		let warnImmediate = options["warnImmediate"];
-		let contextMenu = options["contextMenu"];
-		let toolsMenu = options["toolsMenu"];
-		let matchSubdomains = options["matchSubdomains"]
-		let processActiveTabs = options["processActiveTabs"]
-		if (oa != undefined) {
-			getElement("optionsAccess").value = oa;
-		}
-		if (password != undefined) {
-			getElement("accessPassword").value = password;
-		}
-		if (hpp != undefined) {
-			getElement("hidePassword").checked = hpp;
-		}
-		if (timerVisible != undefined) {
-			getElement("timerVisible").checked = timerVisible;
-		}
-		if (timerSize != undefined) {
-			getElement("timerSize").value = timerSize;
-		}
-		if (timerLocation != undefined) {
-			getElement("timerLocation").value = timerLocation;
-		}
-		if (timerBadge != undefined) {
-			getElement("timerBadge").checked = timerBadge;
-		}
-		if (orm != undefined) {
-			getElement("overrideMins").value = orm;
-		}
-		if (ora != undefined) {
-			getElement("overrideAccess").value = ora;
-		}
-		if (warnSecs != undefined) {
-			getElement("warnSecs").value = warnSecs;
-		}
-		if (warnImmediate != undefined) {
-			getElement("warnImmediate").value = warnImmediate;
-		}
-		if (contextMenu != undefined) {
-			getElement("contextMenu").checked = contextMenu;
-		}
-		if (toolsMenu != undefined) {
-			getElement("toolsMenu").checked = toolsMenu;
-		}
-		if (matchSubdomains != undefined) {
-			getElement("matchSubdomains").checked = matchSubdomains;
-		}
-		if (processActiveTabs != undefined) {
-			getElement("processActiveTabs").checked = processActiveTabs;
-		}
+		applyImportOptions(options);
 
 		$("#alertImportSuccess").dialog("open");
+	}
+}
+
+// Export options to sync storage
+//
+function exportOptionsSync() {
+	let options = compileExportOptions();
+
+	browser.storage.sync.set(options).then(onSuccess, onError);
+	
+	function onSuccess() {
+		$("#alertExportSuccess").dialog("open");
+	}
+
+	function onError(error) {
+		warn("Cannot export options to sync storage: " + error);
+		$("#alertExportSyncError").dialog("open");
+	};
+}
+
+// Import options from sync storage
+//
+function importOptionsSync() {
+	browser.storage.sync.get().then(onGot, onError);
+
+	function onGot(options) {
+		cleanOptions(options);
+		applyImportOptions(options);
+		$("#alertImportSuccess").dialog("open");
+	}
+
+	function onError(error) {
+		warn("Cannot import options from sync storage: " + error);
+		$("#alertRetrieveError").dialog("open");
 	}
 }
 
@@ -870,6 +951,8 @@ for (let set = 1; set <= NUM_SETS; set++) {
 }
 $("#exportOptions").click(exportOptions);
 $("#importOptions").click(importOptions);
+$("#exportOptionsSync").click(exportOptionsSync);
+$("#importOptionsSync").click(importOptionsSync);
 $("#saveOptions").button();
 $("#saveOptions").click(saveOptions);
 $("#saveOptionsClose").button();

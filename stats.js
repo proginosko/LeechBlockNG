@@ -12,7 +12,15 @@ function getElement(id) { return document.getElementById(id); }
 function statsRefresh() {
 	//log("statsRefresh");
 
-	browser.storage.local.get().then(onGot, onError);
+	browser.storage.local.get("sync").then(onGotSync, onError);
+
+	function onGotSync(options) {
+		if (options["sync"]) {
+			browser.storage.sync.get().then(onGot, onError);
+		} else {
+			browser.storage.local.get().then(onGot, onError);
+		}
+	}
 
 	function onGot(options) {
 		// Get current time in seconds

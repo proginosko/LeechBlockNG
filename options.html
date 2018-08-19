@@ -296,13 +296,22 @@
 								<input id="processActiveTabs" type="checkbox">
 								<label for="processActiveTabs">Process only active tabs (improves performance when multiple tabs open)</label>
 							</p>
+							<p>
+								<input id="syncStorage" type="checkbox">
+								<label for="syncStorage">Use sync storage for options (experimental: use at your own risk!)</label>
+							</p>
 						</fieldset>
 						<fieldset>
 							<legend>Export / Import</legend>
 							<p>
-								<button id="exportOptions" type="button">Export Options</button>
-								<button id="importOptions" type="button">Import Options</button>
+								<button id="exportOptions" type="button">Export Options to File</button>
+								<button id="importOptions" type="button">Import Options from File</button>
 								<input type="file" id="importFile">
+							</p>
+							<hr>
+							<p>
+								<button id="exportOptionsSync" type="button">Export Options to Sync Storage</button>
+								<button id="importOptionsSync" type="button">Import Options from Sync Storage</button>
 							</p>
 						</fieldset>
 					</div>
@@ -362,11 +371,17 @@
 			<div id="alertImportError" title="LeechBlock Options">
 				<p><strong>Error:</strong> Unable to import options from file.</p>
 			</div>
+			<div id="alertImportSyncError" title="LeechBlock Options">
+				<p><strong>Error:</strong> Unable to import options from sync storage.</p>
+			</div>
 			<div id="alertImportSuccess" title="LeechBlock Options">
 				<p>The options have been imported successfully.</p>
 			</div>
 			<div id="alertExportError" title="LeechBlock Options">
 				<p><strong>Error:</strong> Unable to download exported options.</p>
+			</div>
+			<div id="alertExportSyncError" title="LeechBlock Options">
+				<p><strong>Error:</strong> Unable to export options to sync storage.</p>
 			</div>
 			<div id="alertExportSuccess" title="LeechBlock Options">
 				<p>The options have been exported successfully.</p>
