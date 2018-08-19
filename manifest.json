@@ -3,7 +3,7 @@
 	"description": "LeechBlock is a simple productivity tool designed to block those time-wasting sites that can suck the life out of your working day.",
 	"manifest_version": 2,
 	"name": "LeechBlock NG",
-	"version": "0.9.4",
+	"version": "0.9.5",
 	"homepage_url": "http://www.proginosko.com/leechblock/",
 	"icons": {
 		"48": "icons/leechblock48.png",
