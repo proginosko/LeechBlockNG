@@ -1,3 +1,6 @@
+### Version 0.9.6 (25 Aug 2018)
+* Added lockdown end time to statistics page.
+
 ### Version 0.9.5 (19 Aug 2018)
 * Added sync storage options (experimental feature).
 
