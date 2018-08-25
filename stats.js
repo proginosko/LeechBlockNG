@@ -52,6 +52,11 @@ function statsRefresh() {
 					let timeLeft = formatTime(secsLeft);
 					getElement(`timeLeft${set}`).innerText = timeLeft;
 				}
+
+				if (timedata[4] > now) {
+					let ldEndTime = new Date(timedata[4] * 1000).toLocaleString();
+					getElement(`ldEndTime${set}`).innerText = ldEndTime;
+				}
 			}
 		}
 
