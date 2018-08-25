@@ -269,9 +269,13 @@ function updateFocusedWindowId() {
 		return; // no support for windows!
 	}
 
-	browser.windows.getLastFocused().then(
-		function (win) { gFocusWindowId = win.id; },
-		function (error) { warn("Cannot get focused window: " + error); }
+	browser.windows.getCurrent().then(
+		function (win) {
+			gFocusWindowId = win.focused ? win.id : browser.windows.WINDOW_ID_NONE;
+		},
+		function (error) {
+			warn("Cannot get current window: " + error);
+		}
 	);
 }
 
