@@ -1,3 +1,6 @@
+### Version 0.9.7 (04 Sep 2018)
+* Fixed bug in sync storage export/import.
+
 ### Version 0.9.6 (25 Aug 2018)
 * Added lockdown end time to statistics page.
 
