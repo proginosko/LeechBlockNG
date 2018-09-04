@@ -420,7 +420,7 @@ function confirmAccess(options) {
 
 // Compile options for export
 //
-function compileExportOptions() {
+function compileExportOptions(encode) {
 	let options = {};
 
 	for (let set = 1; set <= NUM_SETS; set++) {
@@ -435,6 +435,9 @@ function compileExportOptions() {
 		let days = [];
 		for (let i = 0; i < 7; i++) {
 			days.push(getElement(`day${i}${set}`).checked);
+		}
+		if (encode) {
+			days = encodeDays(days);
 		}
 		let blockURL = getElement(`blockURL${set}`).value;
 		let activeBlock = getElement(`activeBlock${set}`).checked;
@@ -458,7 +461,7 @@ function compileExportOptions() {
 		options[`limitMins${set}`] = limitMins;
 		options[`limitPeriod${set}`] = limitPeriod;
 		options[`conjMode${set}`] = conjMode;
-		options[`days${set}`] = encodeDays(days);
+		options[`days${set}`] = days;
 		options[`blockURL${set}`] = blockURL;
 		options[`activeBlock${set}`] = activeBlock;
 		options[`countFocus${set}`] = countFocus;
@@ -498,7 +501,7 @@ function compileExportOptions() {
 
 // Apply imported options
 //
-function applyImportOptions(options) {
+function applyImportOptions(options, decode) {
 	for (let set = 1; set <= NUM_SETS; set++) {
 		// Get option values
 		let setName = options[`setName${set}`];
@@ -566,7 +569,9 @@ function applyImportOptions(options) {
 			}
 		}
 		if (days != undefined) {
-			days = decodeDays(days);
+			if (decode) {
+				days = decodeDays(days);
+			}
 			for (let i = 0; i < 7; i++) {
 				let element = getElement(`day${i}${set}`);
 				if (!element.disabled) {
@@ -730,7 +735,7 @@ function applyImportOptions(options) {
 // Export options to file
 //
 function exportOptions() {
-	let options = compileExportOptions();
+	let options = compileExportOptions(true);
 
 	// Convert options to text lines
 	let lines = [];
@@ -796,7 +801,7 @@ function importOptions() {
 			return;
 		}
 
-		applyImportOptions(options);
+		applyImportOptions(options, true);
 
 		$("#alertImportSuccess").dialog("open");
 	}
@@ -805,7 +810,7 @@ function importOptions() {
 // Export options to sync storage
 //
 function exportOptionsSync() {
-	let options = compileExportOptions();
+	let options = compileExportOptions(false);
 
 	browser.storage.sync.set(options).then(onSuccess, onError);
 	
@@ -826,7 +831,7 @@ function importOptionsSync() {
 
 	function onGot(options) {
 		cleanOptions(options);
-		applyImportOptions(options);
+		applyImportOptions(options, false);
 		$("#alertImportSuccess").dialog("open");
 	}
 
