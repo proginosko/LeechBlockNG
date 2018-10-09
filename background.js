@@ -410,6 +410,7 @@ function checkTab(id, url, isRepeat) {
 			let activeBlock = gOptions[`activeBlock${set}`];
 			let allowOverride = gOptions[`allowOverride${set}`];
 			let showTimer = gOptions[`showTimer${set}`];
+			let grayReplacesBlock = gOptions[`grayReplacesBlock${set}`];
 
 			// Check day
 			let onSelectedDay = days[timedate.getDay()];
@@ -473,15 +474,15 @@ function checkTab(id, url, isRepeat) {
 					browser.tabs.sendMessage(id, message).then(
 						function (keyword) {
 							if (keyword) {
-								// Redirect page
-								browser.tabs.update(id, { url: blockURL });
+								// Redirect/Grayscale page
+								applyAntiLeech(id, blockURL, grayReplacesBlock);
 							}
 						},
 						function (error) {}
 					);
 				} else {
-					// Redirect page
-					browser.tabs.update(id, { url: blockURL });
+					// Redirect/Grayscale page
+					applyAntiLeech(id, blockURL, grayReplacesBlock);
 
 					return true; // blocked
 				}
@@ -504,6 +505,14 @@ function checkTab(id, url, isRepeat) {
 	checkWarning(id);
 
 	return false; // not blocked
+}
+
+function applyAntiLeech(id, blockURL, grayInsteadOfRedirect) {
+	if (!grayInsteadOfRedirect) {
+		browser.tabs.update(id, { url: blockURL });
+	} else {
+		browser.tabs.executeScript(id, { code: 'document.body.style["-webkit-filter"]="grayscale(100)";document.body.style["filter"] = "grayscale(1)";' });
+	}
 }
 
 // Check for warning message (and display message if needed)

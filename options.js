@@ -114,6 +114,7 @@ function saveOptions() {
 		let prevAddons = getElement(`prevAddons${set}`).checked;
 		let prevSupport = getElement(`prevSupport${set}`).checked;
 		let showTimer = getElement(`showTimer${set}`).checked;
+		let grayReplacesBlock = getElement(`grayReplacesBlock${set}`).checked;
 		let sitesURL = getElement(`sitesURL${set}`).value;
 		let regexpBlock = getElement(`regexpBlock${set}`).value;
 		let regexpAllow = getElement(`regexpAllow${set}`).value;
@@ -140,6 +141,7 @@ function saveOptions() {
 		options[`prevAddons${set}`] = prevAddons;
 		options[`prevSupport${set}`] = prevSupport;
 		options[`showTimer${set}`] = showTimer;
+		options[`grayReplacesBlock${set}`] = grayReplacesBlock;
 		options[`sitesURL${set}`] = sitesURL;
 		options[`regexpBlock${set}`] = regexpBlock;
 		options[`regexpAllow${set}`] = regexpAllow;
@@ -296,6 +298,7 @@ function retrieveOptions() {
 			let prevAddons = options[`prevAddons${set}`];
 			let prevSupport = options[`prevSupport${set}`];
 			let showTimer = options[`showTimer${set}`];
+			let grayReplacesBlock = options[`grayReplacesBlock${set}`];
 			let sitesURL = options[`sitesURL${set}`];
 			let regexpBlock = options[`regexpBlock${set}`];
 			let regexpAllow = options[`regexpAllow${set}`];
@@ -328,6 +331,7 @@ function retrieveOptions() {
 			getElement(`prevAddons${set}`).checked = prevAddons;
 			getElement(`prevSupport${set}`).checked = prevSupport;
 			getElement(`showTimer${set}`).checked = showTimer;
+			getElement(`grayReplacesBlock${set}`).checked = grayReplacesBlock;
 			getElement(`sitesURL${set}`).value = sitesURL;
 			getElement(`regexpBlock${set}`).value = regexpBlock;
 			getElement(`regexpAllow${set}`).value = regexpAllow;
@@ -449,6 +453,7 @@ function compileExportOptions(encode) {
 		let prevAddons = getElement(`prevAddons${set}`).checked;
 		let prevSupport = getElement(`prevSupport${set}`).checked;
 		let showTimer = getElement(`showTimer${set}`).checked;
+		let grayReplacesBlock = getElement(`grayReplacesBlock${set}`).checked;
 		let sitesURL = getElement(`sitesURL${set}`).value;
 		let regexpBlock = getElement(`regexpBlock${set}`).value;
 		let regexpAllow = getElement(`regexpAllow${set}`).value;
@@ -472,6 +477,7 @@ function compileExportOptions(encode) {
 		options[`prevAddons${set}`] = prevAddons;
 		options[`prevSupport${set}`] = prevSupport;
 		options[`showTimer${set}`] = showTimer;
+		options[`grayReplacesBlock${set}`] = grayReplacesBlock;
 		options[`sitesURL${set}`] = sitesURL;
 		options[`regexpBlock${set}`] = regexpBlock;
 		options[`regexpAllow${set}`] = regexpAllow;
@@ -521,6 +527,7 @@ function applyImportOptions(options, decode) {
 		let prevAddons = options[`prevAddons${set}`];
 		let prevSupport = options[`prevSupport${set}`];
 		let showTimer = options[`showTimer${set}`];
+		let grayReplacesBlock = options[`grayReplacesBlock${set}`];
 		let sitesURL = options[`sitesURL${set}`];
 		let regexpBlock = options[`regexpBlock${set}`];
 		let regexpAllow = options[`regexpAllow${set}`];
@@ -637,6 +644,12 @@ function applyImportOptions(options, decode) {
 			let element = getElement(`showTimer${set}`);
 			if (!element.disabled) {
 				element.checked = isTrue(showTimer);
+			}
+		}
+		if (grayReplacesBlock != undefined) {
+			let element = getElement(`grayReplacesBlock${set}`);
+			if (!element.disabled) {
+				element.checked = isTrue(grayReplacesBlock);
 			}
 		}
 		if (sitesURL != undefined) {
@@ -850,7 +863,7 @@ function disableSetOptions(set) {
 		"day0", "day1", "day2", "day3", "day4", "day5", "day6",
 		"blockURL", "defaultPage", "delayingPage", "blankPage", "homePage",
 		"activeBlock", "countFocus", "delayFirst", "delaySecs", "allowOverride",
-		"prevOpts", "prevAddons", "prevSupport", "showTimer", "sitesURL",
+		"prevOpts", "prevAddons", "prevSupport", "showTimer", "grayReplacesBlock", "sitesURL",
 		"regexpBlock", "clearRegExpBlock", "genRegExpBlock",
 		"regexpAllow", "clearRegExpAllow", "genRegExpAllow",
 		"ignoreHash", "cancelLockdown"

@@ -77,6 +77,9 @@ function cleanOptions(options) {
 		if (typeof options[`showTimer${set}`] !== "boolean") {
 			options[`showTimer${set}`] = true;
 		}
+		if (typeof options[`grayReplacesBlock${set}`] !== "boolean") {
+			options[`grayReplacesBlock${set}`] = false;
+		}
 		if (typeof options[`sitesURL${set}`] !== "string") {
 			options[`sitesURL${set}`] = "";
 		}
