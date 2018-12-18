@@ -698,6 +698,16 @@ function updateTimer(id) {
 	}
 	browser.tabs.sendMessage(id, message).catch(function (error) {});
 
+	// Set tooltip
+	if (!gIsAndroid) {
+		if (secsLeft == undefined || secsLeft == Infinity) {
+			browser.browserAction.setTitle({ title: null, tabId: id });
+		} else {
+			let title = "LeechBlock [" + formatTime(secsLeft) + "]"
+			browser.browserAction.setTitle({ title: title, tabId: id });
+		}
+	}
+
 	// Set badge timer (if option selected)
 	if (!gIsAndroid && gOptions["timerBadge"] && secsLeft < 600) {
 		let m = Math.floor(secsLeft / 60);
