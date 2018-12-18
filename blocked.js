@@ -28,6 +28,7 @@ function processBlockInfo(info) {
 		} else {
 			blockedSet.innerText += " " + info.blockedSet;
 		}
+		document.title += " (" + blockedSet.innerText + ")";
 	}
 
 	let unblockTime = document.getElementById("lbUnblockTime");
