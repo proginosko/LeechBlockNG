@@ -48,6 +48,11 @@ function processBlockInfo(info) {
 		};
 		countdown.interval = window.setInterval(onCountdownTimer, 1000, countdown);
 	}
+
+	if (info.reloadSecs) {
+		// Reload blocked page after specified time
+		window.setTimeout(reloadBlockedPage, info.reloadSecs * 1000);
+	}
 }
 
 // Handle countdown on delaying page
@@ -86,6 +91,15 @@ function onCountdownTimer(countdown) {
 			blockedSet: countdown.blockedSet
 		};
 		browser.runtime.sendMessage(message);
+	}
+}
+
+// Attempt to reload blocked page
+//
+function reloadBlockedPage() {
+	let blockedURLLink = document.getElementById("lbBlockedURLLink");
+	if (blockedURLLink) {
+		blockedURLLink.click();
 	}
 }
 

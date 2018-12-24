@@ -26,6 +26,7 @@ function saveOptions() {
 		let times = getElement(`times${set}`).value;
 		let limitMins = getElement(`limitMins${set}`).value;
 		let delaySecs = getElement(`delaySecs${set}`).value;
+		let reloadSecs = getElement(`reloadSecs${set}`).value;
 		let blockURL = getElement(`blockURL${set}`).value;
 
 		// Check field values
@@ -44,6 +45,12 @@ function saveOptions() {
 		if (!delaySecs || !checkPosIntFormat(delaySecs)) {
 			$("#tabs").tabs("option", "active", (set - 1));
 			$(`#delaySecs${set}`).focus();
+			$("#alertBadSeconds").dialog("open");
+			return false;
+		}
+		if (!checkPosIntFormat(reloadSecs)) {
+			$("#tabs").tabs("option", "active", (set - 1));
+			$(`#reloadSecs${set}`).focus();
 			$("#alertBadSeconds").dialog("open");
 			return false;
 		}
@@ -109,6 +116,7 @@ function saveOptions() {
 		let countFocus = getElement(`countFocus${set}`).checked;
 		let delayFirst = getElement(`delayFirst${set}`).checked;
 		let delaySecs = getElement(`delaySecs${set}`).value;
+		let reloadSecs = getElement(`reloadSecs${set}`).value;
 		let allowOverride = getElement(`allowOverride${set}`).checked;
 		let prevOpts = getElement(`prevOpts${set}`).checked;
 		let prevAddons = getElement(`prevAddons${set}`).checked;
@@ -135,6 +143,7 @@ function saveOptions() {
 		options[`countFocus${set}`] = countFocus;
 		options[`delayFirst${set}`] = delayFirst;
 		options[`delaySecs${set}`] = delaySecs;
+		options[`reloadSecs${set}`] = reloadSecs;
 		options[`allowOverride${set}`] = allowOverride;
 		options[`prevOpts${set}`] = prevOpts;
 		options[`prevAddons${set}`] = prevAddons;
@@ -291,6 +300,7 @@ function retrieveOptions() {
 			let countFocus = options[`countFocus${set}`];
 			let delayFirst = options[`delayFirst${set}`];
 			let delaySecs = options[`delaySecs${set}`];
+			let reloadSecs = options[`reloadSecs${set}`];
 			let allowOverride = options[`allowOverride${set}`];
 			let prevOpts = options[`prevOpts${set}`];
 			let prevAddons = options[`prevAddons${set}`];
@@ -323,6 +333,7 @@ function retrieveOptions() {
 			getElement(`countFocus${set}`).checked = countFocus;
 			getElement(`delayFirst${set}`).checked = delayFirst;
 			getElement(`delaySecs${set}`).value = delaySecs;
+			getElement(`reloadSecs${set}`).value = reloadSecs;
 			getElement(`allowOverride${set}`).checked = allowOverride;
 			getElement(`prevOpts${set}`).checked = prevOpts;
 			getElement(`prevAddons${set}`).checked = prevAddons;
@@ -444,6 +455,7 @@ function compileExportOptions(encode) {
 		let countFocus = getElement(`countFocus${set}`).checked;
 		let delayFirst = getElement(`delayFirst${set}`).checked;
 		let delaySecs = getElement(`delaySecs${set}`).value;
+		let reloadSecs = getElement(`reloadSecs${set}`).value;
 		let allowOverride = getElement(`allowOverride${set}`).checked;
 		let prevOpts = getElement(`prevOpts${set}`).checked;
 		let prevAddons = getElement(`prevAddons${set}`).checked;
@@ -467,6 +479,7 @@ function compileExportOptions(encode) {
 		options[`countFocus${set}`] = countFocus;
 		options[`delayFirst${set}`] = delayFirst;
 		options[`delaySecs${set}`] = delaySecs;
+		options[`reloadSecs${set}`] = reloadSecs;
 		options[`allowOverride${set}`] = allowOverride;
 		options[`prevOpts${set}`] = prevOpts;
 		options[`prevAddons${set}`] = prevAddons;
@@ -516,6 +529,7 @@ function applyImportOptions(options, decode) {
 		let countFocus = options[`countFocus${set}`];
 		let delayFirst = options[`delayFirst${set}`];
 		let delaySecs = options[`delaySecs${set}`];
+		let reloadSecs = options[`reloadSecs${set}`];
 		let allowOverride = options[`allowOverride${set}`];
 		let prevOpts = options[`prevOpts${set}`];
 		let prevAddons = options[`prevAddons${set}`];
@@ -607,6 +621,12 @@ function applyImportOptions(options, decode) {
 			let element = getElement(`delaySecs${set}`);
 			if (!element.disabled) {
 				element.value = delaySecs;
+			}
+		}
+		if (reloadSecs != undefined) {
+			let element = getElement(`reloadSecs${set}`);
+			if (!element.disabled) {
+				element.value = reloadSecs;
 			}
 		}
 		if (allowOverride != undefined) {
@@ -849,7 +869,9 @@ function disableSetOptions(set) {
 		"times", "allDay", "limitMins", "limitPeriod", "conjMode",
 		"day0", "day1", "day2", "day3", "day4", "day5", "day6",
 		"blockURL", "defaultPage", "delayingPage", "blankPage", "homePage",
-		"activeBlock", "countFocus", "delayFirst", "delaySecs", "allowOverride",
+		"activeBlock", "countFocus",
+		"delayFirst", "delaySecs",
+		"reloadSecs", "allowOverride",
 		"prevOpts", "prevAddons", "prevSupport", "showTimer", "sitesURL",
 		"regexpBlock", "clearRegExpBlock", "genRegExpBlock",
 		"regexpAllow", "clearRegExpAllow", "genRegExpAllow",

@@ -779,12 +779,16 @@ function createBlockInfo(url) {
 	// Get delaying time for block set
 	let delaySecs = gOptions[`delaySecs${blockedSet}`];
 
+	// Get reloading time (if specified)
+	let reloadSecs = gOptions[`reloadSecs${blockedSet}`];
+
 	return {
 		blockedSet: blockedSet,
 		blockedSetName: blockedSetName,
 		blockedURL: blockedURL,
 		unblockTime: unblockTime,
-		delaySecs: delaySecs
+		delaySecs: delaySecs,
+		reloadSecs: reloadSecs
 	};
 }
 

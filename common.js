@@ -6,8 +6,6 @@ const NUM_SETS = 6;
 const ALL_DAY_TIMES = "0000-2400";
 const DEFAULT_BLOCK_URL = "blocked.html?$S&$U";
 const DELAYED_BLOCK_URL = "delayed.html?$S&$U";
-const LEGACY_DEFAULT_BLOCK_URL = "chrome://leechblock/content/blocked.xhtml?$S&$U";
-const LEGACY_DELAYED_BLOCK_URL = "chrome://leechblock/content/delayed.xhtml?$S&$U";
 const DEFAULT_ICON = { 16: "icons/leechblock16.png", 32: "icons/leechblock32.png" };
 const OVERRIDE_ICON = { 16: "icons/leechblock16o.png", 32: "icons/leechblock32o.png" };
 
@@ -62,6 +60,9 @@ function cleanOptions(options) {
 		if (typeof options[`delaySecs${set}`] !== "string") {
 			options[`delaySecs${set}`] = "60";
 		}
+		if (typeof options[`reloadSecs${set}`] !== "string") {
+			options[`reloadSecs${set}`] = "";
+		}
 		if (typeof options[`allowOverride${set}`] !== "boolean") {
 			options[`allowOverride${set}`] = true;
 		}
@@ -100,14 +101,6 @@ function cleanOptions(options) {
 		}
 		if (typeof options[`lockdown${set}`] !== "boolean") {
 			options[`lockdown${set}`] = false;
-		}
-
-		// Update legacy values
-		if (options[`blockURL${set}`] == LEGACY_DEFAULT_BLOCK_URL) {
-			options[`blockURL${set}`] = DEFAULT_BLOCK_URL;
-		}
-		if (options[`blockURL${set}`] == LEGACY_DELAYED_BLOCK_URL) {
-			options[`blockURL${set}`] = DELAYED_BLOCK_URL;
 		}
 	}
 
