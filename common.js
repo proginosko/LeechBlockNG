@@ -11,6 +11,54 @@ const OVERRIDE_ICON = { 16: "icons/leechblock16o.png", 32: "icons/leechblock32o.
 
 const PARSE_URL = /^((([\w-]+):\/*(\w+(?::\w+)?@)?([\w-\.]+)(?::(\d*))?)([^\?#]*))(\?[^#]*)?(#.*)?$/;
 
+const PER_SET_OPTIONS = {
+	// def: default value, id: form element identifier (see options.html)
+	setName: { type: "string", def: "", id: "setName" },
+	sites: { type: "string", def: "", id: "sites" },
+	times: { type: "string", def: "0900-1700", id: "times" },
+	limitMins: { type: "string", def: "", id: "limitMins" },
+	limitPeriod: { type: "string", def: "", id: "limitPeriod" },
+	conjMode: { type: "boolean", def: false, id: "conjMode" },
+	days: { type: "array", def: [false, true, true, true, true, true, false], id: "day" },
+	blockURL: { type: "string", def: DEFAULT_BLOCK_URL, id: "blockURL" },
+	activeBlock: { type: "boolean", def: false, id: "activeBlock" },
+	countFocus: { type: "boolean", def: true, id: "countFocus" },
+	delayFirst: { type: "boolean", def: true, id: "delayFirst" },
+	delaySecs: { type: "string", def: "60", id: "delaySecs" },
+	reloadSecs: { type: "string", def: "", id: "reloadSecs" },
+	allowOverride: { type: "boolean", def: false, id: "allowOverride" },
+	prevOpts: { type: "boolean", def: false, id: "prevOpts" },
+	prevAddons: { type: "boolean", def: false, id: "prevAddons" },
+	prevSupport: { type: "boolean", def: false, id: "prevSupport" },
+	showTimer: { type: "boolean", def: true, id: "showTimer" },
+	sitesURL: { type: "string", def: "", id: "sitesURL" },
+	regexpBlock: { type: "string", def: "", id: "regexpBlock" },
+	regexpAllow: { type: "string", def: "", id: "regexpAllow" },
+	ignoreHash: { type: "boolean", def: true, id: "ignoreHash" },
+};
+
+const GENERAL_OPTIONS = {
+	// def: default value, id: form element identifier (see options.html)
+	sync: { type: "boolean", def: false, id: "syncStorage" }, // default: use local storage
+	oa: { type: "string", def: "0", id: "optionsAccess" }, // default: no password or code
+	password: { type: "string", def: "", id: "accessPassword" }, // default: blank
+	hpp: { type: "boolean", def: true, id: "hidePassword" }, // default: hidden
+	timerVisible: { type: "boolean", def: true, id: "timerVisible" }, // default: visible
+	timerSize: { type: "string", def: "1", id: "timerSize" }, // default: medium
+	timerLocation: { type: "string", def: "0", id: "timerLocation" }, // default: top left
+	timerBadge: { type: "boolean", def: true, id: "timerBadge" }, // default: enabled
+	orm: { type: "string", def: "", id: "overrideMins" }, // default: no override
+	ora: { type: "string", def: "0", id: "overrideAccess" }, // default: no password or code
+	warnSecs: { type: "string", def: "", id: "warnSecs" }, // default: no warning
+	warnImmediate: { type: "boolean", def: true, id: "warnImmediate" }, // default: warn only for immediate block
+	contextMenu: { type: "boolean", def: true, id: "contextMenu" }, // default: enabled
+	toolsMenu: { type: "boolean", def: true, id: "toolsMenu" }, // default: enabled
+	matchSubdomains: { type: "boolean", def: false, id: "matchSubdomains" }, // default: disabled
+	processActiveTabs: { type: "boolean", def: false, id: "processActiveTabs" }, // default: disabled
+	lockdownHours: { type: "string", def: "", id: null }, // default: blank
+	lockdownMins: { type: "string", def: "", id: null }, // default: blank
+};
+
 function listObjectProperties(obj, name) {
 	let list = "";
 	for (let prop of Object.keys(obj).sort()) {
@@ -19,145 +67,31 @@ function listObjectProperties(obj, name) {
 	return list;
 }
 
-// Clean options
+// Clean options (check types and set default values where needed)
 //
 function cleanOptions(options) {
-	for (let set = 1; set <= NUM_SETS; set++) {
-		// Check types and set default values where needed
-		if (typeof options[`setName${set}`] !== "string") {
-			options[`setName${set}`] = "";
-		}
-		if (typeof options[`sites${set}`] !== "string") {
-			options[`sites${set}`] = "";
-		}
-		if (typeof options[`times${set}`] !== "string") {
-			options[`times${set}`] = "0900-1700";
-		}
-		if (typeof options[`limitMins${set}`] !== "string") {
-			options[`limitMins${set}`] = "";
-		}
-		if (typeof options[`limitPeriod${set}`] !== "string") {
-			options[`limitPeriod${set}`] = "";
-		}
-		if (typeof options[`conjMode${set}`] !== "boolean") {
-			options[`conjMode${set}`] = false;
-		}
-		if (!Array.isArray(options[`days${set}`])) {
-			options[`days${set}`] = [false, true, true, true, true, true, false];
-		}
-		if (typeof options[`blockURL${set}`] !== "string") {
-			options[`blockURL${set}`] = DEFAULT_BLOCK_URL;
-		}
-		if (typeof options[`activeBlock${set}`] !== "boolean") {
-			options[`activeBlock${set}`] = false;
-		}
-		if (typeof options[`countFocus${set}`] !== "boolean") {
-			options[`countFocus${set}`] = true;
-		}
-		if (typeof options[`delayFirst${set}`] !== "boolean") {
-			options[`delayFirst${set}`] = true;
-		}
-		if (typeof options[`delaySecs${set}`] !== "string") {
-			options[`delaySecs${set}`] = "60";
-		}
-		if (typeof options[`reloadSecs${set}`] !== "string") {
-			options[`reloadSecs${set}`] = "";
-		}
-		if (typeof options[`allowOverride${set}`] !== "boolean") {
-			options[`allowOverride${set}`] = true;
-		}
-		if (typeof options[`prevOpts${set}`] !== "boolean") {
-			options[`prevOpts${set}`] = false;
-		}
-		if (typeof options[`prevAddons${set}`] !== "boolean") {
-			options[`prevAddons${set}`] = false;
-		}
-		if (typeof options[`prevSupport${set}`] !== "boolean") {
-			options[`prevSupport${set}`] = false;
-		}
-		if (typeof options[`showTimer${set}`] !== "boolean") {
-			options[`showTimer${set}`] = true;
-		}
-		if (typeof options[`sitesURL${set}`] !== "string") {
-			options[`sitesURL${set}`] = "";
-		}
-		if (typeof options[`regexpBlock${set}`] !== "string") {
-			options[`regexpBlock${set}`] = "";
-		}
-		if (typeof options[`regexpAllow${set}`] !== "string") {
-			options[`regexpAllow${set}`] = "";
-		}
-		if (typeof options[`blockRE${set}`] !== "string") {
-			options[`blockRE${set}`] = "";
-		}
-		if (typeof options[`allowRE${set}`] !== "string") {
-			options[`allowRE${set}`] = "";
-		}
-		if (typeof options[`keywordRE${set}`] !== "string") {
-			options[`keywordRE${set}`] = "";
-		}
-		if (typeof options[`ignoreHash${set}`] !== "boolean") {
-			options[`ignoreHash${set}`] = true;
-		}
-		if (typeof options[`lockdown${set}`] !== "boolean") {
-			options[`lockdown${set}`] = false;
+	// Per-set options
+	for (let name in PER_SET_OPTIONS) {
+		let type = PER_SET_OPTIONS[name].type;
+		let def = PER_SET_OPTIONS[name].def;
+		for (let set = 1; set <= NUM_SETS; set++) {
+			if (type == "array") {
+				if (!Array.isArray(options[`${name}${set}`])) {
+					options[`${name}${set}`] = def.slice();
+				}
+			} else if (typeof options[`${name}${set}`] != type) {
+				options[`${name}${set}`] = def;
+			}
 		}
 	}
 
 	// General options
-	if (typeof options["sync"] !== "boolean") {
-		options["sync"] = false; // default: use local storage
-	}
-	if (typeof options["oa"] !== "string") {
-		options["oa"] = "0"; // default: no password or code
-	}
-	if (typeof options["password"] !== "string") {
-		options["password"] = ""; // default: blank
-	}
-	if (typeof options["hpp"] !== "boolean") {
-		options["hpp"] = true; // default: hidden
-	}
-	if (typeof options["timerVisible"] !== "boolean") {
-		options["timerVisible"] = true; // default: visible
-	}
-	if (typeof options["timerSize"] !== "string") {
-		options["timerSize"] = "1"; // default: medium
-	}
-	if (typeof options["timerLocation"] !== "string") {
-		options["timerLocation"] = "0"; // default: top left
-	}
-	if (typeof options["timerBadge"] !== "boolean") {
-		options["timerBadge"] = true; // default: enabled
-	}
-	if (typeof options["orm"] !== "string") {
-		options["orm"] = ""; // default: no override
-	}
-	if (typeof options["ora"] !== "string") {
-		options["ora"] = "0"; // default: no password or code
-	}
-	if (typeof options["warnSecs"] !== "string") {
-		options["warnSecs"] = ""; // default: no warning
-	}
-	if (typeof options["warnImmediate"] !== "boolean") {
-		options["warnImmediate"] = true; // default: warn only for immediate block
-	}
-	if (typeof options["contextMenu"] !== "boolean") {
-		options["contextMenu"] = true; // default: enabled
-	}
-	if (typeof options["toolsMenu"] !== "boolean") {
-		options["toolsMenu"] = true; // default: enabled
-	}
-	if (typeof options["matchSubdomains"] !== "boolean") {
-		options["matchSubdomains"] = false; // default: disabled for backwards compatibility
-	}
-	if (typeof options["processActiveTabs"] !== "boolean") {
-		options["processActiveTabs"] = false; // default: disabled for backwards compatibility
-	}
-	if (typeof options["lockdownHours"] !== "string") {
-		options["lockdownHours"] = ""; // default: blank
-	}
-	if (typeof options["lockdownMins"] !== "string") {
-		options["lockdownMins"] = ""; // default: blank
+	for (let name in GENERAL_OPTIONS) {
+		let type = GENERAL_OPTIONS[name].type;
+		let def = GENERAL_OPTIONS[name].def;
+		if (typeof options[`${name}`] != type) {
+			options[`${name}`] = def;
+		}
 	}
 }
 
@@ -218,6 +152,14 @@ function getParsedURL(url) {
 			hash: null
 		};
 	}
+}
+
+// Clean list of sites
+//
+function cleanSites(sites) {
+	sites = sites.replace(/\s+/g, " ").replace(/(^ +)|( +$)|(\w+:\/+)/g, "");
+	sites = sites.split(" ").sort().join(" "); // sort alphabetically
+	return sites;
 }
 
 // Create regular expressions for matching sites to block/allow
