@@ -6,6 +6,8 @@
 		}
 	},
 
+	"author": "James Anderson",
+
 	"background": {
 		"scripts": ["common.js", "background.js"]
 	},
