@@ -49,6 +49,7 @@ const GENERAL_OPTIONS = {
 	timerBadge: { type: "boolean", def: true, id: "timerBadge" }, // default: enabled
 	orm: { type: "string", def: "", id: "overrideMins" }, // default: no override
 	ora: { type: "string", def: "0", id: "overrideAccess" }, // default: no password or code
+	orc: { type: "boolean", def: true, id: "overrideConfirm" }, // default: enabled
 	warnSecs: { type: "string", def: "", id: "warnSecs" }, // default: no warning
 	warnImmediate: { type: "boolean", def: true, id: "warnImmediate" }, // default: warn only for immediate block
 	contextMenu: { type: "boolean", def: true, id: "contextMenu" }, // default: enabled

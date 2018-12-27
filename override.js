@@ -54,6 +54,7 @@ function closePage() {
 //
 function confirmAccess(options) {
 	let ora = options["ora"];
+	let orc = options["orc"];
 	let password = options["password"];
 	let hpp = options["hpp"];
 
@@ -89,22 +90,27 @@ function confirmAccess(options) {
 		$("#promptAccessCode").dialog("open");
 		$("#promptAccessCodeInput").focus();
 	} else {
-		activateOverride();
+		activateOverride(orc);
 	}
 }
 
 // Activate override
 //
-function activateOverride() {
-	// Calculate end time
-	let endTime = new Date(Date.now() + gOverrideMins * 60000);
-
-	// Show confirmation dialog
-	$("#alertOverrideEndTime").html(endTime.toLocaleTimeString());
-	$("#alertOverrideActivated").dialog("open");
-
+function activateOverride(showConfirm) {
 	// Request override
 	browser.runtime.sendMessage({ type: "override" });
+
+	if (showConfirm) {
+		// Calculate end time
+		let endTime = new Date(Date.now() + gOverrideMins * 60000);
+
+		// Show confirmation dialog
+		$("#alertOverrideEndTime").html(endTime.toLocaleTimeString());
+		$("#alertOverrideActivated").dialog("open");
+	} else {
+		// Close page immediately (no confirmation dialog)
+		closePage();
+	}
 }
 
 // Initialize access control prompt
