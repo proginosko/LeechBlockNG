@@ -1,3 +1,13 @@
+### Version 0.9.8 (27 Dec 2018)
+* Added more time limit period options (8 hours, 3 days, 4 days).
+* Added option to automatically attempt to reload blocked page after interval.
+* Added option to show/hide override confirmation message.
+* Added option to specify offset (in hours) for time limit period.
+* Block set name now shown in title of blocking page.
+* Time left now shown in icon tooltip.
+* Improved scaling on mobile devices.
+* Under-the-hood improvements.
+
 ### Version 0.9.7 (04 Sep 2018)
 * Fixed bug in sync storage export/import.
 
