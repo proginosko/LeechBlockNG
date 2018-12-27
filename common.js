@@ -18,6 +18,7 @@ const PER_SET_OPTIONS = {
 	times: { type: "string", def: "0900-1700", id: "times" },
 	limitMins: { type: "string", def: "", id: "limitMins" },
 	limitPeriod: { type: "string", def: "", id: "limitPeriod" },
+	limitOffset: { type: "string", def: "", id: "limitOffset" },
 	conjMode: { type: "boolean", def: false, id: "conjMode" },
 	days: { type: "array", def: [false, true, true, true, true, true, false], id: "day" },
 	blockURL: { type: "string", def: DEFAULT_BLOCK_URL, id: "blockURL" },
@@ -245,6 +246,12 @@ function checkPosIntFormat(value) {
 	return (value == "") || /^[1-9][0-9]*$/.test(value);
 }
 
+// Check positive/negative integer format
+//
+function checkPosNegIntFormat(value) {
+	return (value == "") || /^-?[1-9][0-9]*$/.test(value);
+}
+
 // Convert times to minute periods
 //
 function getMinPeriods(times) {
@@ -323,14 +330,16 @@ function cleanTimePeriods(times) {
 
 // Calculate start of time period from current time and time limit period
 //
-function getTimePeriodStart(now, limitPeriod) {
+function getTimePeriodStart(now, limitPeriod, limitOffset) {
 	limitPeriod = +limitPeriod; // force value to number
+	limitOffset = +limitOffset; // force value to number
 
 	if (limitPeriod > 0) {
 		let periodStart = now - (now % limitPeriod);
 
 		// Adjust start time for timezone, DST, and Sunday as first day of week
 		if (limitPeriod > 3600) {
+			periodStart += limitOffset * 3600; // add user-specified offset (hours)
 			let offsetMins = new Date(now * 1000).getTimezoneOffset();
 			periodStart += offsetMins * 60; // add time difference
 			if (limitPeriod > 86400) {

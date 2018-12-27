@@ -403,7 +403,8 @@ function checkTab(id, url, isRepeat) {
 			let minPeriods = getMinPeriods(times);
 			let limitMins = gOptions[`limitMins${set}`];
 			let limitPeriod = gOptions[`limitPeriod${set}`];
-			let periodStart = getTimePeriodStart(now, limitPeriod);
+			let limitOffset = gOptions[`limitOffset${set}`];
+			let periodStart = getTimePeriodStart(now, limitPeriod, limitOffset);
 			let conjMode = gOptions[`conjMode${set}`];
 			let days = gOptions[`days${set}`];
 			let blockURL = gOptions[`blockURL${set}`];
@@ -619,7 +620,8 @@ function updateTimeData(url, secsOpen, secsFocus) {
 			let times = gOptions[`times${set}`];
 			let minPeriods = getMinPeriods(times);
 			let limitPeriod = gOptions[`limitPeriod${set}`];
-			let periodStart = getTimePeriodStart(now, limitPeriod);
+			let limitOffset = gOptions[`limitOffset${set}`];
+			let periodStart = getTimePeriodStart(now, limitPeriod, limitOffset);
 			let conjMode = gOptions[`conjMode${set}`];
 			let days = gOptions[`days${set}`];
 
@@ -812,7 +814,8 @@ function getUnblockTime(set) {
 	let minPeriods = getMinPeriods(times);
 	let limitMins = gOptions[`limitMins${set}`];
 	let limitPeriod = gOptions[`limitPeriod${set}`];
-	let periodStart = getTimePeriodStart(now, limitPeriod);
+	let limitOffset = gOptions[`limitOffset${set}`];
+	let periodStart = getTimePeriodStart(now, limitPeriod, limitOffset);
 	let conjMode = gOptions[`conjMode${set}`];
 	let days = gOptions[`days${set}`];
 

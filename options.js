@@ -25,6 +25,7 @@ function saveOptions() {
 		// Get field values
 		let times = $(`#times${set}`).val();
 		let limitMins = $(`#limitMins${set}`).val();
+		let limitOffset = $(`#limitOffset${set}`).val();
 		let delaySecs = $(`#delaySecs${set}`).val();
 		let reloadSecs = $(`#reloadSecs${set}`).val();
 		let blockURL = $(`#blockURL${set}`).val();
@@ -40,6 +41,12 @@ function saveOptions() {
 			$("#tabs").tabs("option", "active", (set - 1));
 			$(`#limitMins${set}`).focus();
 			$("#alertBadTimeLimit").dialog("open");
+			return false;
+		}
+		if (!checkPosNegIntFormat(limitOffset)) {
+			$("#tabs").tabs("option", "active", (set - 1));
+			$(`#limitOffset${set}`).focus();
+			$("#alertBadTimeLimitOffset").dialog("open");
 			return false;
 		}
 		if (!delaySecs || !checkPosIntFormat(delaySecs)) {
@@ -212,7 +219,8 @@ function retrieveOptions() {
 				let minPeriods = getMinPeriods(times);
 				let limitMins = options[`limitMins${set}`];
 				let limitPeriod = options[`limitPeriod${set}`];
-				let periodStart = getTimePeriodStart(now, limitPeriod);
+				let limitOffset = options[`limitOffset${set}`];
+				let periodStart = getTimePeriodStart(now, limitPeriod, limitOffset);
 				let conjMode = options[`conjMode${set}`];
 				let days = options[`days${set}`];
 

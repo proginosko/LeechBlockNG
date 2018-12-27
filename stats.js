@@ -31,7 +31,8 @@ function statsRefresh() {
 			let timedata = options[`timedata${set}`];
 			let limitMins = options[`limitMins${set}`];
 			let limitPeriod = options[`limitPeriod${set}`];
-			let periodStart = getTimePeriodStart(now, limitPeriod);
+			let limitOffset = options[`limitOffset${set}`];
+			let periodStart = getTimePeriodStart(now, limitPeriod, limitOffset);
 
 			if (setName) {
 				getElement(`blockSetName${set}`).innerText = setName;
