@@ -1,20 +1,48 @@
 {
 
-	"description": "LeechBlock is a simple productivity tool designed to block those time-wasting sites that can suck the life out of your working day.",
-	"manifest_version": 2,
-	"name": "LeechBlock NG",
-	"version": "0.9.8",
-	"homepage_url": "http://www.proginosko.com/leechblock/",
-	"icons": {
-		"48": "icons/leechblock48.png",
-		"96": "icons/leechblock96.png"
-	},
-
 	"applications": {
 		"gecko": {
 			"id": "leechblockng@proginosko.com"
 		}
 	},
+
+	"background": {
+		"scripts": ["common.js", "background.js"]
+	},
+
+	"browser_action": {
+		"browser_style": false,
+		"default_icon": {
+			"16": "icons/leechblock16.png",
+			"32": "icons/leechblock32.png"
+		},
+		"default_popup": "popup.html",
+		"default_title": "LeechBlock"
+	},
+
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"js": ["content.js"]
+		}
+	],
+
+	"description": "LeechBlock is a simple productivity tool designed to block those time-wasting sites that can suck the life out of your working day.",
+
+	"homepage_url": "http://www.proginosko.com/leechblock/",
+
+	"icons": {
+		"48": "icons/leechblock48.png",
+		"96": "icons/leechblock96.png"
+	},
+
+	"manifest_version": 2,
+
+	"name": "LeechBlock NG",
+
+	"optional_permissions": [
+		"<all_urls>"
+	],
 
 	"options_ui": {
 		"page": "options.html",
@@ -29,29 +57,6 @@
 		"webNavigation"
 	],
 
-	"optional_permissions": [
-		"<all_urls>"
-	],
-
-	"background": {
-		"scripts": ["common.js", "background.js"]
-	},
-
-	"content_scripts": [
-		{
-			"matches": ["<all_urls>"],
-			"js": ["content.js"]
-		}
-	],
-
-	"browser_action": {
-		"browser_style": false,
-		"default_icon": {
-			"16": "icons/leechblock16.png",
-			"32": "icons/leechblock32.png"
-		},
-		"default_popup": "popup.html",
-		"default_title": "LeechBlock"
-	}
+	"version": "0.9.8"
 
 }
