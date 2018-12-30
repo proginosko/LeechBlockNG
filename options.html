@@ -316,6 +316,10 @@
 								<input id="syncStorage" type="checkbox">
 								<label for="syncStorage">Use sync storage for options (experimental: use at your own risk!)</label>
 							</p>
+							<p>
+								<input id="accessCodeImage" type="checkbox">
+								<label for="accessCodeImage">Display access code as image (experimental: use at your own risk!)</label>
+							</p>
 						</fieldset>
 						<fieldset>
 							<legend>Export / Import</legend>
@@ -419,6 +423,9 @@
 			<div id="promptAccessCode" title="LeechBlock Options">
 				<p>Enter the following code for access to options:</p>
 				<p id="promptAccessCodeText"></p>
+				<p id="promptAccessCodeImage">
+					<canvas id="promptAccessCodeCanvas" width="544" height="16"></canvas>
+				</p>
 				<p><input id="promptAccessCodeInput" type="text" size="64"></p>
 			</div>
 		</div>
