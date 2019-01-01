@@ -1,3 +1,8 @@
+### Version 0.9.9 (01 Jan 2019)
+* Added theme options: Default, Dark, and Spruce (!)
+* Added option to display random access code as image instead of text.
+* Fixed bug affecting override confirmation message.
+
 ### Version 0.9.8 (27 Dec 2018)
 * Added more time limit period options (8 hours, 3 days, 4 days).
 * Added option to automatically attempt to reload blocked page after interval.
