@@ -1,0 +1,96 @@
+/* LeechBlock Spruce theme CSS style */
+
+body {
+	background: #031;
+	color: #9ca;
+}
+
+.ui-button {
+	background: #253;
+	color: #adb;
+	border: 1px solid #840;
+}
+
+.ui-button:focus {
+	background: #253;
+	color: #adb;
+	border: 1px solid #840;
+}
+
+.ui-button:hover {
+	background: #142;
+	color: #adb;
+	border: 1px solid #840;
+}
+
+.ui-widget button {
+	background: #253;
+	color: #adb;
+	border: 1px solid #840;
+}
+
+.ui-widget fieldset, input, select, textarea {
+	background: #031;
+	color: #9ca;
+	border: 1px solid #840;
+}
+
+.ui-widget :disabled {
+	color: #586;
+}
+
+.ui-widget hr {
+	height: 0px;
+	margin: 0px;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom: 1px solid #840;
+}
+
+.ui-widget th, td {
+	border: 1px solid #840;
+}
+
+.ui-widget-header {
+	background: #253;
+	color: #adb;
+	border: 1px solid #840;
+}
+
+.ui-widget-content {
+	background: #031;
+	color: #8b9;
+	border: 1px solid #840;
+}
+
+.ui-widget.ui-widget-content {
+	border: 1px solid #840;
+}
+
+.ui-tabs .ui-state-default {
+	background: #475;
+	border: 1px solid #840;
+}
+
+.ui-tabs .ui-state-default a {
+	color: #000;
+}
+
+.ui-tabs .ui-state-hover {
+	background: #364;
+	border: 1px solid #840;
+}
+
+.ui-tabs .ui-state-active {
+	background: #031;
+	border: 1px solid #840;
+}
+
+.ui-tabs .ui-state-active a {
+	color: #bec;
+}
+
+#paneAbout {
+	color: #9ca;
+}

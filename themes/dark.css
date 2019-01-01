@@ -1,0 +1,97 @@
+/* LeechBlock Dark theme CSS style */
+
+body {
+	background: #222;
+	color: #bbb;
+}
+
+.ui-button {
+	background: #444;
+	color: #bbb;
+	border: 1px solid #888;
+}
+
+.ui-button:focus {
+	background: #444;
+	color: #bbb;
+	border: 1px solid #888;
+}
+
+.ui-button:hover {
+	background: #333;
+	color: #bbb;
+	border: 1px solid #888;
+}
+
+.ui-widget button {
+	background: #444;
+	color: #bbb;
+	border: 1px solid #666;
+}
+
+.ui-widget fieldset, input, select, textarea {
+	background: #222;
+	color: #bbb;
+	border: 1px solid #666;
+}
+
+.ui-widget :disabled {
+	color: #666;
+}
+
+.ui-widget hr {
+	height: 0px;
+	margin: 0px;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom: 1px solid #666;
+}
+
+.ui-widget th, td {
+	border: 1px solid #666;
+}
+
+.ui-widget-header {
+	background: #444;
+	color: #bbb;
+	border: 1px solid #888;
+}
+
+.ui-widget-content {
+	background: #222;
+	color: #bbb;
+	border: 1px solid #888;
+}
+
+.ui-widget.ui-widget-content {
+	border: 1px solid #888;
+}
+
+.ui-tabs .ui-state-default {
+	background: #aaa;
+	border: 1px solid #666;
+}
+
+.ui-tabs .ui-state-default a {
+	color: #000;
+}
+
+.ui-tabs .ui-state-hover {
+	background: #999;
+	border: 1px solid #666;
+}
+
+.ui-tabs .ui-state-active {
+	background: #222;
+	border: 1px solid #666;
+}
+
+.ui-tabs .ui-state-active a {
+	color: #bbb;
+}
+
+#paneAbout {
+	color: #bbb;
+}
+	

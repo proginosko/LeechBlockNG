@@ -7,6 +7,14 @@
 function processBlockInfo(info) {
 	if (!info) return;
 
+	if (info.theme) {
+		// Set theme
+		let link = document.getElementById("themeLink");
+		if (link) {
+			link.href = info.theme ? `themes/${info.theme}.css` : "";
+		}
+	}
+
 	let blockedURL = document.getElementById("lbBlockedURL");
 	if (info.blockedURL && blockedURL) {
 		if (info.blockedURL.length > 60) {

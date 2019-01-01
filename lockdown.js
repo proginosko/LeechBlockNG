@@ -25,6 +25,8 @@ function initializeForm() {
 	}
 
 	function onGot(options) {
+		setTheme(options["theme"]);
+
 		let lockdownHours = options["lockdownHours"];
 		if (lockdownHours > 0) {
 			getElement("hours").value = lockdownHours;

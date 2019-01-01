@@ -748,13 +748,16 @@ function updateIcon() {
 // Create info for blocking/delaying page
 //
 function createBlockInfo(url) {
+	// Get theme
+	let theme = gOptions["theme"];
+
 	// Get parsed URL
 	let parsedURL = getParsedURL(url);
 	let pageURL = parsedURL.page;
 
 	if (parsedURL.args == null || parsedURL.args.length < 2) {
 		warn("Cannot create block info: not enough arguments in URL.");
-		return {};
+		return { theme: theme };
 	}
 
 	// Get block set and URL (including hash part) of blocked page
@@ -785,6 +788,7 @@ function createBlockInfo(url) {
 	let reloadSecs = gOptions[`reloadSecs${blockedSet}`];
 
 	return {
+		theme: theme,
 		blockedSet: blockedSet,
 		blockedSetName: blockedSetName,
 		blockedURL: blockedURL,

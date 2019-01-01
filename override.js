@@ -27,6 +27,8 @@ function initializePage() {
 	}
 
 	function onGot(options) {
+		setTheme(options["theme"]);
+
 		gOverrideMins = options["orm"];
 	
 		if (!gOverrideMins) {

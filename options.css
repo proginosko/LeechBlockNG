@@ -5,9 +5,32 @@ html {
 }
 
 body {
-	background-color: #fff;
+	background: #fff;
 	color: #000;
 	font-size: 14px;
+}
+
+.ui-button {
+	border: 1px solid #888;
+}
+
+.ui-button:focus {
+	border: 1px solid #888;
+}
+
+.ui-button:hover {
+	border: 1px solid #888;
+}
+
+.ui-widget button {
+	padding: 2px 8px;
+	border: 1px solid #888;
+}
+
+.ui-widget fieldset, input, select, textarea {
+	background: #fff;
+	color: #000;
+	border: 1px solid #888;
 }
 
 .ui-widget hr {

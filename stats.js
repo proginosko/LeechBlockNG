@@ -23,6 +23,8 @@ function statsRefresh() {
 	}
 
 	function onGot(options) {
+		setTheme(options["theme"]);
+
 		// Get current time in seconds
 		let now = Math.floor(Date.now() / 1000);
 

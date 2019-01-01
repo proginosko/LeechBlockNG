@@ -41,6 +41,7 @@ const PER_SET_OPTIONS = {
 const GENERAL_OPTIONS = {
 	// def: default value, id: form element identifier (see options.html)
 	sync: { type: "boolean", def: false, id: "syncStorage" }, // default: use local storage
+	theme: { type: "string", def: "", id: "theme" }, // default: light theme
 	oa: { type: "string", def: "0", id: "optionsAccess" }, // default: no password or code
 	password: { type: "string", def: "", id: "accessPassword" }, // default: blank
 	hpp: { type: "boolean", def: true, id: "hidePassword" }, // default: hidden
@@ -407,7 +408,7 @@ function decodeDays(dayCode) {
 	return days;
 }
 
-// Creates a random access code of a specified length
+// Create a random access code of a specified length
 //
 function createAccessCode(len) {
 	// Omit O, 0, I, l to avoid ambiguity with some fonts
@@ -417,4 +418,13 @@ function createAccessCode(len) {
 		code += codeChars.charAt(Math.random() * codeChars.length);
 	}
 	return code;
+}
+
+// Set theme in current document
+//
+function setTheme(theme) {
+	let link = document.getElementById("themeLink");
+	if (link) {
+		link.href = theme ? `themes/${theme}.css` : "";
+	}
 }

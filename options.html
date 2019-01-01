@@ -10,6 +10,7 @@
 		<link href="options.css" rel="stylesheet">
 		<link href="icons/leechblock16.ico" rel="icon" type="image/x-icon">
 		<link href="icons/leechblock16.ico" rel="shortcut icon" type="image/x-icon">
+		<link id="themeLink" rel="stylesheet">
 	</head>
 
 	<body>
@@ -290,6 +291,14 @@
 						</fieldset>
 						<fieldset>
 							<legend>Miscellaneous</legend>
+							<p>
+								<label>Theme:</label>
+								<select id="theme">
+									<option value="">Default</option>
+									<option value="dark">Dark</option>
+									<option value="spruce">Spruce</option>
+								</select>
+							</p>
 							<p>
 								<input id="contextMenu" type="checkbox">
 								<label for="contextMenu">Show context menu</label>

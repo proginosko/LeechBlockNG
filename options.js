@@ -197,6 +197,8 @@ function retrieveOptions() {
 		cleanOptions(options);
 		cleanTimeData(options);
 
+		setTheme(options["theme"]);
+
 		// Get current time/date
 		let timedate = new Date();
 
@@ -717,6 +719,7 @@ for (let set = 1; set <= NUM_SETS; set++) {
 	});
 	$(`#advOpts${set}`).css("display", "none");
 }
+$("#theme").change(function (e) { setTheme($("#theme").val()); });
 $("#exportOptions").click(exportOptions);
 $("#importOptions").click(importOptions);
 $("#exportOptionsSync").click(exportOptionsSync);
