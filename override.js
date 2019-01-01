@@ -9,6 +9,7 @@ function getElement(id) { return document.getElementById(id); }
 
 var gAccessConfirmed = false;
 var gAccessRequiredInput;
+var gOverrideConfirm;
 var gOverrideMins;
 
 // Initialize page
@@ -29,6 +30,7 @@ function initializePage() {
 	function onGot(options) {
 		setTheme(options["theme"]);
 
+		gOverrideConfirm = options["orc"];
 		gOverrideMins = options["orm"];
 	
 		if (!gOverrideMins) {
@@ -56,7 +58,6 @@ function closePage() {
 //
 function confirmAccess(options) {
 	let ora = options["ora"];
-	let orc = options["orc"];
 	let password = options["password"];
 	let hpp = options["hpp"];
 
@@ -84,7 +85,7 @@ function confirmAccess(options) {
 		$("#promptAccessCode").dialog("open");
 		$("#promptAccessCodeInput").focus();
 	} else {
-		activateOverride(orc);
+		activateOverride();
 	}
 }
 
@@ -122,11 +123,11 @@ function displayAccessCode(code, asImage) {
 
 // Activate override
 //
-function activateOverride(showConfirm) {
+function activateOverride() {
 	// Request override
 	browser.runtime.sendMessage({ type: "override" });
 
-	if (showConfirm) {
+	if (gOverrideConfirm) {
 		// Calculate end time
 		let endTime = new Date(Date.now() + gOverrideMins * 60000);
 
