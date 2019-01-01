@@ -82,6 +82,10 @@ body {
 	-moz-user-select: none;
 }
 
+#promptAccessCodeCanvas {
+	background: #fff;
+}
+
 #promptAccessCodeInput {
 	font: normal 14px monospace;
 }

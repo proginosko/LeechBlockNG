@@ -376,14 +376,16 @@ function displayAccessCode(code, asImage) {
 		getElement("promptAccessCodeText").style.display = "none";
 		getElement("promptAccessCodeImage").style.display = "";
 		let canvas = getElement("promptAccessCodeCanvas");
-		canvas.height = (code.length == 128) ? 32 : 16;
+		canvas.width = (code.length == 32) ? 264 : 520;
+		canvas.height = (code.length == 128) ? 40 : 24;
 		let ctx = canvas.getContext("2d");
 		ctx.font = "normal 14px monospace";
+		ctx.fillStyle = "#000";
 		if (code.length == 128) {
-			ctx.fillText(code.substring(0, 64), 0, 12);
-			ctx.fillText(code.substring(64), 0, 28);
+			ctx.fillText(code.substring(0, 64), 4, 16);
+			ctx.fillText(code.substring(64), 4, 32);
 		} else {
-			ctx.fillText(code, 0, 12);
+			ctx.fillText(code, 4, 16);
 		}
 	} else {
 		// Display code as text
