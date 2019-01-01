@@ -351,28 +351,50 @@ function confirmAccess(options) {
 		$("#promptPasswordInput").focus();
 	} else if (oa > 1) {
 		let code = createAccessCode(32);
-		let codeText = code;
-		gAccessRequiredInput = code;
 		if (oa > 2) {
-			code = createAccessCode(32);
-			codeText += code;
-			gAccessRequiredInput += code;
+			code += createAccessCode(32);
 		}
 		if (oa > 3) {
-			code = createAccessCode(32);
-			codeText += "<br>" + code;
-			gAccessRequiredInput += code;
-			code = createAccessCode(32);
-			codeText += code;
-			gAccessRequiredInput += code;
+			code += createAccessCode(64);
 		}
-		$("#promptAccessCodeText").html(codeText);
+		gAccessRequiredInput = code;
+		displayAccessCode(code, options["accessCodeImage"]);
 		$("#promptAccessCodeInput").val("");
 		$("#promptAccessCode").dialog("open");
 		$("#promptAccessCodeInput").focus();
 	} else {
 		gAccessConfirmed = true;
 		$("#form").show({ effect: "fade" });
+	}
+}
+
+// Display access code (as text or image)
+//
+function displayAccessCode(code, asImage) {
+	if (asImage) {
+		// Display code as image
+		getElement("promptAccessCodeText").style.display = "none";
+		getElement("promptAccessCodeImage").style.display = "";
+		let canvas = getElement("promptAccessCodeCanvas");
+		canvas.height = (code.length == 128) ? 32 : 16;
+		let ctx = canvas.getContext("2d");
+		ctx.font = "normal 14px monospace";
+		if (code.length == 128) {
+			ctx.fillText(code.substring(0, 64), 0, 12);
+			ctx.fillText(code.substring(64), 0, 28);
+		} else {
+			ctx.fillText(code, 0, 12);
+		}
+	} else {
+		// Display code as text
+		getElement("promptAccessCodeText").style.display = "";
+		getElement("promptAccessCodeImage").style.display = "none";
+		if (code.length == 128) {
+			let html = code.substring(0, 64) + "<br>" + code.substring(64);
+			getElement("promptAccessCodeText").innerHTML = html;
+		} else {
+			getElement("promptAccessCodeText").innerHTML = code;
+		}
 	}
 }
 

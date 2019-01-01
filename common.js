@@ -58,6 +58,7 @@ const GENERAL_OPTIONS = {
 	toolsMenu: { type: "boolean", def: true, id: "toolsMenu" }, // default: enabled
 	matchSubdomains: { type: "boolean", def: false, id: "matchSubdomains" }, // default: disabled
 	processActiveTabs: { type: "boolean", def: false, id: "processActiveTabs" }, // default: disabled
+	accessCodeImage: { type: "boolean", def: false, id: "accessCodeImage" }, // default: disabled
 	lockdownHours: { type: "string", def: "", id: null }, // default: blank
 	lockdownMins: { type: "string", def: "", id: null }, // default: blank
 };
