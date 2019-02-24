@@ -29,6 +29,10 @@ body {
 	border: 1px solid #840;
 }
 
+.ui-widget button:hover {
+	background: #142;
+}
+
 .ui-widget fieldset, input, select, textarea {
 	background: #031;
 	color: #9ca;

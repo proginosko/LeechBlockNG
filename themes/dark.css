@@ -8,25 +8,29 @@ body {
 .ui-button {
 	background: #444;
 	color: #bbb;
-	border: 1px solid #888;
+	border: 1px solid #666;
 }
 
 .ui-button:focus {
 	background: #444;
 	color: #bbb;
-	border: 1px solid #888;
+	border: 1px solid #666;
 }
 
 .ui-button:hover {
 	background: #333;
 	color: #bbb;
-	border: 1px solid #888;
+	border: 1px solid #666;
 }
 
 .ui-widget button {
 	background: #444;
 	color: #bbb;
 	border: 1px solid #666;
+}
+
+.ui-widget button:hover {
+	background: #333;
 }
 
 .ui-widget fieldset, input, select, textarea {

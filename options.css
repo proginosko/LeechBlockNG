@@ -11,20 +11,28 @@ body {
 }
 
 .ui-button {
+	background: #eee;
 	border: 1px solid #888;
 }
 
 .ui-button:focus {
+	background: #eee;
 	border: 1px solid #888;
 }
 
 .ui-button:hover {
+	background: #ddd;
 	border: 1px solid #888;
 }
 
 .ui-widget button {
 	padding: 2px 8px;
+	background: #eee;
 	border: 1px solid #888;
+}
+
+.ui-widget button:hover {
+	background: #ddd;
 }
 
 .ui-widget fieldset, input, select, textarea {

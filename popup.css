@@ -17,5 +17,10 @@ button {
 	width: 100%;
 	margin: 2px;
 	padding: 2px;
+	background: #eee;
 	border: 1px solid #888;
+}
+
+button:hover {
+	background: #ddd;
 }
