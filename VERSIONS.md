@@ -1,3 +1,6 @@
+### Version 0.9.9.1 (24 Feb 2019)
+* Bug fixes and theme improvements.
+
 ### Version 0.9.9 (01 Jan 2019)
 * Added theme options: Default, Dark, and Spruce (!)
 * Added option to display random access code as image instead of text.
