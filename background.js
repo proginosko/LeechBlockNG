@@ -31,19 +31,13 @@ function createRegExps() {
 	// Create new RegExp objects
 	for (let set = 1; set <= NUM_SETS; set++) {
 		let blockRE = gOptions[`regexpBlock${set}`] || gOptions[`blockRE${set}`];
-		if (blockRE) {
-			gRegExps[set - 1].block = new RegExp(blockRE, "i");
-		}
+		gRegExps[set - 1].block = blockRE ? new RegExp(blockRE, "i") : null;
 
 		let allowRE = gOptions[`regexpAllow${set}`] || gOptions[`allowRE${set}`];
-		if (allowRE) {
-			gRegExps[set - 1].allow = new RegExp(allowRE, "i");
-		}
+		gRegExps[set - 1].allow = allowRE ? new RegExp(allowRE, "i") : null;
 
 		let keywordRE = gOptions[`keywordRE${set}`];
-		if (keywordRE) {
-			gRegExps[set - 1].keyword = new RegExp(keywordRE, "i");
-		}
+		gRegExps[set - 1].keyword = keywordRE ? new RegExp(keywordRE, "i") : null;
 	}
 }
 
