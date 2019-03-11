@@ -24,3 +24,7 @@ button {
 button:hover {
 	background: #ddd;
 }
+
+.logo {
+	width: 204px;
+}
