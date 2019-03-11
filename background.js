@@ -16,6 +16,7 @@ var gSetCounted = [];
 var gRegExps = [];
 var gFocusWindowId = 0;
 var gOverrideIcon = false;
+var gSaveSecsCount = 0;
 
 // Create (precompile) regular expressions
 //
@@ -212,7 +213,7 @@ function loadSiteLists() {
 	}
 }
 
-// Save time data to local storage
+// Save time data to storage
 //
 function saveTimeData() {
 	//log("saveTimeData");
@@ -226,7 +227,7 @@ function saveTimeData() {
 		options[`timedata${set}`] = gOptions[`timedata${set}`];
 	}
 	gStorage.set(options).catch(
-		function (error) { warn("Cannot set options: " + error); }
+		function (error) { warn("Cannot save time data: " + error); }
 	);
 }
 
@@ -252,7 +253,6 @@ function restartTimeData(set) {
 		gOptions[`timedata${set}`][1] = 0;
 	}
 
-	// Save time data to local storage
 	saveTimeData();
 }
 
@@ -302,9 +302,6 @@ function processTabs(active) {
 				updateTimer(tab.id);
 			}
 		}
-
-		// Save time data to local storage
-		saveTimeData();
 	}
 
 	function onError(error) {
@@ -1214,6 +1211,11 @@ function onInterval() {
 	} else {
 		processTabs(gOptions["processActiveTabs"]);
 		updateIcon();
+
+		if (++gSaveSecsCount >= gOptions["saveSecs"]) {
+			saveTimeData();
+			gSaveSecsCount = 0;
+		}
 	}
 }
 
