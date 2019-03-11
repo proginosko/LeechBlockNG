@@ -68,6 +68,10 @@ body {
 	padding: 4px 12px;
 }
 
+.logo {
+	width: 408px;
+}
+
 #form-container {
 	display: flex;
 	justify-content: center;
@@ -96,4 +100,8 @@ body {
 
 #promptAccessCodeInput {
 	font: normal 14px monospace;
+}
+
+.logo {
+	width: 408px;
 }
