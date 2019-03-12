@@ -71,15 +71,24 @@ function saveOptions() {
 	}
 
 	// Check format for text fields in general options
-	if (!checkPosIntFormat($("#overrideMins").val())) {
+	let overrideMins = $("#overrideMins").val();
+	if (!checkPosIntFormat(overrideMins)) {
 		$("#tabs").tabs("option", "active", NUM_SETS);
 		$("#overrideMins").focus();
 		$("#alertBadMinutes").dialog("open");
 		return false;
 	}
-	if (!checkPosIntFormat($("#warnSecs").val())) {
+	let warnSecs = $("#warnSecs").val();
+	if (!checkPosIntFormat(warnSecs)) {
 		$("#tabs").tabs("option", "active", NUM_SETS);
 		$("#warnSecs").focus();
+		$("#alertBadSeconds").dialog("open");
+		return false;
+	}
+	let saveSecs = $("#saveSecs").val();
+	if (!saveSecs || !checkPosIntFormat(saveSecs)) {
+		$("#tabs").tabs("option", "active", NUM_SETS);
+		$("#saveSecs").focus();
 		$("#alertBadSeconds").dialog("open");
 		return false;
 	}

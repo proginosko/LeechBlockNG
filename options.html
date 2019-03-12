@@ -268,6 +268,16 @@
 							</p>
 						</fieldset>
 						<fieldset>
+							<legend>Warning Message</legend>
+							<p>
+								Display warning message <input id="warnSecs" type="text" size="2" title="Leave blank for no warning"> seconds before site is blocked
+							</p>
+							<p>
+								<input id="warnImmediate" type="checkbox">
+								<label for="warnImmediate">Only display warning message on pages that will be immediately blocked</label>
+							</p>
+						</fieldset>
+						<fieldset>
 							<legend>Temporary Override</legend>
 							<p>
 								Allow blocking to be suspended for a period of <input id="overrideMins" type="text" size="2" title="Leave blank for no override"> minutes
@@ -314,11 +324,7 @@
 								<label for="matchSubdomains">Block all subdomains (not just www)</label>
 							</p>
 							<p>
-								Display warning message <input id="warnSecs" type="text" size="2" title="Leave blank for no warning"> seconds before site is blocked
-							</p>
-							<p>
-								<input id="warnImmediate" type="checkbox">
-								<label for="warnImmediate">Only display warning message on pages that will be immediately blocked</label>
+								Save time data every <input id="saveSecs" type="text" size="2" title="Default: 10"> seconds
 							</p>
 							<p>
 								<input id="processActiveTabs" type="checkbox">

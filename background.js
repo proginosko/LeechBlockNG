@@ -13,9 +13,11 @@ var gGotOptions = false;
 var gOptions = {};
 var gTabs = [];
 var gSetCounted = [];
+var gSetTouched = [];
 var gRegExps = [];
 var gFocusWindowId = 0;
 var gOverrideIcon = false;
+var gSaveSecsCount = 0;
 
 // Create (precompile) regular expressions
 //
@@ -143,6 +145,7 @@ function retrieveOptions(update) {
 		cleanOptions(gOptions);
 		cleanTimeData(gOptions);
 		gSetCounted = Array(NUM_SETS).fill(false);
+		gSetTouched = Array(NUM_SETS).fill(false);
 		createRegExps();
 		refreshMenus();
 		loadSiteLists();
@@ -212,7 +215,7 @@ function loadSiteLists() {
 	}
 }
 
-// Save time data to local storage
+// Save time data to storage
 //
 function saveTimeData() {
 	//log("saveTimeData");
@@ -222,12 +225,20 @@ function saveTimeData() {
 	}
 
 	let options = {};
+	let touched = false;
 	for (let set = 1; set <= NUM_SETS; set++) {
-		options[`timedata${set}`] = gOptions[`timedata${set}`];
+		if (gSetTouched[set - 1]) {
+			options[`timedata${set}`] = gOptions[`timedata${set}`];
+			touched = true;
+		}
 	}
-	gStorage.set(options).catch(
-		function (error) { warn("Cannot set options: " + error); }
-	);
+	if (touched) {
+		gStorage.set(options).catch(
+			function (error) { warn("Cannot save time data: " + error); }
+		);
+	}
+
+	gSetTouched = Array(NUM_SETS).fill(false);
 }
 
 // Restart time data
@@ -246,13 +257,14 @@ function restartTimeData(set) {
 		for (set = 1; set <= NUM_SETS; set++) {
 			gOptions[`timedata${set}`][0] = now;
 			gOptions[`timedata${set}`][1] = 0;
+			gSetTouched[set - 1] = true;
 		}
 	} else {
 		gOptions[`timedata${set}`][0] = now;
 		gOptions[`timedata${set}`][1] = 0;
+		gSetTouched[set - 1] = true;
 	}
 
-	// Save time data to local storage
 	saveTimeData();
 }
 
@@ -302,9 +314,6 @@ function processTabs(active) {
 				updateTimer(tab.id);
 			}
 		}
-
-		// Save time data to local storage
-		saveTimeData();
 	}
 
 	function onError(error) {
@@ -669,6 +678,7 @@ function updateTimeData(url, secsOpen, secsFocus) {
 
 			// Update time data for this set
 			gOptions[`timedata${set}`] = timedata;
+			gSetTouched[set - 1] = true;
 		}
 	}
 }
@@ -946,7 +956,10 @@ function applyLockdown(set, endTime) {
 	// Apply lockdown only if it doesn't reduce any current lockdown
 	if (endTime > gOptions[`timedata${set}`][4]) {
 		gOptions[`timedata${set}`][4] = endTime;
+		gSetTouched[set - 1] = true;
 	}
+
+	saveTimeData();
 }
 
 // Cancel lockdown for specified set
@@ -959,6 +972,9 @@ function cancelLockdown(set) {
 	}
 
 	gOptions[`timedata${set}`][4] = 0;
+	gSetTouched[set - 1] = true;
+
+	saveTimeData();
 }
 
 // Apply override
@@ -1214,6 +1230,11 @@ function onInterval() {
 	} else {
 		processTabs(gOptions["processActiveTabs"]);
 		updateIcon();
+
+		if (++gSaveSecsCount >= gOptions["saveSecs"]) {
+			saveTimeData();
+			gSaveSecsCount = 0;
+		}
 	}
 }
 
