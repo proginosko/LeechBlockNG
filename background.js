@@ -22,24 +22,18 @@ var gSaveSecsCount = 0;
 // Create (precompile) regular expressions
 //
 function createRegExps() {
-	// Create new array if necessary
-	if (!gRegExps || gRegExps.length != NUM_SETS) {
-		gRegExps = [];
-		for (let set = 1; set <= NUM_SETS; set++) {
-			gRegExps.push({ block: null, allow: null, keyword: null });
-		}
-	}
-
 	// Create new RegExp objects
 	for (let set = 1; set <= NUM_SETS; set++) {
+		gRegExps[set] = {};
+
 		let blockRE = gOptions[`regexpBlock${set}`] || gOptions[`blockRE${set}`];
-		gRegExps[set - 1].block = blockRE ? new RegExp(blockRE, "i") : null;
+		gRegExps[set].block = blockRE ? new RegExp(blockRE, "i") : null;
 
 		let allowRE = gOptions[`regexpAllow${set}`] || gOptions[`allowRE${set}`];
-		gRegExps[set - 1].allow = allowRE ? new RegExp(allowRE, "i") : null;
+		gRegExps[set].allow = allowRE ? new RegExp(allowRE, "i") : null;
 
 		let keywordRE = gOptions[`keywordRE${set}`];
-		gRegExps[set - 1].keyword = keywordRE ? new RegExp(keywordRE, "i") : null;
+		gRegExps[set].keyword = keywordRE ? new RegExp(keywordRE, "i") : null;
 	}
 }
 
@@ -144,7 +138,6 @@ function retrieveOptions(update) {
 
 		cleanOptions(gOptions);
 		cleanTimeData(gOptions);
-		gSetCounted = Array(NUM_SETS).fill(false);
 		createRegExps();
 		refreshMenus();
 		loadSiteLists();
@@ -292,7 +285,7 @@ function updateFocusedWindowId() {
 function processTabs(active) {
 	//log("processTabs: " + active);
 
-	gSetCounted.fill(false);
+	gSetCounted = []; // reset
 
 	if (active) {
 		// Process only active tabs
@@ -389,10 +382,10 @@ function checkTab(id, url, isRepeat) {
 		}
 
 		// Get regular expressions for matching sites to block/allow
-		let blockRE = gRegExps[set - 1].block;
+		let blockRE = gRegExps[set].block;
 		if (!blockRE) continue; // no block for this set
-		let allowRE = gRegExps[set - 1].allow;
-		let keywordRE = gRegExps[set - 1].keyword;
+		let allowRE = gRegExps[set].allow;
+		let keywordRE = gRegExps[set].keyword;
 
 		// Get options for preventing access to about:addons and about:support
 		let prevAddons = gOptions[`prevAddons${set}`];
@@ -613,9 +606,9 @@ function updateTimeData(url, secsOpen, secsFocus) {
 
 	for (let set = 1; set <= NUM_SETS; set++) {
 		// Get regular expressions for matching sites to block/allow
-		let blockRE = gRegExps[set - 1].block;
+		let blockRE = gRegExps[set].block;
 		if (!blockRE) continue; // no block for this set
-		let allowRE = gRegExps[set - 1].allow;
+		let allowRE = gRegExps[set].allow;
 
 		// Test URL against block/allow regular expressions
 		if (testURL(pageURL, blockRE, allowRE)) {
@@ -631,10 +624,10 @@ function updateTimeData(url, secsOpen, secsFocus) {
 			let days = gOptions[`days${set}`];
 
 			// Avoid overcounting time for non-focused tabs
-			if (!countFocus && gSetCounted[set - 1]) {
+			if (!countFocus && gSetCounted[set]) {
 				continue;
 			} else {
-				gSetCounted[set - 1] = true;
+				gSetCounted[set] = true;
 			}
 
 			// Reset time data if currently invalid
