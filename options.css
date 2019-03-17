@@ -68,6 +68,10 @@ body {
 	padding: 4px 12px;
 }
 
+.logo {
+	width: 408px;
+}
+
 #form-container {
 	display: flex;
 	justify-content: center;
