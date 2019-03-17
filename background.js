@@ -13,7 +13,7 @@ var gGotOptions = false;
 var gOptions = {};
 var gTabs = [];
 var gSetCounted = [];
-var gSetTouched = [];
+var gSavedTimeData = [];
 var gRegExps = [];
 var gFocusWindowId = 0;
 var gOverrideIcon = false;
@@ -145,11 +145,15 @@ function retrieveOptions(update) {
 		cleanOptions(gOptions);
 		cleanTimeData(gOptions);
 		gSetCounted = Array(NUM_SETS).fill(false);
-		gSetTouched = Array(NUM_SETS).fill(false);
 		createRegExps();
 		refreshMenus();
 		loadSiteLists();
 		updateIcon();
+
+		// Keep track of saved time data to avoid unnecessary writes
+		for (let set = 1; set <= NUM_SETS; set++) {
+			gSavedTimeData[set] = gOptions[`timedata${set}`].toString();
+		}
 	}
 
 	function onError(error) {
@@ -227,8 +231,10 @@ function saveTimeData() {
 	let options = {};
 	let touched = false;
 	for (let set = 1; set <= NUM_SETS; set++) {
-		if (gSetTouched[set - 1]) {
-			options[`timedata${set}`] = gOptions[`timedata${set}`];
+		let timedata = gOptions[`timedata${set}`];
+		if (gSavedTimeData[set] != timedata.toString()) {
+			options[`timedata${set}`] = timedata;
+			gSavedTimeData[set] = timedata.toString();
 			touched = true;
 		}
 	}
@@ -237,8 +243,6 @@ function saveTimeData() {
 			function (error) { warn("Cannot save time data: " + error); }
 		);
 	}
-
-	gSetTouched = Array(NUM_SETS).fill(false);
 }
 
 // Restart time data
@@ -257,12 +261,10 @@ function restartTimeData(set) {
 		for (set = 1; set <= NUM_SETS; set++) {
 			gOptions[`timedata${set}`][0] = now;
 			gOptions[`timedata${set}`][1] = 0;
-			gSetTouched[set - 1] = true;
 		}
 	} else {
 		gOptions[`timedata${set}`][0] = now;
 		gOptions[`timedata${set}`][1] = 0;
-		gSetTouched[set - 1] = true;
 	}
 
 	saveTimeData();
@@ -678,7 +680,6 @@ function updateTimeData(url, secsOpen, secsFocus) {
 
 			// Update time data for this set
 			gOptions[`timedata${set}`] = timedata;
-			gSetTouched[set - 1] = true;
 		}
 	}
 }
@@ -956,7 +957,6 @@ function applyLockdown(set, endTime) {
 	// Apply lockdown only if it doesn't reduce any current lockdown
 	if (endTime > gOptions[`timedata${set}`][4]) {
 		gOptions[`timedata${set}`][4] = endTime;
-		gSetTouched[set - 1] = true;
 	}
 
 	saveTimeData();
@@ -972,7 +972,6 @@ function cancelLockdown(set) {
 	}
 
 	gOptions[`timedata${set}`][4] = 0;
-	gSetTouched[set - 1] = true;
 
 	saveTimeData();
 }
