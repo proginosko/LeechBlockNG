@@ -162,7 +162,7 @@ function saveOptions() {
 		);
 
 		// Export options to sync storage if selected
-		if (options["autoExportSync"]) {
+		if (options["autoExportSync"] && !gIsAndroid) {
 			exportOptionsSync(); // no event passed, so dialogs suppressed
 		}
 	}
@@ -329,6 +329,7 @@ function retrieveOptions() {
 			getElement("syncStorage").disabled = true;
 			getElement("exportOptionsSync").disabled = true;
 			getElement("importOptionsSync").disabled = true;
+			getElement("autoExportSync").disabled = true;
 		}
 
 		confirmAccess(options);
