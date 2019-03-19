@@ -160,6 +160,11 @@ function saveOptions() {
 		browser.storage.local.set(options).catch(
 			function (error) { warn("Cannot set options: " + error); }
 		);
+
+		// Export options to sync storage if selected
+		if (options["autoExportSync"]) {
+			exportOptionsSync(); // no event passed, so dialogs suppressed
+		}
 	}
 
 	// Notify extension that options have been updated
@@ -599,35 +604,43 @@ function importOptions() {
 
 // Export options to sync storage
 //
-function exportOptionsSync() {
+function exportOptionsSync(event) {
 	let options = compileExportOptions(false);
 
 	browser.storage.sync.set(options).then(onSuccess, onError);
 	
 	function onSuccess() {
-		$("#alertExportSuccess").dialog("open");
+		if (event) {
+			$("#alertExportSuccess").dialog("open");
+		}
 	}
 
 	function onError(error) {
 		warn("Cannot export options to sync storage: " + error);
-		$("#alertExportSyncError").dialog("open");
+		if (event) {
+			$("#alertExportSyncError").dialog("open");
+		}
 	};
 }
 
 // Import options from sync storage
 //
-function importOptionsSync() {
+function importOptionsSync(event) {
 	browser.storage.sync.get().then(onGot, onError);
 
 	function onGot(options) {
 		cleanOptions(options);
 		applyImportOptions(options, false);
-		$("#alertImportSuccess").dialog("open");
+		if (event) {
+			$("#alertImportSuccess").dialog("open");
+		}
 	}
 
 	function onError(error) {
 		warn("Cannot import options from sync storage: " + error);
-		$("#alertRetrieveError").dialog("open");
+		if (event) {
+			$("#alertImportSyncError").dialog("open");
+		}
 	}
 }
 
