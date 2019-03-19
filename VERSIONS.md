@@ -1,3 +1,9 @@
+### Version 0.9.10 (18 Mar 2019)
+* Added option to set interval for saving time data.
+* Added option to auto-save options to sync storage (as backup).
+* Improved logo (thanks to Robert Gützkow).
+* Under-the-hood improvements.
+
 ### Version 0.9.9.1 (24 Feb 2019)
 * Bug fixes and theme improvements.
 
