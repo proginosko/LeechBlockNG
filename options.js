@@ -722,6 +722,9 @@ browser.runtime.getPlatformInfo().then(
 	function (info) { gIsAndroid = (info.os == "android"); }
 );
 
+// Set version text
+$("#version").text(browser.runtime.getManifest().version);
+
 // Use HTML for first block set to create other block sets
 let tabHTML = $("#tabBlockSet1").html();
 let setHTML = $("#blockSet1").html();
