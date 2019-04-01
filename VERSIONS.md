@@ -1,3 +1,6 @@
+### Version 0.9.10.1 (01 Apr 2019)
+* Fixed bug in Save Options & Close.
+
 ### Version 0.9.10 (18 Mar 2019)
 * Added option to set interval for saving time data.
 * Added option to auto-save options to sync storage (as backup).
