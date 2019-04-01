@@ -17,7 +17,7 @@ var gAccessRequiredInput;
 
 // Save options to local storage (returns true if success)
 //
-function saveOptions() {
+function saveOptions(event) {
 	//log("saveOptions");
 
 	// Check format for text fields in block sets
@@ -170,17 +170,13 @@ function saveOptions() {
 	// Notify extension that options have been updated
 	browser.runtime.sendMessage({ type: "options" });
 
-	$("#form").hide({ effect: "fade", complete: retrieveOptions });
+	if (event.data.closeOptions) {
+		$("#form").hide({ effect: "fade", complete: closeOptions });
+	} else {
+		$("#form").hide({ effect: "fade", complete: retrieveOptions });
+	}
 
 	return true;
-}
-
-// Save options and close tab
-//
-function saveOptionsClose() {
-	if (saveOptions()) {
-		closeOptions();
-	}
 }
 
 // Close options tab
@@ -775,9 +771,9 @@ $("#importOptions").click(importOptions);
 $("#exportOptionsSync").click(exportOptionsSync);
 $("#importOptionsSync").click(importOptionsSync);
 $("#saveOptions").button();
-$("#saveOptions").click(saveOptions);
+$("#saveOptions").click({ closeOptions: false }, saveOptions);
 $("#saveOptionsClose").button();
-$("#saveOptionsClose").click(saveOptionsClose);
+$("#saveOptionsClose").click({ closeOptions: true }, saveOptions);
 
 // Initialize alert dialogs
 $("div[id^='alert']").dialog({
