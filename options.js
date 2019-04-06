@@ -712,6 +712,21 @@ function initAccessControlPrompt(prompt) {
 	);
 }
 
+// Handle keydown event
+//
+function handleKeyDown(event) {
+	if (event.ctrlKey && event.which == 83) {
+		event.preventDefault();
+		if (!event.shiftKey) {
+			// Ctrl+S -> Save Options
+			$("#saveOptions").click();
+		} else {
+			// Ctrl+Shift+S -> Save Options & Close
+			$("#saveOptionsClose").click();
+		}
+	}
+}
+
 /*** STARTUP CODE BEGINS HERE ***/
 
 browser.runtime.getPlatformInfo().then(
@@ -790,3 +805,5 @@ initAccessControlPrompt("promptPassword");
 initAccessControlPrompt("promptAccessCode");
 
 document.addEventListener("DOMContentLoaded", retrieveOptions);
+
+window.addEventListener("keydown", handleKeyDown);
