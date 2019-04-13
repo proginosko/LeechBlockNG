@@ -661,7 +661,7 @@ function disableSetOptions(set) {
 	// Disable buttons
 	let items = [
 		"allDay",
-		"defaultPage", "delayingPage", "blankPage", "homePage",
+		"defaultPage", "delayingPage", "blankPage",
 		"clearRegExpBlock", "genRegExpBlock",
 		"clearRegExpAllow", "genRegExpAllow",
 		"cancelLockdown"
@@ -756,7 +756,6 @@ for (let set = 1; set <= NUM_SETS; set++) {
 	$(`#defaultPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DEFAULT_BLOCK_URL); });
 	$(`#delayingPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DELAYED_BLOCK_URL); });
 	$(`#blankPage${set}`).click(function (e) { $(`#blockURL${set}`).val("about:blank"); });
-	$(`#homePage${set}`).click(function (e) { $(`#blockURL${set}`).val("about:home"); });
 	$(`#showAdvOpts${set}`).click(function (e) {
 		$(`#showAdvOpts${set}`).css("display", "none");
 		$(`#advOpts${set}`).css("display", "block");
