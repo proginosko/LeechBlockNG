@@ -1,3 +1,7 @@
+### Version 0.9.11 (14 Apr 2019)
+* Added keyboard shortcuts for options (Ctrl+S to Save, Ctrl+Shift+S to Save & Close).
+* Under-the-hood performance improvements.
+
 ### Version 0.9.10.1 (01 Apr 2019)
 * Fixed bug in Save Options & Close.
 
