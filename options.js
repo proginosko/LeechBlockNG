@@ -14,6 +14,78 @@ function isTrue(str) { return /^true$/i.test(str); }
 var gIsAndroid = false;
 var gAccessConfirmed = false;
 var gAccessRequiredInput;
+var gFormHTML;
+var gNumSets;
+
+// Initialize form (with specified number of block sets)
+//
+function initForm(numSets) {
+	//log("initForm: " + numSets);
+
+	// Reset form to original HTML
+	$("#form").html(gFormHTML);
+
+	gNumSets = +numSets;
+
+	// Set maximum number of block sets
+	$("#maxSets").text(MAX_SETS);
+
+	// Set version text
+	$("#version").text(browser.runtime.getManifest().version);
+
+	// Use HTML for first block set to create other block sets
+	let tabHTML = $("#tabBlockSet1").html();
+	let setHTML = $("#blockSet1").html();
+	for (let set = 2; set <= gNumSets; set++) {
+		let nextTabHTML = tabHTML
+				.replace(/(Block Set) 1/g, `$1 ${set}`)
+				.replace(/(id|href)="(#?\w+)1"/g, `$1="$2${set}"`);
+		let nextSetHTML = setHTML
+				.replace(/(id|for)="(\w+)1"/g, `$1="$2${set}"`);
+		$("#tabGeneral").before(`<li id="tabBlockSet${set}">${nextTabHTML}</li>`);
+		$("#paneGeneral").before(`<div id="blockSet${set}">${nextSetHTML}</div>`);
+	}
+
+	// Set up JQuery UI widgets
+	$("#tabs").tabs();
+	for (let set = 1; set <= gNumSets; set++) {
+		$(`#allDay${set}`).click(function (e) { $(`#times${set}`).val(ALL_DAY_TIMES); });
+		$(`#defaultPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DEFAULT_BLOCK_URL); });
+		$(`#delayingPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DELAYED_BLOCK_URL); });
+		$(`#blankPage${set}`).click(function (e) { $(`#blockURL${set}`).val("about:blank"); });
+		$(`#showAdvOpts${set}`).click(function (e) {
+			$(`#showAdvOpts${set}`).css("display", "none");
+			$(`#advOpts${set}`).css("display", "block");
+		});
+		$(`#clearRegExpBlock${set}`).click(function (e) { $(`#regexpBlock${set}`).val(""); });
+		$(`#genRegExpBlock${set}`).click(function (e) {
+			let sites = $(`#sites${set}`).val();
+			let matchSubdomains = getElement("matchSubdomains").checked;
+			$(`#regexpBlock${set}`).val(getRegExpSites(sites, matchSubdomains).block);
+		});
+		$(`#clearRegExpAllow${set}`).click(function (e) { $(`#regexpAllow${set}`).val(""); });
+		$(`#genRegExpAllow${set}`).click(function (e) {
+			let sites = $(`#sites${set}`).val();
+			let matchSubdomains = getElement("matchSubdomains").checked;
+			$(`#regexpAllow${set}`).val(getRegExpSites(sites, matchSubdomains).allow);
+		});
+		$(`#cancelLockdown${set}`).click(function (e) {
+			browser.runtime.sendMessage({ type: "lockdown", set: set });
+			this.disabled = true;
+			$("#alertLockdownCancel").dialog("open");
+		});
+		$(`#advOpts${set}`).css("display", "none");
+	}
+	$("#theme").change(function (e) { setTheme($("#theme").val()); });
+	$("#exportOptions").click(exportOptions);
+	$("#importOptions").click(importOptions);
+	$("#exportOptionsSync").click(exportOptionsSync);
+	$("#importOptionsSync").click(importOptionsSync);
+	$("#saveOptions").button();
+	$("#saveOptions").click({ closeOptions: false }, saveOptions);
+	$("#saveOptionsClose").button();
+	$("#saveOptionsClose").click({ closeOptions: true }, saveOptions);
+}
 
 // Save options to local storage (returns true if success)
 //
@@ -21,7 +93,7 @@ function saveOptions(event) {
 	//log("saveOptions");
 
 	// Check format for text fields in block sets
-	for (let set = 1; set <= NUM_SETS; set++) {
+	for (let set = 1; set <= gNumSets; set++) {
 		// Get field values
 		let times = $(`#times${set}`).val();
 		let limitMins = $(`#limitMins${set}`).val();
@@ -71,23 +143,30 @@ function saveOptions(event) {
 	}
 
 	// Check format for text fields in general options
+	let numSets = $("#numSets").val();
+	if (!numSets || !checkPosIntFormat(numSets)) {
+		$("#tabs").tabs("option", "active", gNumSets);
+		$("#numSets").focus();
+		$("#alertBadNumSets").dialog("open");
+		return false;
+	}
 	let overrideMins = $("#overrideMins").val();
 	if (!checkPosIntFormat(overrideMins)) {
-		$("#tabs").tabs("option", "active", NUM_SETS);
+		$("#tabs").tabs("option", "active", gNumSets);
 		$("#overrideMins").focus();
 		$("#alertBadMinutes").dialog("open");
 		return false;
 	}
 	let warnSecs = $("#warnSecs").val();
 	if (!checkPosIntFormat(warnSecs)) {
-		$("#tabs").tabs("option", "active", NUM_SETS);
+		$("#tabs").tabs("option", "active", gNumSets);
 		$("#warnSecs").focus();
 		$("#alertBadSeconds").dialog("open");
 		return false;
 	}
 	let saveSecs = $("#saveSecs").val();
 	if (!saveSecs || !checkPosIntFormat(saveSecs)) {
-		$("#tabs").tabs("option", "active", NUM_SETS);
+		$("#tabs").tabs("option", "active", gNumSets);
 		$("#saveSecs").focus();
 		$("#alertBadSeconds").dialog("open");
 		return false;
@@ -109,7 +188,7 @@ function saveOptions(event) {
 	}
 
 	// Per-set options
-	for (let set = 1; set <= NUM_SETS; set++) {
+	for (let set = 1; set <= gNumSets; set++) {
 		for (let name in PER_SET_OPTIONS) {
 			let type = PER_SET_OPTIONS[name].type;
 			let id = PER_SET_OPTIONS[name].id;
@@ -207,6 +286,9 @@ function retrieveOptions() {
 		cleanOptions(options);
 		cleanTimeData(options);
 
+		// Initialize form
+		initForm(options["numSets"]);
+
 		setTheme(options["theme"]);
 
 		// Get current time/date
@@ -216,14 +298,14 @@ function retrieveOptions() {
 		let now = Math.floor(Date.now() / 1000);
 
 		// Check whether a lockdown is currently active
-		for (let set = 1; set <= NUM_SETS; set++) {
+		for (let set = 1; set <= gNumSets; set++) {
 			let timedata = options[`timedata${set}`];
 			let lockdown = (timedata[4] > now);
 			getElement(`cancelLockdown${set}`).disabled = !lockdown;
 		}
 
 		// Check whether access to options should be prevented
-		for (let set = 1; set <= NUM_SETS; set++) {
+		for (let set = 1; set <= gNumSets; set++) {
 			if (options[`prevOpts${set}`]) {
 				// Get options
 				let timedata = options[`timedata${set}`];
@@ -276,7 +358,7 @@ function retrieveOptions() {
 		}
 
 		// Per-set options
-		for (let set = 1; set <= NUM_SETS; set++) {
+		for (let set = 1; set <= gNumSets; set++) {
 			for (let name in PER_SET_OPTIONS) {
 				let type = PER_SET_OPTIONS[name].type;
 				let id = PER_SET_OPTIONS[name].id;
@@ -302,8 +384,6 @@ function retrieveOptions() {
 			let setName = options[`setName${set}`];
 			if (setName) {
 				getElement(`blockSetName${set}`).innerText = setName;
-			} else {
-				getElement(`blockSetName${set}`).innerText = `Block Set ${set}`;
 			}
 		}
 
@@ -417,7 +497,7 @@ function compileExportOptions(encode) {
 	let options = {};
 
 	// Per-set options
-	for (let set = 1; set <= NUM_SETS; set++) {
+	for (let set = 1; set <= gNumSets; set++) {
 		for (let name in PER_SET_OPTIONS) {
 			let type = PER_SET_OPTIONS[name].type;
 			let id = PER_SET_OPTIONS[name].id;
@@ -468,8 +548,11 @@ function compileExportOptions(encode) {
 // Apply imported options
 //
 function applyImportOptions(options, decode) {
+	// Initialize form
+	initForm(options["numSets"]);
+
 	// Per-set options
-	for (let set = 1; set <= NUM_SETS; set++) {
+	for (let set = 1; set <= gNumSets; set++) {
 		if (getElement(`sites${set}`).disabled) {
 			continue; // skip disabled options
 		}
@@ -505,8 +588,6 @@ function applyImportOptions(options, decode) {
 		let setName = options[`setName${set}`];
 		if (setName) {
 			getElement(`blockSetName${set}`).innerText = setName;
-		} else {
-			getElement(`blockSetName${set}`).innerText = `Block Set ${set}`;
 		}
 	}
 
@@ -593,8 +674,10 @@ function importOptions() {
 			return;
 		}
 
+		cleanOptions(options);
 		applyImportOptions(options, true);
 
+		$("#tabs").tabs("option", "active", gNumSets);
 		$("#alertImportSuccess").dialog("open");
 	}
 }
@@ -628,7 +711,9 @@ function importOptionsSync(event) {
 	function onGot(options) {
 		cleanOptions(options);
 		applyImportOptions(options, false);
+
 		if (event) {
+			$("#tabs").tabs("option", "active", gNumSets);
 			$("#alertImportSuccess").dialog("open");
 		}
 	}
@@ -733,61 +818,8 @@ browser.runtime.getPlatformInfo().then(
 	function (info) { gIsAndroid = (info.os == "android"); }
 );
 
-// Set version text
-$("#version").text(browser.runtime.getManifest().version);
-
-// Use HTML for first block set to create other block sets
-let tabHTML = $("#tabBlockSet1").html();
-let setHTML = $("#blockSet1").html();
-for (let set = 2; set <= NUM_SETS; set++) {
-	let nextTabHTML = tabHTML
-			.replace(/Block Set 1/g, `Block Set ${set}`)
-			.replace(/(id|href)="(#?\w+)1"/g, `$1="$2${set}"`);
-	let nextSetHTML = setHTML
-			.replace(/(id|for)="(\w+)1"/g, `$1="$2${set}"`);
-	$("#tabGeneral").before(`<li id="tabBlockSet${set}">${nextTabHTML}</li>`);
-	$("#paneGeneral").before(`<div id="blockSet${set}">${nextSetHTML}</div>`);
-}
-
-// Set up JQuery UI widgets
-$("#tabs").tabs();
-for (let set = 1; set <= NUM_SETS; set++) {
-	$(`#allDay${set}`).click(function (e) { $(`#times${set}`).val(ALL_DAY_TIMES); });
-	$(`#defaultPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DEFAULT_BLOCK_URL); });
-	$(`#delayingPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DELAYED_BLOCK_URL); });
-	$(`#blankPage${set}`).click(function (e) { $(`#blockURL${set}`).val("about:blank"); });
-	$(`#showAdvOpts${set}`).click(function (e) {
-		$(`#showAdvOpts${set}`).css("display", "none");
-		$(`#advOpts${set}`).css("display", "block");
-	});
-	$(`#clearRegExpBlock${set}`).click(function (e) { $(`#regexpBlock${set}`).val(""); });
-	$(`#genRegExpBlock${set}`).click(function (e) {
-		let sites = $(`#sites${set}`).val();
-		let matchSubdomains = getElement("matchSubdomains").checked;
-		$(`#regexpBlock${set}`).val(getRegExpSites(sites, matchSubdomains).block);
-	});
-	$(`#clearRegExpAllow${set}`).click(function (e) { $(`#regexpAllow${set}`).val(""); });
-	$(`#genRegExpAllow${set}`).click(function (e) {
-		let sites = $(`#sites${set}`).val();
-		let matchSubdomains = getElement("matchSubdomains").checked;
-		$(`#regexpAllow${set}`).val(getRegExpSites(sites, matchSubdomains).allow);
-	});
-	$(`#cancelLockdown${set}`).click(function (e) {
-		browser.runtime.sendMessage({ type: "lockdown", set: set });
-		this.disabled = true;
-		$("#alertLockdownCancel").dialog("open");
-	});
-	$(`#advOpts${set}`).css("display", "none");
-}
-$("#theme").change(function (e) { setTheme($("#theme").val()); });
-$("#exportOptions").click(exportOptions);
-$("#importOptions").click(importOptions);
-$("#exportOptionsSync").click(exportOptionsSync);
-$("#importOptionsSync").click(importOptionsSync);
-$("#saveOptions").button();
-$("#saveOptions").click({ closeOptions: false }, saveOptions);
-$("#saveOptionsClose").button();
-$("#saveOptionsClose").click({ closeOptions: true }, saveOptions);
+// Save original HTML of form
+gFormHTML = $("#form").html();
 
 // Initialize alert dialogs
 $("div[id^='alert']").dialog({

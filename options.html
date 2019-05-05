@@ -214,6 +214,13 @@
 					</div>
 					<div id="paneGeneral">
 						<fieldset>
+							<legend>Block Sets</legend>
+							<p>
+								Number of block sets (1&ndash;<span id="maxSets">?</span>):
+								<input id="numSets" type="text" size="2" title="Default: 6">
+							</p>
+						</fieldset>
+						<fieldset>
 							<legend>Access Control</legend>
 							<p>
 								<label>Select the requirement for access to options:</label><br>
@@ -409,6 +416,9 @@
 			</div>
 			<div id="alertBadBlockURL" title="LeechBlock Options">
 				<p>Please enter the URL for the blocking page in the correct format (as a fully specified URL).</p>
+			</div>
+			<div id="alertBadNumSets" title="LeechBlock Options">
+				<p>Please enter the number of block sets in the correct format (as a positive whole number).</p>
 			</div>
 			<div id="alertNoImportFile" title="LeechBlock Options">
 				<p>Please select a file containing the options to import.</p>

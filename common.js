@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-const NUM_SETS = 6;
+const MAX_SETS = 30;
 const ALL_DAY_TIMES = "0000-2400";
 const DEFAULT_BLOCK_URL = "blocked.html?$S&$U";
 const DELAYED_BLOCK_URL = "delayed.html?$S&$U";
@@ -40,6 +40,7 @@ const PER_SET_OPTIONS = {
 
 const GENERAL_OPTIONS = {
 	// def: default value, id: form element identifier (see options.html)
+	numSets: { type: "string", def: "6", id: "numSets" }, // default: 6 block sets
 	sync: { type: "boolean", def: false, id: "syncStorage" }, // default: use local storage
 	theme: { type: "string", def: "", id: "theme" }, // default: light theme
 	oa: { type: "string", def: "0", id: "optionsAccess" }, // default: no password or code
@@ -76,11 +77,25 @@ function listObjectProperties(obj, name) {
 // Clean options (check types and set default values where needed)
 //
 function cleanOptions(options) {
+	// General options
+	for (let name in GENERAL_OPTIONS) {
+		let type = GENERAL_OPTIONS[name].type;
+		let def = GENERAL_OPTIONS[name].def;
+		if (typeof options[`${name}`] != type) {
+			options[`${name}`] = def;
+		}
+	}
+
+	// Clean number of block sets
+	let numSets = +options["numSets"];
+	numSets = Math.max(1, Math.min(MAX_SETS, Math.floor(numSets)));
+	options["numSets"] = numSets.toString();
+
 	// Per-set options
 	for (let name in PER_SET_OPTIONS) {
 		let type = PER_SET_OPTIONS[name].type;
 		let def = PER_SET_OPTIONS[name].def;
-		for (let set = 1; set <= NUM_SETS; set++) {
+		for (let set = 1; set <= numSets; set++) {
 			if (type == "array") {
 				if (!Array.isArray(options[`${name}${set}`])) {
 					options[`${name}${set}`] = def.slice();
@@ -88,15 +103,6 @@ function cleanOptions(options) {
 			} else if (typeof options[`${name}${set}`] != type) {
 				options[`${name}${set}`] = def;
 			}
-		}
-	}
-
-	// General options
-	for (let name in GENERAL_OPTIONS) {
-		let type = GENERAL_OPTIONS[name].type;
-		let def = GENERAL_OPTIONS[name].def;
-		if (typeof options[`${name}`] != type) {
-			options[`${name}`] = def;
 		}
 	}
 }
@@ -110,7 +116,8 @@ function cleanOptions(options) {
 // timedata[4] = end time for lockdown (secs since epoch)
 //
 function cleanTimeData(options) {
-	for (let set = 1; set <= NUM_SETS; set++) {
+	let numSets = +options["numSets"];
+	for (let set = 1; set <= numSets; set++) {
 		let timedata = options[`timedata${set}`];
 		if (!Array.isArray(timedata) || timedata.length < 5) {
 			timedata = [Math.floor(Date.now() / 1000), 0, 0, 0, 0];
