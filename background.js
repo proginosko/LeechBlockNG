@@ -1151,6 +1151,17 @@ function handleMessage(message, sender, sendResponse) {
 
 function handleTabCreated(tab) {
 	//log("handleTabCreated: " + tab.id);
+
+	if (!gTabs[tab.id]) {
+		// Create object to track this tab
+		gTabs[tab.id] = { allowedHost: null, allowedPath: null };
+
+		if (tab.openerTabId) {
+			// Inherit properties from opener tab
+			gTabs[tab.id].allowedHost = gTabs[tab.openerTabId].allowedHost;
+			gTabs[tab.id].allowedPath = gTabs[tab.openerTabId].allowedPath;
+		}
+	}
 }
 
 function handleTabUpdated(tabId, changeInfo, tab) {
@@ -1250,7 +1261,7 @@ if (browser.menus) {
 
 browser.runtime.onMessage.addListener(handleMessage);
 
-//browser.tabs.onCreated.addListener(handleTabCreated);
+browser.tabs.onCreated.addListener(handleTabCreated);
 browser.tabs.onUpdated.addListener(handleTabUpdated);
 browser.tabs.onActivated.addListener(handleTabActivated);
 browser.tabs.onRemoved.addListener(handleTabRemoved);
