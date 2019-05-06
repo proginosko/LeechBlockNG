@@ -22,6 +22,8 @@ const PER_SET_OPTIONS = {
 	conjMode: { type: "boolean", def: false, id: "conjMode" },
 	days: { type: "array", def: [false, true, true, true, true, true, false], id: "day" },
 	blockURL: { type: "string", def: DEFAULT_BLOCK_URL, id: "blockURL" },
+	applyFilter: { type: "boolean", def: false, id: "applyFilter" },
+	filterName: { type: "string", def: "grayscale", id: "filterName" },
 	activeBlock: { type: "boolean", def: false, id: "activeBlock" },
 	countFocus: { type: "boolean", def: true, id: "countFocus" },
 	delayFirst: { type: "boolean", def: true, id: "delayFirst" },

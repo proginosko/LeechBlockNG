@@ -143,6 +143,12 @@ function checkKeyword(keywordRE) {
 	return false; // keyword(s) not found
 }
 
+// Apply filter
+//
+function applyFilter(name) {
+	document.body.style.filter = `${name}(100%)`;
+}
+
 /*** EVENT HANDLERS BEGIN HERE ***/
 
 function handleMessage(message, sender, sendResponse) {
@@ -153,6 +159,8 @@ function handleMessage(message, sender, sendResponse) {
 	} else if (message.type == "keyword") {
 		let keyword = checkKeyword(message.keywordRE);
 		sendResponse(keyword);
+	} else if (message.type == "filter") {
+		applyFilter(message.name);
 	}
 }
 

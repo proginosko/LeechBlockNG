@@ -409,6 +409,8 @@ function checkTab(id, url, isRepeat) {
 			let conjMode = gOptions[`conjMode${set}`];
 			let days = gOptions[`days${set}`];
 			let blockURL = gOptions[`blockURL${set}`];
+			let applyFilter = gOptions[`applyFilter${set}`];
+			let filterName = gOptions[`filterName${set}`];
 			let activeBlock = gOptions[`activeBlock${set}`];
 			let allowOverride = gOptions[`allowOverride${set}`];
 			let showTimer = gOptions[`showTimer${set}`];
@@ -481,6 +483,13 @@ function checkTab(id, url, isRepeat) {
 						},
 						function (error) {}
 					);
+				} else if (applyFilter) {
+					// Send message to tab
+					let message = {
+						type: "filter",
+						name: filterName
+					};
+					browser.tabs.sendMessage(id, message).catch(function (error) {});
 				} else {
 					// Redirect page
 					browser.tabs.update(id, { url: blockURL });
