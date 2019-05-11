@@ -53,6 +53,10 @@ function initForm(numSets) {
 		$(`#defaultPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DEFAULT_BLOCK_URL); });
 		$(`#delayingPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DELAYED_BLOCK_URL); });
 		$(`#blankPage${set}`).click(function (e) { $(`#blockURL${set}`).val("about:blank"); });
+		$(`#resetOpts${set}`).click(function (e) {
+			resetSetOptions(set);
+			$("#alertResetOptions").dialog("open");
+		});
 		$(`#showAdvOpts${set}`).click(function (e) {
 			$(`#showAdvOpts${set}`).css("display", "none");
 			$(`#advOpts${set}`).css("display", "block");
@@ -726,6 +730,33 @@ function importOptionsSync(event) {
 	}
 }
 
+// Reset options for block set to defaults
+//
+function resetSetOptions(set) {
+	// Restore default set name to tab
+	getElement(`blockSetName${set}`).innerText = `Block Set ${set}`;
+
+	// Restore per-set options
+	for (let name in PER_SET_OPTIONS) {
+		let type = PER_SET_OPTIONS[name].type;
+		let id = PER_SET_OPTIONS[name].id;
+		let val = PER_SET_OPTIONS[name].def;
+
+		// Set component value
+		if (name == "conjMode") {
+			getElement(`${id}${set}`).selectedIndex = val ? 1 : 0;
+		} else if (type == "boolean") {
+			getElement(`${id}${set}`).checked = val;
+		} else if (type == "string") {
+			getElement(`${id}${set}`).value = val;
+		} else if (type == "array") {
+			for (let i = 0; i < val.length; i++) {
+				getElement(`${id}${i}${set}`).checked = val[i];
+			}
+		}
+	}
+}
+
 // Disable options for block set
 //
 function disableSetOptions(set) {
@@ -745,6 +776,7 @@ function disableSetOptions(set) {
 
 	// Disable buttons
 	let items = [
+		"resetOpts",
 		"allDay",
 		"defaultPage", "delayingPage", "blankPage",
 		"clearRegExpBlock", "genRegExpBlock",
