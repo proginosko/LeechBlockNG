@@ -31,14 +31,26 @@ body {
 	border: 1px solid #888;
 }
 
-.ui-widget button:hover {
+.ui-widget button:hover:enabled {
 	background: #ddd;
+}
+
+.ui-widget button:disabled {
+	background: #eee;
+	color: #666;
+	border: 1px solid #ccc;
 }
 
 .ui-widget fieldset, input, select, textarea {
 	background: #fff;
 	color: #000;
 	border: 1px solid #888;
+}
+
+.ui-widget input:disabled, select:disabled, textarea:disabled {
+	background: #eee;
+	color: #666;
+	border: 1px solid #ccc;
 }
 
 .ui-widget hr {

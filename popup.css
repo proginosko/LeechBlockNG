@@ -21,7 +21,7 @@ button {
 	border: 1px solid #888;
 }
 
-button:hover {
+button:hover:enabled {
 	background: #ddd;
 }
 
