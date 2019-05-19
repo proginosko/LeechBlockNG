@@ -9,10 +9,41 @@ function getElement(id) { return document.getElementById(id); }
 
 var gStorage = browser.storage.local;
 
-// Initialize form
+var gFormHTML;
+var gNumSets;
+
+// Initialize form (with specified number of block sets)
 //
-function initializeForm() {
-	//log("initializeForm");
+function initForm(numSets) {
+	//log("initForm: " + numSets);
+
+	// Reset form to original HTML
+	$("#form").html(gFormHTML);
+
+	gNumSets = +numSets;
+
+	// Use HTML for first check box to create other check boxes
+	let blockSetHTML = $("#blockSets").html();
+	for (let set = 2; set <= gNumSets; set++) {
+		let nextSetHTML = blockSetHTML
+				.replace(/(Block Set) 1/g, `$1 ${set}`)
+				.replace(/(id|for)="(\w+)1"/g, `$1="$2${set}"`);
+		$("#blockSets").append(nextSetHTML);
+	}
+
+	// Set up JQuery UI widgets
+	$("#activate").button();
+	$("#activate").click(onActivate);
+	$("#cancel").button();
+	$("#cancel").click(onCancel);
+}
+
+// Refresh page
+//
+function refreshPage() {
+	//log("refreshPage");
+
+	$("#form").hide();
 
 	browser.storage.local.get("sync").then(onGotSync, onError);
 
@@ -25,6 +56,11 @@ function initializeForm() {
 	}
 
 	function onGot(options) {
+		cleanOptions(options);
+
+		// Initialize form
+		initForm(options["numSets"]);
+
 		setTheme(options["theme"]);
 
 		let lockdownHours = options["lockdownHours"];
@@ -37,7 +73,7 @@ function initializeForm() {
 			getElement("mins").value = lockdownMins;
 		}
 
-		for (let set = 1; set <= NUM_SETS; set++) {
+		for (let set = 1; set <= gNumSets; set++) {
 			let lockdown = options[`lockdown${set}`];
 			if (lockdown) {
 				getElement(`blockSet${set}`).checked = lockdown;
@@ -49,6 +85,8 @@ function initializeForm() {
 				getElement(`blockSetLabel${set}`).innerText += ` (${setName})`;
 			}
 		}
+
+		$("#form").show();
 	}
 
 	function onError(error) {
@@ -77,7 +115,7 @@ function onActivate() {
 
 	// Request lockdown for each selected set
 	let noneSelected = true;
-	for (let set = 1; set <= NUM_SETS; set++) {
+	for (let set = 1; set <= gNumSets; set++) {
 		let selected = getElement(`blockSet${set}`).checked;
 		if (selected) {
 			noneSelected = false;
@@ -100,7 +138,7 @@ function onActivate() {
 	let options = {};
 	options["lockdownHours"] = hours;
 	options["lockdownMins"] = mins;
-	for (let set = 1; set <= NUM_SETS; set++) {
+	for (let set = 1; set <= gNumSets; set++) {
 		options[`lockdown${set}`] = getElement(`blockSet${set}`).checked;
 	}
 	gStorage.set(options).catch(
@@ -122,20 +160,8 @@ function onCancel() {
 
 /*** STARTUP CODE BEGINS HERE ***/
 
-// Use HTML for first check box to create other check boxes
-let blockSetHTML = $("#blockSets").html();
-for (let set = 2; set <= NUM_SETS; set++) {
-	let nextSetHTML = blockSetHTML
-			.replace(/Block Set 1/g, `Block Set ${set}`)
-			.replace(/(id|for)="(\w+)1"/g, `$1="$2${set}"`);
-	$("#blockSets").append(nextSetHTML);
-}
-
-// Set up JQuery UI widgets
-$("#activate").button();
-$("#activate").click(onActivate);
-$("#cancel").button();
-$("#cancel").click(onCancel);
+// Save original HTML of form
+gFormHTML = $("#form").html();
 
 // Initialize alert dialogs
 $("div[id^='alert']").dialog({
@@ -147,6 +173,5 @@ $("div[id^='alert']").dialog({
 	}
 });
 
-$("#form").show();
-
-document.addEventListener("DOMContentLoaded", initializeForm);
+document.addEventListener("DOMContentLoaded", refreshPage);
+document.addEventListener("focus", refreshPage);

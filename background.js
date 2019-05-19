@@ -14,6 +14,7 @@ var gStorage = browser.storage.local;
 var gIsAndroid = false;
 var gGotOptions = false;
 var gOptions = {};
+var gNumSets;
 var gTabs = [];
 var gSetCounted = [];
 var gSavedTimeData = [];
@@ -26,7 +27,7 @@ var gSaveSecsCount = 0;
 //
 function createRegExps() {
 	// Create new RegExp objects
-	for (let set = 1; set <= NUM_SETS; set++) {
+	for (let set = 1; set <= gNumSets; set++) {
 		gRegExps[set] = {};
 
 		let blockRE = gOptions[`regexpBlock${set}`] || gOptions[`blockRE${set}`];
@@ -100,7 +101,7 @@ function refreshMenus() {
 	});
 
 	// Add Site submenu
-	for (let set = 1; set <= NUM_SETS; set++) {
+	for (let set = 1; set <= gNumSets; set++) {
 		let title = `Add Site to Block Set ${set}`;
 		let setName = gOptions[`setName${set}`];
 		if (setName) {
@@ -141,13 +142,16 @@ function retrieveOptions(update) {
 
 		cleanOptions(gOptions);
 		cleanTimeData(gOptions);
+
+		gNumSets = +gOptions["numSets"];
+
 		createRegExps();
 		refreshMenus();
 		loadSiteLists();
 		updateIcon();
 
 		// Keep track of saved time data to avoid unnecessary writes
-		for (let set = 1; set <= NUM_SETS; set++) {
+		for (let set = 1; set <= gNumSets; set++) {
 			gSavedTimeData[set] = gOptions[`timedata${set}`].toString();
 		}
 	}
@@ -165,7 +169,7 @@ function loadSiteLists() {
 
 	let time = Date.now();
 
-	for (let set = 1; set <= NUM_SETS; set++) {
+	for (let set = 1; set <= gNumSets; set++) {
 		// Get sites for block set from HTTP source (if specified)
 		let sitesURL = gOptions[`sitesURL${set}`];
 		if (sitesURL) {
@@ -226,7 +230,7 @@ function saveTimeData() {
 
 	let options = {};
 	let touched = false;
-	for (let set = 1; set <= NUM_SETS; set++) {
+	for (let set = 1; set <= gNumSets; set++) {
 		let timedata = gOptions[`timedata${set}`];
 		if (gSavedTimeData[set] != timedata.toString()) {
 			options[`timedata${set}`] = timedata;
@@ -246,7 +250,7 @@ function saveTimeData() {
 function restartTimeData(set) {
 	//log("restartTimeData: " + set);
 
-	if (!gGotOptions) {
+	if (!gGotOptions || set < 1 || set > gNumSets) {
 		return;
 	}
 
@@ -254,7 +258,7 @@ function restartTimeData(set) {
 	let now = Math.floor(Date.now() / 1000);
 
 	if (!set) {
-		for (set = 1; set <= NUM_SETS; set++) {
+		for (set = 1; set <= gNumSets; set++) {
 			gOptions[`timedata${set}`][0] = now;
 			gOptions[`timedata${set}`][1] = 0;
 		}
@@ -373,7 +377,7 @@ function checkTab(id, url, isRepeat) {
 
 	gTabs[id].secsLeft = Infinity;
 
-	for (let set = 1; set <= NUM_SETS; set++) {
+	for (let set = 1; set <= gNumSets; set++) {
 		// Get URL of page (possibly with hash part)
 		let pageURL = parsedURL.page;
 		let pageURLWithHash = parsedURL.page;
@@ -612,7 +616,7 @@ function updateTimeData(url, secsOpen, secsFocus) {
 	// Get current time in seconds
 	let now = Math.floor(Date.now() / 1000);
 
-	for (let set = 1; set <= NUM_SETS; set++) {
+	for (let set = 1; set <= gNumSets; set++) {
 		// Get regular expressions for matching sites to block/allow
 		let blockRE = gRegExps[set].block;
 		if (!blockRE) continue; // no block for this set
@@ -807,8 +811,9 @@ function createBlockInfo(url) {
 // Return time when blocked sites will be unblocked (as Date object)
 //
 function getUnblockTime(set) {
-	// Check for invalid set number
-	if (set < 1 || set > NUM_SETS) {
+	//log("getUnlockTime: " + set);
+
+	if (!gGotOptions || set < 1 || set > gNumSets) {
 		return null;
 	}
 
@@ -951,7 +956,7 @@ function getUnblockTime(set) {
 function applyLockdown(set, endTime) {
 	//log("applyLockdown: " + set + " " + endTime);
 
-	if (!gGotOptions) {
+	if (!gGotOptions || set < 1 || set > gNumSets) {
 		return;
 	}
 
@@ -968,7 +973,7 @@ function applyLockdown(set, endTime) {
 function cancelLockdown(set) {
 	//log("cancelLockdown: " + set);
 
-	if (!gGotOptions) {
+	if (!gGotOptions || set < 1 || set > gNumSets) {
 		return;
 	}
 
@@ -1030,6 +1035,10 @@ function openExtensionPage(url) {
 function openDelayedPage(id, url, set) {
 	//log("openDelayedPage: " + id + " " + url);
 
+	if (!gGotOptions || set < 1 || set > gNumSets) {
+		return;
+	}
+
 	// Get parsed URL for this page
 	let parsedURL = getParsedURL(url);
 
@@ -1048,11 +1057,7 @@ function openDelayedPage(id, url, set) {
 function addSiteToSet(url, set) {
 	//log("addSiteToSet: " + url + " " + set);
 
-	if (!/^http/i.test(url) || set < 1 || set > NUM_SETS) {
-		return;
-	}
-
-	if (!gGotOptions) {
+	if (!gGotOptions || set < 1 || set > gNumSets || !/^http/i.test(url)) {
 		return;
 	}
 
