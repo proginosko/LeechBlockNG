@@ -149,31 +149,32 @@ function saveOptions(event) {
 		}
 	}
 
+	let complete = event.data.closeOptions ? closeOptions : retrieveOptions;
+
 	if (options["sync"]) {
 		// Set sync option in local storage and all options in sync storage
 		browser.storage.local.set({ sync: true });
-		browser.storage.sync.set(options).catch(
+		browser.storage.sync.set(options).then(
+			function () {
+				browser.runtime.sendMessage({ type: "options" });
+				$("#form").hide({ effect: "fade", complete: complete });
+			},
 			function (error) { warn("Cannot set options: " + error); }
 		);
 	} else {
-		// Set all options in local storage
-		browser.storage.local.set(options).catch(
-			function (error) { warn("Cannot set options: " + error); }
-		);
-
 		// Export options to sync storage if selected
 		if (options["autoExportSync"] && !gIsAndroid) {
 			exportOptionsSync(); // no event passed, so dialogs suppressed
 		}
-	}
 
-	// Notify extension that options have been updated
-	browser.runtime.sendMessage({ type: "options" });
-
-	if (event.data.closeOptions) {
-		$("#form").hide({ effect: "fade", complete: closeOptions });
-	} else {
-		$("#form").hide({ effect: "fade", complete: retrieveOptions });
+		// Set all options in local storage
+		browser.storage.local.set(options).then(
+			function () {
+				browser.runtime.sendMessage({ type: "options" });
+				$("#form").hide({ effect: "fade", complete: complete });
+			},
+			function (error) { warn("Cannot set options: " + error); }
+		);
 	}
 
 	return true;
@@ -567,7 +568,7 @@ function importOptions() {
 	let reader = new FileReader();
 	reader.onload = processImportFile;
 	reader.readAsText(file);
-	
+
 	function processImportFile(event) {
 		let text = event.target.result;
 		if (!text) {
@@ -605,7 +606,7 @@ function exportOptionsSync(event) {
 	let options = compileExportOptions(false);
 
 	browser.storage.sync.set(options).then(onSuccess, onError);
-	
+
 	function onSuccess() {
 		if (event) {
 			$("#alertExportSuccess").dialog("open");
