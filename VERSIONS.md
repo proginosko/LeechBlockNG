@@ -1,3 +1,8 @@
+### Version 1.0 (19 May 2019)
+* Finally! Added option to customize number of block sets.
+* Added option to apply filter (grayscale, invert, sepia) instead of blocking page.
+* Bug fixes and under-the-hood improvements.
+
 ### Version 0.9.11 (14 Apr 2019)
 * Added keyboard shortcuts for options (Ctrl+S to Save, Ctrl+Shift+S to Save & Close).
 * Under-the-hood performance improvements.
