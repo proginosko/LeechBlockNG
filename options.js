@@ -16,6 +16,7 @@ var gAccessConfirmed = false;
 var gAccessRequiredInput;
 var gFormHTML;
 var gNumSets;
+var gTabIndex = 0;
 
 // Initialize form (with specified number of block sets)
 //
@@ -47,7 +48,7 @@ function initForm(numSets) {
 	}
 
 	// Set up JQuery UI widgets
-	$("#tabs").tabs();
+	$("#tabs").tabs({ activate: onActivate });
 	for (let set = 1; set <= gNumSets; set++) {
 		$(`#allDay${set}`).click(function (e) { $(`#times${set}`).val(ALL_DAY_TIMES); });
 		$(`#defaultPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DEFAULT_BLOCK_URL); });
@@ -89,6 +90,22 @@ function initForm(numSets) {
 	$("#saveOptions").click({ closeOptions: false }, saveOptions);
 	$("#saveOptionsClose").button();
 	$("#saveOptionsClose").click({ closeOptions: true }, saveOptions);
+
+	// Set active tab
+	if (gTabIndex < 0) {
+		// -ve index = other tab (General, About)
+		let index = Math.max(0, gTabIndex + gNumSets + 2);
+		$("#tabs").tabs("option", "active", index);
+	} else {
+		// +ve index = block set tab
+		let index = Math.min(gTabIndex, gNumSets - 1);
+		$("#tabs").tabs("option", "active", index);
+	}
+
+	function onActivate(event, ui) {
+		let index = ui.newTab.index();
+		gTabIndex = (index < gNumSets) ? index : (index - gNumSets - 2);
+	}
 }
 
 // Save options to local storage (returns true if success)
