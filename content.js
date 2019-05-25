@@ -5,10 +5,10 @@
 const TIMER_SIZES = ["10px", "12px", "14px", "16px"];
 
 const TIMER_LOCATIONS = [
-	["0px", "", "0px", ""],
-	["0px", "", "", "0px"],
-	["", "0px", "", "0px"],
-	["", "0px", "0px", ""]
+	["0px", "auto", "0px", "auto"],
+	["0px", "auto", "auto", "0px"],
+	["auto", "0px", "auto", "0px"],
+	["auto", "0px", "0px", "auto"]
 ];
 
 var gTimer;
