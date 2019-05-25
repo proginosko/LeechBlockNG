@@ -1,3 +1,6 @@
+### Version 1.0.1 (25 May 2019)
+* Fixed bug in countdown timer position.
+
 ### Version 1.0 (24 May 2019)
 * Finally! Added option to customize number of block sets.
 * Added option to apply filter (grayscale, invert, sepia) instead of blocking page.
