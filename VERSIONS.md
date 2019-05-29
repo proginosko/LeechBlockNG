@@ -1,3 +1,6 @@
+### Version 1.0.2 (29 May 2019)
+* Fixed bug affecting options file import.
+
 ### Version 1.0.1 (25 May 2019)
 * Fixed bug in countdown timer position.
 
