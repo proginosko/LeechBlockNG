@@ -687,6 +687,8 @@ function importOptions() {
 				let value = results[2];
 				if (/^days\d+$/.test(option)) {
 					options[option] = decodeDays(value);
+				} else if (/^(true|false)$/.test(value)) {
+					options[option] = isTrue(value);
 				} else {
 					options[option] = value;
 				}
