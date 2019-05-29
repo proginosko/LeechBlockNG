@@ -515,7 +515,7 @@ function displayAccessCode(code, asImage) {
 
 // Compile options for export
 //
-function compileExportOptions(encode) {
+function compileExportOptions() {
 	let options = {};
 
 	// Per-set options
@@ -545,10 +545,6 @@ function compileExportOptions(encode) {
 				options[`${name}${set}`] = val;
 			}
 		}
-
-		if (encode) {
-			options[`days${set}`] = encodeDays(options[`days${set}`]);
-		}
 	}
 
 	// General options
@@ -569,7 +565,7 @@ function compileExportOptions(encode) {
 
 // Apply imported options
 //
-function applyImportOptions(options, decode) {
+function applyImportOptions(options) {
 	// Initialize form
 	initForm(options["numSets"]);
 
@@ -577,10 +573,6 @@ function applyImportOptions(options, decode) {
 	for (let set = 1; set <= gNumSets; set++) {
 		if (getElement(`sites${set}`).disabled) {
 			continue; // skip disabled options
-		}
-
-		if (decode) {
-			options[`days${set}`] = decodeDays(options[`days${set}`]);
 		}
 
 		for (let name in PER_SET_OPTIONS) {
@@ -630,12 +622,17 @@ function applyImportOptions(options, decode) {
 // Export options to file
 //
 function exportOptions() {
-	let options = compileExportOptions(true);
+	let options = compileExportOptions();
 
 	// Convert options to text lines
 	let lines = [];
 	for (let option in options) {
-		lines.push(option + "=" + options[option] + "\n");
+		let value = options[option];
+		if (/^days\d+$/.test(option)) {
+			lines.push(option + "=" + encodeDays(value) + "\n");
+		} else {
+			lines.push(option + "=" + value + "\n");
+		}
 	}
 
 	// Create blob and download it
@@ -686,7 +683,13 @@ function importOptions() {
 		for (let line of lines) {
 			let results = regexp.exec(line);
 			if (results) {
-				options[results[1]] = results[2];
+				let option = results[1];
+				let value = results[2];
+				if (/^days\d+$/.test(option)) {
+					options[option] = decodeDays(value);
+				} else {
+					options[option] = value;
+				}
 				hasOptions = true;
 			}
 		}
@@ -697,7 +700,7 @@ function importOptions() {
 		}
 
 		cleanOptions(options);
-		applyImportOptions(options, true);
+		applyImportOptions(options);
 
 		$("#tabs").tabs("option", "active", gNumSets);
 		$("#alertImportSuccess").dialog("open");
@@ -707,7 +710,7 @@ function importOptions() {
 // Export options to sync storage
 //
 function exportOptionsSync(event) {
-	let options = compileExportOptions(false);
+	let options = compileExportOptions();
 
 	browser.storage.sync.set(options).then(onSuccess, onError);
 
@@ -732,7 +735,7 @@ function importOptionsSync(event) {
 
 	function onGot(options) {
 		cleanOptions(options);
-		applyImportOptions(options, false);
+		applyImportOptions(options);
 
 		if (event) {
 			$("#tabs").tabs("option", "active", gNumSets);
