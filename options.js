@@ -484,15 +484,19 @@ function confirmAccess(options) {
 // Display access code (as text or image)
 //
 function displayAccessCode(code, asImage) {
+	let codeText = getElement("promptAccessCodeText");
+	let codeImage = getElement("promptAccessCodeImage");
+	let codeCanvas = getElement("promptAccessCodeCanvas");
+
 	if (asImage) {
 		// Display code as image
-		getElement("promptAccessCodeText").style.display = "none";
-		getElement("promptAccessCodeImage").style.display = "";
-		let canvas = getElement("promptAccessCodeCanvas");
-		canvas.width = (code.length == 32) ? 264 : 520;
-		canvas.height = (code.length == 128) ? 40 : 24;
-		let ctx = canvas.getContext("2d");
+		codeText.style.display = "none";
+		codeImage.style.display = "";
+		let ctx = codeCanvas.getContext("2d");
 		ctx.font = "normal 14px monospace";
+		codeCanvas.width = ctx.measureText(code.substring(0, 64)).width + 8;
+		codeCanvas.height = (code.length == 128) ? 40 : 24;
+		ctx.font = "normal 14px monospace"; // resizing canvas resets font!
 		ctx.fillStyle = "#000";
 		if (code.length == 128) {
 			ctx.fillText(code.substring(0, 64), 4, 16);
@@ -502,13 +506,14 @@ function displayAccessCode(code, asImage) {
 		}
 	} else {
 		// Display code as text
-		getElement("promptAccessCodeText").style.display = "";
-		getElement("promptAccessCodeImage").style.display = "none";
+		codeText.style.display = "";
+		codeImage.style.display = "none";
 		if (code.length == 128) {
-			let html = code.substring(0, 64) + "<br>" + code.substring(64);
-			getElement("promptAccessCodeText").innerHTML = html;
+			codeText.appendChild(document.createTextNode(code.substring(0, 64)));
+			codeText.appendChild(document.createElement("br"));
+			codeText.appendChild(document.createTextNode(code.substring(64)));
 		} else {
-			getElement("promptAccessCodeText").innerHTML = code;
+			codeText.appendChild(document.createTextNode(code));
 		}
 	}
 }
