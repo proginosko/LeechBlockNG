@@ -1,3 +1,6 @@
+### Version 1.0.4 (25 Jun 2019)
+* Minor code tweaks.
+
 ### Version 1.0.3 (29 May 2019)
 * Fixed bug affecting options file import.
 
