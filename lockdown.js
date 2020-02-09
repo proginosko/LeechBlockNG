@@ -103,15 +103,22 @@ function onActivate() {
 	// Get lockdown duration
 	let hours = getElement("hours").value;
 	let mins = getElement("mins").value;
+	let forever = getElement("forever").checked;
 	let duration = hours * 3600 + mins * 60;
 
-	if (!duration || duration < 0) {
+	if (!forever && (!duration || duration < 0)) {
 		$("#alertNoDuration").dialog("open");
 		return;
 	}
 
 	// Calculate end time for lockdown	
-	let endTime = Math.floor(Date.now() / 1000) + duration;
+	let endTime = Math.floor(Date.now() / 1000);
+	if ( forever ) {
+		endTime += 20 * 365 * 24 * 3600;  // 20 years is pretty much forever right? :-)
+	}
+	else {
+		endTime += duration;
+	}
 
 	// Request lockdown for each selected set
 	let noneSelected = true;
@@ -138,6 +145,7 @@ function onActivate() {
 	let options = {};
 	options["lockdownHours"] = hours;
 	options["lockdownMins"] = mins;
+	options["lockdownForever"] = forever;
 	for (let set = 1; set <= gNumSets; set++) {
 		options[`lockdown${set}`] = getElement(`blockSet${set}`).checked;
 	}
