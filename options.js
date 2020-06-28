@@ -328,53 +328,57 @@ function retrieveOptions() {
 
 		// Check whether access to options should be prevented
 		for (let set = 1; set <= gNumSets; set++) {
-			if (options[`prevOpts${set}`]) {
-				// Get options
-				let timedata = options[`timedata${set}`];
-				let times = options[`times${set}`];
-				let minPeriods = getMinPeriods(times);
-				let limitMins = options[`limitMins${set}`];
-				let limitPeriod = options[`limitPeriod${set}`];
-				let limitOffset = options[`limitOffset${set}`];
-				let periodStart = getTimePeriodStart(now, limitPeriod, limitOffset);
-				let conjMode = options[`conjMode${set}`];
-				let days = options[`days${set}`];
+			// Get options
+			let timedata = options[`timedata${set}`];
+			let times = options[`times${set}`];
+			let minPeriods = getMinPeriods(times);
+			let limitMins = options[`limitMins${set}`];
+			let limitPeriod = options[`limitPeriod${set}`];
+			let limitOffset = options[`limitOffset${set}`];
+			let periodStart = getTimePeriodStart(now, limitPeriod, limitOffset);
+			let conjMode = options[`conjMode${set}`];
+			let days = options[`days${set}`];
 
-				// Check day
-				let onSelectedDay = days[timedate.getDay()];
+			// Check day
+			let onSelectedDay = days[timedate.getDay()];
 
-				// Check time periods
-				let withinTimePeriods = false;
-				if (onSelectedDay && times) {
-					// Get number of minutes elapsed since midnight
-					let mins = timedate.getHours() * 60 + timedate.getMinutes();
+			// Check time periods
+			let withinTimePeriods = false;
+			if (onSelectedDay && times) {
+				// Get number of minutes elapsed since midnight
+				let mins = timedate.getHours() * 60 + timedate.getMinutes();
 
-					// Check each time period in turn
-					for (let mp of minPeriods) {
-						if (mins >= mp.start && mins < mp.end) {
-							withinTimePeriods = true;
-						}
+				// Check each time period in turn
+				for (let mp of minPeriods) {
+					if (mins >= mp.start && mins < mp.end) {
+						withinTimePeriods = true;
 					}
 				}
+			}
 
-				// Check time limit
-				let afterTimeLimit = false;
-				if (onSelectedDay && limitMins && limitPeriod) {
-					// Check time period and time limit
-					if (timedata[2] == periodStart && timedata[3] >= (limitMins * 60)) {
-						afterTimeLimit = true;
-					}
+			// Check time limit
+			let afterTimeLimit = false;
+			if (onSelectedDay && limitMins && limitPeriod) {
+				// Check time period and time limit
+				if (timedata[2] == periodStart && timedata[3] >= (limitMins * 60)) {
+					afterTimeLimit = true;
 				}
+			}
 
-				// Check lockdown condition
-				let lockdown = (timedata[4] > now);
+			// Check lockdown condition
+			let lockdown = (timedata[4] > now);
 
-				// Disable options if specified block conditions are fulfilled
-				if (lockdown
-						|| (!conjMode && (withinTimePeriods || afterTimeLimit))
-						|| (conjMode && (withinTimePeriods && afterTimeLimit))) {
+			// Disable options if specified block conditions are fulfilled
+			if (lockdown
+					|| (!conjMode && (withinTimePeriods || afterTimeLimit))
+					|| (conjMode && (withinTimePeriods && afterTimeLimit))) {
+				if (options[`prevOpts${set}`]) {
 					// Disable options for this set
 					disableSetOptions(set);
+				}
+				if (options[`prevGenOpts${set}`]) {
+					// Disable general options
+					disableGeneralOptions();
 				}
 			}
 		}
@@ -813,6 +817,26 @@ function disableSetOptions(set) {
 	];
 	for (let item of items) {
 		getElement(`${item}${set}`).disabled = true;
+	}
+}
+
+// Disable general options
+//
+function disableGeneralOptions() {
+	// Disable all general options
+	let items = [
+		"numSets",
+		"optionsAccess", "accessPassword", "hidePassword",
+		"timerVisible", "timerSize", "timerLocation", "timerBadge",
+		"warnSecs", "warnImmediate",
+		"overrideMins", "overrideAccess", "overrideConfirm",
+		"theme", "contextMenu", "toolsMenu", "matchSubdomains",
+		"saveSecs", "processActiveTabs", "accessCodeImage", "syncStorage",
+		"exportOptions", "importOptions", "importFile",
+		"exportOptionsSync", "importOptionsSync", "autoExportSync"
+	];
+	for (let item of items) {
+		getElement(item).disabled = true;
 	}
 }
 

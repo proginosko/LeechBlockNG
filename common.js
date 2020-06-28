@@ -31,6 +31,7 @@ const PER_SET_OPTIONS = {
 	reloadSecs: { type: "string", def: "", id: "reloadSecs" },
 	allowOverride: { type: "boolean", def: false, id: "allowOverride" },
 	prevOpts: { type: "boolean", def: false, id: "prevOpts" },
+	prevGenOpts: { type: "boolean", def: false, id: "prevGenOpts" },
 	prevAddons: { type: "boolean", def: false, id: "prevAddons" },
 	prevSupport: { type: "boolean", def: false, id: "prevSupport" },
 	showTimer: { type: "boolean", def: true, id: "showTimer" },
