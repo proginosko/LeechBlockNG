@@ -375,6 +375,8 @@ function retrieveOptions() {
 				if (options[`prevOpts${set}`]) {
 					// Disable options for this set
 					disableSetOptions(set);
+					// Disable import options
+					disableImportOptions();
 				}
 				if (options[`prevGenOpts${set}`]) {
 					// Disable general options
@@ -834,6 +836,18 @@ function disableGeneralOptions() {
 		"saveSecs", "processActiveTabs", "accessCodeImage", "syncStorage",
 		"exportOptions", "importOptions", "importFile",
 		"exportOptionsSync", "importOptionsSync", "autoExportSync"
+	];
+	for (let item of items) {
+		getElement(item).disabled = true;
+	}
+}
+
+// Disable import options
+//
+function disableImportOptions() {
+	// Disable all import options
+	let items = [
+		"importOptions", "importFile", "importOptionsSync"
 	];
 	for (let item of items) {
 		getElement(item).disabled = true;
