@@ -15,7 +15,7 @@ var gIsAndroid = false;
 var gAccessConfirmed = false;
 var gAccessRequiredInput;
 var gFormHTML;
-var gNumSets;
+var gNumSets, gNumSetsMin;
 var gTabIndex = 0;
 
 // Initialize form (with specified number of block sets)
@@ -27,6 +27,7 @@ function initForm(numSets) {
 	$("#form").html(gFormHTML);
 
 	gNumSets = +numSets;
+	gNumSetsMin = 1;
 
 	// Set maximum number of block sets
 	$("#maxSets").text(MAX_SETS);
@@ -191,6 +192,11 @@ function saveOptions(event) {
 		$("#saveSecs").focus();
 		$("#alertBadSeconds").dialog("open");
 		return false;
+	}
+
+	// Prevent removal of block sets with disabled options
+	if (numSets < gNumSetsMin) {
+		$("#numSets").val(gNumSetsMin);
 	}
 
 	let options = {};
@@ -373,6 +379,7 @@ function retrieveOptions() {
 					|| (!conjMode && (withinTimePeriods || afterTimeLimit))
 					|| (conjMode && (withinTimePeriods && afterTimeLimit))) {
 				if (options[`prevOpts${set}`]) {
+					gNumSetsMin = set;
 					// Disable options for this set
 					disableSetOptions(set);
 					// Disable import options
