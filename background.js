@@ -346,7 +346,7 @@ function checkTab(id, url, isRepeat) {
 
 	if (!gTabs[id]) {
 		// Create object to track this tab
-		gTabs[id] = { allowedHost: null, allowedPath: null };
+		gTabs[id] = { allowedHost: null, allowedPath: null, filtered: false };
 	}
 
 	gTabs[id].blockable = BLOCKABLE_URL.test(url);
@@ -472,7 +472,7 @@ function checkTab(id, url, isRepeat) {
 					|| (!conjMode && (withinTimePeriods || afterTimeLimit))
 					|| (conjMode && (withinTimePeriods && afterTimeLimit));
 
-			// Redirect page if all relevant block conditions are fulfilled
+			// Apply block if all relevant block conditions are fulfilled
 			if (!override && doBlock && (!isRepeat || activeBlock)) {
 				// Get final URL for block page
 				blockURL = blockURL.replace(/\$S/g, set).replace(/\$U/g, pageURLWithHash);
@@ -486,25 +486,56 @@ function checkTab(id, url, isRepeat) {
 					browser.tabs.sendMessage(id, message).then(
 						function (keyword) {
 							if (keyword) {
-								// Redirect page
-								browser.tabs.update(id, { url: blockURL });
+								if (applyFilter) {
+									gTabs[id].filtered = true;
+
+									// Send message to tab
+									let message = {
+										type: "filter",
+										name: filterName
+									};
+									browser.tabs.sendMessage(id, message).catch(
+										function (error) {}
+									);
+								} else {
+									// Redirect page
+									browser.tabs.update(id, { url: blockURL });
+								}
 							}
 						},
 						function (error) {}
 					);
 				} else if (applyFilter) {
+					gTabs[id].filtered = true;
+
 					// Send message to tab
 					let message = {
 						type: "filter",
 						name: filterName
 					};
-					browser.tabs.sendMessage(id, message).catch(function (error) {});
+					browser.tabs.sendMessage(id, message).catch(
+						function (error) {}
+					);
 				} else {
 					// Redirect page
 					browser.tabs.update(id, { url: blockURL });
 
 					return true; // blocked
 				}
+			}
+
+			// Clear filter if no longer blocked
+			if (gTabs[id].filtered && (override || !doBlock)) {
+				gTabs[id].filtered = false;
+
+				// Send message to tab
+				let message = {
+					type: "filter",
+					name: null
+				};
+				browser.tabs.sendMessage(id, message).catch(
+					function (error) {}
+				);
 			}
 
 			// Update seconds left before block

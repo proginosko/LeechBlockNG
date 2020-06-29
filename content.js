@@ -124,7 +124,11 @@ function applyFilter(name) {
 		"invert": "invert(100%)",
 		"sepia": "sepia(100%)"
 	};
-	document.body.style.filter = filters[name];
+	if (name && filters[name]) {
+		document.body.style.filter = filters[name];
+	} else {
+		document.body.style.filter = "none";
+	}
 }
 
 /*** EVENT HANDLERS BEGIN HERE ***/
