@@ -589,10 +589,6 @@ function applyImportOptions(options) {
 
 	// Per-set options
 	for (let set = 1; set <= gNumSets; set++) {
-		if (getElement(`sites${set}`).disabled) {
-			continue; // skip disabled options
-		}
-
 		for (let name in PER_SET_OPTIONS) {
 			let type = PER_SET_OPTIONS[name].type;
 			let id = PER_SET_OPTIONS[name].id;
