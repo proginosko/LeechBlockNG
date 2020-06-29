@@ -116,7 +116,15 @@ function checkKeyword(keywordRE) {
 // Apply filter
 //
 function applyFilter(name) {
-	document.body.style.filter = `${name}(100%)`;
+	let filters = {
+		"blur (1px)": "blur(1px)",
+		"blur (2px)": "blur(2px)",
+		"blur (4px)": "blur(4px)",
+		"grayscale": "grayscale(100%)",
+		"invert": "invert(100%)",
+		"sepia": "sepia(100%)"
+	};
+	document.body.style.filter = filters[name];
 }
 
 /*** EVENT HANDLERS BEGIN HERE ***/
