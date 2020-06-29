@@ -11,6 +11,8 @@ const OVERRIDE_ICON = { 16: "icons/leechblock16o.png", 32: "icons/leechblock32o.
 
 const PARSE_URL = /^((([\w-]+):\/*(\w+(?::\w+)?@)?([\w-\.]+)(?::(\d*))?)([^\?#]*))(\?[^#]*)?(#.*)?$/;
 
+const LEECHBLOCK_URL = "https://www.proginosko.com/leechblock/";
+
 const PER_SET_OPTIONS = {
 	// def: default value, id: form element identifier (see options.html)
 	setName: { type: "string", def: "", id: "setName" },

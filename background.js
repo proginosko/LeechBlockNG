@@ -339,6 +339,11 @@ function checkTab(id, url, isRepeat) {
 		return false; // not blocked
 	}
 
+	// Quick exit for LeechBlock website (documentation should be always available)
+	if (url.startsWith(LEECHBLOCK_URL)) {
+		return false; // not blocked
+	}
+
 	if (!gTabs[id]) {
 		// Create object to track this tab
 		gTabs[id] = { allowedHost: null, allowedPath: null };
