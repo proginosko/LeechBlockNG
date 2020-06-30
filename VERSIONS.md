@@ -1,5 +1,12 @@
+### Version 1.0.6 (29 Jun 2020)
+* Added option for 90-minute time period.
+* Added option to prevent access to general options when sites are blocked.
+* Added blur filter options.
+* Filter now removed automatically when blocking ends.
+* Closed some escape hatches.
+
 ### Version 1.0.5 (04 Apr 2020)
-* Add option for 2-week time period.
+* Added option for 2-week time period.
 * Fixed bug affecting block sets >= 10.
 
 ### Version 1.0.4 (25 Jun 2019)
