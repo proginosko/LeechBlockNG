@@ -84,10 +84,8 @@ body {
 	width: 408px;
 }
 
-#form-container {
-	display: flex;
-	justify-content: center;
-	align-items: center;
+#form {
+  text-align: center;
 }
 
 #tabs {
