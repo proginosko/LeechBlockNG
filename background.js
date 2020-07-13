@@ -288,7 +288,7 @@ function updateFocusedWindowId() {
 }
 
 // Process tabs: update time spent and check for blocks
-// 
+//
 function processTabs(active) {
 	//log("processTabs: " + active);
 
@@ -323,6 +323,40 @@ function processTabs(active) {
 	}
 }
 
+// Multiple block sets can apply filters at the same time. They are unioned into filter sets.
+function newFilterSet() {
+	return {
+		blur: 0,
+		invert: false,
+		sepia: false,
+		grayscale: false
+	};
+}
+
+function copyFilterSet(filterSet) {
+	return {
+		blur: filterSet.blur,
+		invert: filterSet.invert,
+		sepia: filterSet.sepia,
+		grayscale: filterSet.grayscale
+	};
+}
+
+function equalFilterSets(a, b) {
+	return a && b && a.blur == b.blur && a.invert == b.invert && a.sepia == b.sepia && a.grayscale == b.grayscale;
+}
+
+function addToFilterSet(filterSet, filterName) {
+	switch (filterName) {
+		case "blur (1px)": filterSet.blur = Math.max(filterSet.blur, 1); break;
+		case "blur (2px)": filterSet.blur = Math.max(filterSet.blur, 2); break;
+		case "blur (4px)": filterSet.blur = Math.max(filterSet.blur, 4); break;
+		case "invert": filterSet.invert = true; break;
+		case "sepia": filterSet.sepia = true; break;
+		case "grayscale": filterSet.grayscale = true; break;
+	}
+}
+
 // Check the URL of a tab and applies block if necessary (returns true if blocked)
 //
 function checkTab(id, url, isRepeat) {
@@ -346,7 +380,14 @@ function checkTab(id, url, isRepeat) {
 
 	if (!gTabs[id]) {
 		// Create object to track this tab
-		gTabs[id] = { allowedHost: null, allowedPath: null, filtered: false };
+		gTabs[id] = {
+			allowedHost: null,
+			allowedPath: null,
+			// The currently applied filters for this tab
+			filters: newFilterSet(),
+			// The filters applied by block sets without `activeBlock` set
+			nonActiveBlockFilters: newFilterSet()
+		};
 	}
 
 	gTabs[id].blockable = BLOCKABLE_URL.test(url);
@@ -381,6 +422,13 @@ function checkTab(id, url, isRepeat) {
 	let overrideEndTime = gOptions["oret"];
 
 	gTabs[id].secsLeft = Infinity;
+
+	// `!activeBlock` block sets only get processed when `!isRepeat`, so we remember their
+	// results when determining the filters in the `isRepeat` scenario
+	let newFilters = isRepeat ? copyFilterSet(gTabs[id].nonActiveBlockFilters) : newFilterSet();
+
+	// (This will only be used below if `!isRepeat`)
+	let newNonActiveBlockFilters = newFilterSet();
 
 	for (let set = 1; set <= gNumSets; set++) {
 		// Get URL of page (possibly with hash part)
@@ -487,16 +535,38 @@ function checkTab(id, url, isRepeat) {
 						function (keyword) {
 							if (keyword) {
 								if (applyFilter) {
-									gTabs[id].filtered = true;
+									// This code is running asynchronously from the rest of `checkTab`
 
-									// Send message to tab
-									let message = {
-										type: "filter",
-										name: filterName
-									};
-									browser.tabs.sendMessage(id, message).catch(
-										function (error) {}
-									);
+									// At this point, the rest of the outer loop will have finished
+									// updating the captured new-filter-set variables
+
+									// So we add the filter from this block set to them (if any) *and*
+									// apply the new results to the tab as well
+
+									// Add filter to sets
+									addToFilterSet(newFilters, filterName);
+									if (!activeBlock) {
+										addToFilterSet(newNonActiveBlockFilters, filterName);
+									}
+
+									// Save `!activeBlock` filters for the next `isRepeat` run
+									if (!isRepeat) {
+										gTabs[id].nonActiveBlockFilters = copyFilterSet(newNonActiveBlockFilters);
+									}
+
+									// Apply filters to tab if navigation happened or if the filters changed
+									if (!isRepeat || !equalFilterSets(gTabs[id].filters, newFilters)) {
+										gTabs[id].filters = copyFilterSet(newFilters);
+
+										// Send message to tab
+										let message = {
+											type: "filter",
+											filters: newFilters
+										};
+										browser.tabs.sendMessage(id, message).catch(
+											function (error) {}
+										);
+									}
 								} else {
 									// Redirect page
 									browser.tabs.update(id, { url: blockURL });
@@ -506,36 +576,17 @@ function checkTab(id, url, isRepeat) {
 						function (error) {}
 					);
 				} else if (applyFilter) {
-					gTabs[id].filtered = true;
-
-					// Send message to tab
-					let message = {
-						type: "filter",
-						name: filterName
-					};
-					browser.tabs.sendMessage(id, message).catch(
-						function (error) {}
-					);
+					// Add filter to sets
+					addToFilterSet(newFilters, filterName);
+					if (!activeBlock) {
+						addToFilterSet(newNonActiveBlockFilters, filterName);
+					}
 				} else {
 					// Redirect page
 					browser.tabs.update(id, { url: blockURL });
 
 					return true; // blocked
 				}
-			}
-
-			// Clear filter if no longer blocked
-			if (gTabs[id].filtered && (override || !doBlock)) {
-				gTabs[id].filtered = false;
-
-				// Send message to tab
-				let message = {
-					type: "filter",
-					name: null
-				};
-				browser.tabs.sendMessage(id, message).catch(
-					function (error) {}
-				);
 			}
 
 			// Update seconds left before block
@@ -550,6 +601,25 @@ function checkTab(id, url, isRepeat) {
 				gTabs[id].secsLeftSet = set;
 			}
 		}
+	}
+
+	// Save `!activeBlock` filters for the next `isRepeat` run
+	if (!isRepeat) {
+		gTabs[id].nonActiveBlockFilters = copyFilterSet(newNonActiveBlockFilters);
+	}
+
+	// Apply filters to tab if navigation happened or if the filters changed
+	if (!isRepeat || !equalFilterSets(gTabs[id].filters, newFilters)) {
+		gTabs[id].filters = copyFilterSet(newFilters);
+
+		// Send message to tab
+		let message = {
+			type: "filter",
+			filters: newFilters
+		};
+		browser.tabs.sendMessage(id, message).catch(
+			function (error) {}
+		);
 	}
 
 	checkWarning(id);
@@ -855,7 +925,7 @@ function getUnblockTime(set) {
 
 	// Get current time/date
 	let timedate = new Date();
-	
+
 	// Get current time in seconds
 	let now = Math.floor(Date.now() / 1000);
 
@@ -885,7 +955,7 @@ function getUnblockTime(set) {
 		// Return end time for lockdown
 		return new Date(timedata[4] * 1000);
 	}
-	
+
 	// Get number of minutes elapsed since midnight
 	let mins = timedate.getHours() * 60 + timedate.getMinutes();
 
@@ -1131,7 +1201,7 @@ function addSiteToSet(url, set) {
 		gStorage.set(options).catch(
 			function (error) { warn("Cannot set options: " + error); }
 		);
-	}	
+	}
 }
 
 /*** EVENT HANDLERS BEGIN HERE ***/

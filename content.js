@@ -113,19 +113,24 @@ function checkKeyword(keywordRE) {
 	return false; // keyword(s) not found
 }
 
-// Apply filter
+// Apply filters
 //
-function applyFilter(name) {
-	let filters = {
-		"blur (1px)": "blur(1px)",
-		"blur (2px)": "blur(2px)",
-		"blur (4px)": "blur(4px)",
-		"grayscale": "grayscale(100%)",
-		"invert": "invert(100%)",
-		"sepia": "sepia(100%)"
-	};
-	if (name && filters[name]) {
-		document.body.style.filter = filters[name];
+function applyFilters(filters) {
+	let filterString = "";
+	if (filters.blur > 0) {
+		filterString += "blur(" + filters.blur.toString() + "px) ";
+	}
+	if (filters.invert) {
+		filterString += "invert(100%) ";
+	}
+	if (filters.grayscale) {
+		filterString += "grayscale(100%) ";
+	}
+	if (filters.sepia) {
+		filterString += "sepia(100%) ";
+	}
+	if (filterString != "") {
+		document.body.style.filter = filterString;
 	} else {
 		document.body.style.filter = "none";
 	}
@@ -142,7 +147,7 @@ function handleMessage(message, sender, sendResponse) {
 		let keyword = checkKeyword(message.keywordRE);
 		sendResponse(keyword);
 	} else if (message.type == "filter") {
-		applyFilter(message.name);
+		applyFilters(message.filters);
 	}
 }
 
