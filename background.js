@@ -334,6 +334,9 @@ function checkTab(id, url, isRepeat) {
 				|| (host2 == "www." + host1);
 	}
 
+	// Remove view-source prefix if necessary
+	url = url.replace(/^view-source:/i, "");
+
 	if (!gTabs[id]) {
 		// Create object to track this tab
 		gTabs[id] = { allowedHost: null, allowedPath: null, filtered: false };
