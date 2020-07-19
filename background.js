@@ -334,16 +334,6 @@ function checkTab(id, url, isRepeat) {
 				|| (host2 == "www." + host1);
 	}
 
-	// Quick exit for about:blank and moz-extension
-	if (url == "about:blank" || url.startsWith("moz-extension")) {
-		return false; // not blocked
-	}
-
-	// Quick exit for LeechBlock website (documentation should be always available)
-	if (url.startsWith(LEECHBLOCK_URL)) {
-		return false; // not blocked
-	}
-
 	if (!gTabs[id]) {
 		// Create object to track this tab
 		gTabs[id] = { allowedHost: null, allowedPath: null, filtered: false };
@@ -352,6 +342,16 @@ function checkTab(id, url, isRepeat) {
 	gTabs[id].blockable = BLOCKABLE_URL.test(url);
 	gTabs[id].clockable = CLOCKABLE_URL.test(url);
 	gTabs[id].url = url;
+
+	// Quick exit for about:blank
+	if (url == "about:blank") {
+		return false; // not blocked
+	}
+
+	// Quick exit for LeechBlock website (documentation should be always available)
+	if (url.startsWith(LEECHBLOCK_URL)) {
+		return false; // not blocked
+	}
 
 	// Quick exit for non-blockable URLs
 	if (!gTabs[id].blockable) {
