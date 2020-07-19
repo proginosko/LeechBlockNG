@@ -1,3 +1,6 @@
+### Version 1.0.6.1 (19 Jul 2020)
+* Bug fixes and under-the-hood improvements.
+
 ### Version 1.0.6 (29 Jun 2020)
 * Added option for 90-minute time period.
 * Added option to prevent access to general options when sites are blocked.
