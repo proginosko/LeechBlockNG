@@ -599,14 +599,14 @@ function applyImportOptions(options) {
 				if (name == "sites") {
 					getElement(`${id}${set}`).value = val.replace(/\s+/g, "\n");
 				} else if (name == "conjMode") {
-					getElement(`${id}${set}`).selectedIndex = isTrue(val) ? 1 : 0;
+					getElement(`${id}${set}`).selectedIndex = val ? 1 : 0;
 				} else if (type == "boolean") {
-					getElement(`${id}${set}`).checked = isTrue(val);
+					getElement(`${id}${set}`).checked = val;
 				} else if (type == "string") {
 					getElement(`${id}${set}`).value = val;
 				} else if (type == "array") {
 					for (let i = 0; i < val.length; i++) {
-						getElement(`${id}${i}${set}`).checked = isTrue(val[i]);
+						getElement(`${id}${i}${set}`).checked = val[i];
 					}
 				}
 			}
@@ -625,7 +625,7 @@ function applyImportOptions(options) {
 		let id = GENERAL_OPTIONS[name].id;
 		if (id && options[name] != undefined) {
 			if (type == "boolean") {
-				getElement(id).checked = isTrue(options[name]);
+				getElement(id).checked = options[name];
 			} else if (type == "string") {
 				getElement(id).value = options[name];
 			}
