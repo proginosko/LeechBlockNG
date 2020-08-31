@@ -595,7 +595,13 @@ function checkWarning(id) {
 // Clock time spent on page
 //
 function clockPageTime(id, open, focus) {
-	if (!gTabs[id] || !gTabs[id].clockable) {
+	if (!gTabs[id]) {
+		return;
+	}
+
+	if (!gTabs[id].clockable) {
+		gTabs[id].openTime = undefined;
+		gTabs[id].focusTime = undefined;
 		return;
 	}
 
