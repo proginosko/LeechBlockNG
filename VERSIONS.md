@@ -1,3 +1,6 @@
+### Version 1.0.6.2 (31 Aug 2020)
+* Fixed bug affecting time limit blocking.
+
 ### Version 1.0.6.1 (19 Jul 2020)
 * Bug fixes and under-the-hood improvements.
 
