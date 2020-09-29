@@ -90,6 +90,7 @@ body {
 
 #tabs {
 	display: inline-block;
+	text-align: left;
 }
 
 #paneAbout {
