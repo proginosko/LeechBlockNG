@@ -427,6 +427,7 @@ function checkTab(id, url, isRepeat) {
 			let activeBlock = gOptions[`activeBlock${set}`];
 			let allowOverride = gOptions[`allowOverride${set}`];
 			let showTimer = gOptions[`showTimer${set}`];
+			let allowKeywords = gOptions[`allowKeywords${set}`];
 
 			// Check day
 			let onSelectedDay = days[timedate.getDay()];
@@ -489,7 +490,7 @@ function checkTab(id, url, isRepeat) {
 					};
 					browser.tabs.sendMessage(id, message).then(
 						function (keyword) {
-							if (keyword) {
+							if (keyword != allowKeywords) {
 								if (closeTab) {
 									// Close tab
 									browser.tabs.remove(id);
