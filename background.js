@@ -422,6 +422,7 @@ function checkTab(id, url, isRepeat) {
 			let days = gOptions[`days${set}`];
 			let blockURL = gOptions[`blockURL${set}`];
 			let applyFilter = gOptions[`applyFilter${set}`];
+			let closeTab = gOptions[`closeTab${set}`];
 			let filterName = gOptions[`filterName${set}`];
 			let activeBlock = gOptions[`activeBlock${set}`];
 			let allowOverride = gOptions[`allowOverride${set}`];
@@ -489,7 +490,10 @@ function checkTab(id, url, isRepeat) {
 					browser.tabs.sendMessage(id, message).then(
 						function (keyword) {
 							if (keyword) {
-								if (applyFilter) {
+								if (closeTab) {
+									// Close tab
+									browser.tabs.remove(id);
+								} else if (applyFilter) {
 									gTabs[id].filtered = true;
 
 									// Send message to tab
@@ -508,6 +512,11 @@ function checkTab(id, url, isRepeat) {
 						},
 						function (error) {}
 					);
+				} else if (closeTab) {
+					// Close tab
+					browser.tabs.remove(id);
+
+					return true; // blocked
 				} else if (applyFilter) {
 					gTabs[id].filtered = true;
 

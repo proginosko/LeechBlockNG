@@ -25,6 +25,7 @@ const PER_SET_OPTIONS = {
 	days: { type: "array", def: [false, true, true, true, true, true, false], id: "day" },
 	blockURL: { type: "string", def: DEFAULT_BLOCK_URL, id: "blockURL" },
 	applyFilter: { type: "boolean", def: false, id: "applyFilter" },
+	closeTab: { type: "boolean", def: false, id: "closeTab" },
 	filterName: { type: "string", def: "grayscale", id: "filterName" },
 	activeBlock: { type: "boolean", def: false, id: "activeBlock" },
 	countFocus: { type: "boolean", def: true, id: "countFocus" },
