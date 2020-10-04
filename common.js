@@ -137,7 +137,7 @@ function cleanTimeData(options) {
 //
 function getParsedURL(url) {
 	let results = PARSE_URL.exec(url);
-	if (results != null) {
+	if (results) {
 		let page = results[1];
 		let origin = results[2];
 		let protocol = results[3];
@@ -149,14 +149,15 @@ function getParsedURL(url) {
 		let fragment = results[9];
 		return {
 			pageNoArgs: page,
-			page: (query == null) ? page : (page + query),
+			page: query ? (page + query) : page,
 			origin: origin,
 			protocol: protocol,
 			host: host,
-			path: path,
+			pathNoArgs: path,
+			path: query ? (path + query) : path,
 			query: query,
-			args: (query == null) ? null : query.substring(1).split(/[;&]/),
-			hash: (fragment == null) ? null : fragment.substring(1)
+			args: query ? query.substring(1).split(/[;&]/) : null,
+			hash: fragment ? fragment.substring(1) : null 
 		};
 	} else {
 		warn("Cannot parse URL: " + url);
@@ -166,6 +167,7 @@ function getParsedURL(url) {
 			origin: null,
 			protocol: null,
 			host: null,
+			pathNoArgs: null,
 			path: null,
 			query: null,
 			args: null,
