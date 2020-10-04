@@ -84,6 +84,11 @@ body {
 	width: 408px;
 }
 
+#form-container {
+	display: flex;
+	justify-content: center;
+}
+
 #form {
   text-align: center;
 }
