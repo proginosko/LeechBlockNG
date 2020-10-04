@@ -1,3 +1,9 @@
+### Version 1.0.7 (04 Oct 2020)
+* Added option to close tab instead of blocking page.
+* Added option to treat keywords as allow-conditions rather than block-conditions.
+* Fixed issues with options page on mobile devices.
+* Fixed bug affecting delaying page on YouTube.
+
 ### Version 1.0.6.2 (31 Aug 2020)
 * Fixed bug affecting time limit blocking.
 
