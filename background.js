@@ -339,7 +339,7 @@ function checkTab(id, url, isRepeat) {
 
 	if (!gTabs[id]) {
 		// Create object to track this tab
-		gTabs[id] = { allowedHost: null, allowedPath: null, filtered: false };
+		gTabs[id] = { allowedHost: null, allowedPath: null };
 	}
 
 	gTabs[id].blockable = BLOCKABLE_URL.test(url);
@@ -482,6 +482,27 @@ function checkTab(id, url, isRepeat) {
 				// Get final URL for block page
 				blockURL = blockURL.replace(/\$S/g, set).replace(/\$U/g, pageURLWithHash);
 
+				function applyBlock() {
+					if (closeTab) {
+						// Close tab
+						browser.tabs.remove(id);
+					} else if (applyFilter) {
+						gTabs[id].filterSet = set;
+
+						// Send message to tab
+						let message = {
+							type: "filter",
+							name: filterName
+						};
+						browser.tabs.sendMessage(id, message).catch(
+							function (error) {}
+						);
+					} else {
+						// Redirect page
+						browser.tabs.update(id, { url: blockURL });
+					}
+				}
+
 				if (keywordRE) {
 					// Check for keyword(s) before blocking
 					let message = {
@@ -491,55 +512,20 @@ function checkTab(id, url, isRepeat) {
 					browser.tabs.sendMessage(id, message).then(
 						function (keyword) {
 							if (keyword != allowKeywords) {
-								if (closeTab) {
-									// Close tab
-									browser.tabs.remove(id);
-								} else if (applyFilter) {
-									gTabs[id].filtered = true;
-
-									// Send message to tab
-									let message = {
-										type: "filter",
-										name: filterName
-									};
-									browser.tabs.sendMessage(id, message).catch(
-										function (error) {}
-									);
-								} else {
-									// Redirect page
-									browser.tabs.update(id, { url: blockURL });
-								}
+								applyBlock();
 							}
 						},
 						function (error) {}
 					);
-				} else if (closeTab) {
-					// Close tab
-					browser.tabs.remove(id);
-
-					return true; // blocked
-				} else if (applyFilter) {
-					gTabs[id].filtered = true;
-
-					// Send message to tab
-					let message = {
-						type: "filter",
-						name: filterName
-					};
-					browser.tabs.sendMessage(id, message).catch(
-						function (error) {}
-					);
 				} else {
-					// Redirect page
-					browser.tabs.update(id, { url: blockURL });
-
+					applyBlock();
 					return true; // blocked
 				}
 			}
 
 			// Clear filter if no longer blocked
-			if (gTabs[id].filtered && (override || !doBlock)) {
-				gTabs[id].filtered = false;
+			if (set == gTabs[id].filterSet && (override || !doBlock)) {
+				gTabs[id].filterSet = undefined;
 
 				// Send message to tab
 				let message = {
