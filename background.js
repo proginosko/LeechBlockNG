@@ -339,7 +339,7 @@ function checkTab(id, url, isRepeat) {
 
 	if (!gTabs[id]) {
 		// Create object to track this tab
-		gTabs[id] = { allowedHost: null, allowedPath: null };
+		gTabs[id] = { allowedHost: null, allowedPath: null, allowedSet: 0 };
 	}
 
 	gTabs[id].blockable = BLOCKABLE_URL.test(url);
@@ -365,13 +365,14 @@ function checkTab(id, url, isRepeat) {
 	let parsedURL = getParsedURL(url);
 
 	// Check for allowed host/path
-	let ah = isSameHost(gTabs[id].allowedHost, parsedURL.host);
-	let ap = !gTabs[id].allowedPath || (gTabs[id].allowedPath == parsedURL.path);
-	if (ah && ap) {
-		return false; // not blocked
-	} else {
+	let allowHost = isSameHost(gTabs[id].allowedHost, parsedURL.host);
+	let allowPath = !gTabs[id].allowedPath || (gTabs[id].allowedPath == parsedURL.path);
+	let allowSet = gTabs[id].allowedSet;
+	if (!allowHost || !allowPath) {
+		// Allowing delayed site/page no longer applies
 		gTabs[id].allowedHost = null;
 		gTabs[id].allowedPath = null;
+		gTabs[id].allowedSet = 0;
 	}
 
 	// Get current time/date
@@ -386,6 +387,11 @@ function checkTab(id, url, isRepeat) {
 	gTabs[id].secsLeft = Infinity;
 
 	for (let set = 1; set <= gNumSets; set++) {
+		if (allowHost && allowPath && allowSet == set) {
+			// Allow delayed site/page
+			continue;
+		}
+
 		// Get URL of page (possibly with hash part)
 		let pageURL = parsedURL.page;
 		let pageURLWithHash = parsedURL.page;
@@ -1085,9 +1091,8 @@ function openDelayedPage(id, url, set) {
 
 	// Set parameters for allowing host
 	gTabs[id].allowedHost = parsedURL.host;
-	if (!gOptions[`delayFirst${set}`]) {
-		gTabs[id].allowedPath = parsedURL.path;
-	}
+	gTabs[id].allowedPath = gOptions[`delayFirst${set}`] ? null : parsedURL.path;
+	gTabs[id].allowedSet = set;
 
 	// Redirect page
 	browser.tabs.update(id, { url: url });
@@ -1200,12 +1205,13 @@ function handleTabCreated(tab) {
 
 	if (!gTabs[tab.id]) {
 		// Create object to track this tab
-		gTabs[tab.id] = { allowedHost: null, allowedPath: null };
+		gTabs[tab.id] = { allowedHost: null, allowedPath: null, allowedSet: 0 };
 
 		if (tab.openerTabId) {
 			// Inherit properties from opener tab
 			gTabs[tab.id].allowedHost = gTabs[tab.openerTabId].allowedHost;
 			gTabs[tab.id].allowedPath = gTabs[tab.openerTabId].allowedPath;
+			gTabs[tab.id].allowedSet = gTabs[tab.openerTabId].allowedSet;
 		}
 	}
 }
