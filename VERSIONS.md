@@ -1,3 +1,6 @@
+### Version 1.0.7.1 (19 Oct 2020)
+* Bug fixes and under-the-hood improvements.
+
 ### Version 1.0.7 (04 Oct 2020)
 * Added option to close tab instead of blocking page.
 * Added option to treat keywords as allow-conditions rather than block-conditions.
