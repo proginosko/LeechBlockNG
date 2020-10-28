@@ -1,3 +1,6 @@
+### Version 1.0.7.2 (28 Oct 2020)
+* Fixed bug affecting keyword blocking.
+
 ### Version 1.0.7.1 (19 Oct 2020)
 * Bug fixes and under-the-hood improvements.
 
