@@ -83,6 +83,9 @@ function initForm(numSets) {
 		$(`#advOpts${set}`).css("display", "none");
 	}
 	$("#theme").change(function (e) { setTheme($("#theme").val()); });
+	$("#clockOffset").click(showClockOffsetTime);
+	$("#clockOffset").keyup(showClockOffsetTime);
+	$("#clockOffsetTime").click(showClockOffsetTime);
 	$("#exportOptions").click(exportOptions);
 	$("#importOptions").click(importOptions);
 	$("#exportOptionsSync").click(exportOptionsSync);
@@ -191,6 +194,13 @@ function saveOptions(event) {
 		$("#tabs").tabs("option", "active", gNumSets);
 		$("#saveSecs").focus();
 		$("#alertBadSeconds").dialog("open");
+		return false;
+	}
+	let clockOffset = $("#clockOffset").val();
+	if (!checkPosNegIntFormat(clockOffset)) {
+		$("#tabs").tabs("option", "active", gNumSets);
+		$("#clockOffset").focus();
+		$("#alertBadClockOffset").dialog("open");
 		return false;
 	}
 
@@ -319,11 +329,12 @@ function retrieveOptions() {
 
 		setTheme(options["theme"]);
 
-		// Get current time/date
-		let timedate = new Date();
-
 		// Get current time in seconds
-		let now = Math.floor(Date.now() / 1000);
+		let clockOffset = options["clockOffset"];
+		let now = Math.floor(Date.now() / 1000) + (clockOffset * 60);
+
+		// Get current time/date
+		let timedate = new Date(now * 1000);
 
 		// Check whether a lockdown is currently active
 		for (let set = 1; set <= gNumSets; set++) {
@@ -528,6 +539,19 @@ function displayAccessCode(code, asImage) {
 		} else {
 			codeText.appendChild(document.createTextNode(code));
 		}
+	}
+}
+
+// Show adjusted time based on clock offset
+//
+function showClockOffsetTime() {
+	let clockOffset = $("#clockOffset").val();
+	if (!clockOffset || !checkPosNegIntFormat(clockOffset)) {
+		$("#clockOffsetTime").css("display", "none");
+	} else {
+		let timedate = new Date(Date.now() + (clockOffset * 60000));
+		$("#clockOffsetTime").html(timedate.toLocaleString());
+		$("#clockOffsetTime").css("display", "inline");
 	}
 }
 

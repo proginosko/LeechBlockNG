@@ -66,6 +66,7 @@ const GENERAL_OPTIONS = {
 	toolsMenu: { type: "boolean", def: true, id: "toolsMenu" }, // default: enabled
 	matchSubdomains: { type: "boolean", def: false, id: "matchSubdomains" }, // default: disabled
 	saveSecs: { type: "string", def: "10", id: "saveSecs" }, // default: every 10 seconds
+	clockOffset: { type: "string", def: "", id: "clockOffset" }, // default: no offset
 	processActiveTabs: { type: "boolean", def: false, id: "processActiveTabs" }, // default: disabled
 	accessCodeImage: { type: "boolean", def: false, id: "accessCodeImage" }, // default: disabled
 	autoExportSync: { type: "boolean", def: true, id: "autoExportSync" }, // default: enabled
@@ -124,10 +125,12 @@ function cleanOptions(options) {
 //
 function cleanTimeData(options) {
 	let numSets = +options["numSets"];
+	let clockOffset = options["clockOffset"];
+	let now = Math.floor(Date.now() / 1000) + (clockOffset * 60);
 	for (let set = 1; set <= numSets; set++) {
 		let timedata = options[`timedata${set}`];
 		if (!Array.isArray(timedata) || timedata.length < 5) {
-			timedata = [Math.floor(Date.now() / 1000), 0, 0, 0, 0];
+			timedata = [now, 0, 0, 0, 0];
 		}
 		options[`timedata${set}`] = timedata;
 	}

@@ -117,3 +117,10 @@ body {
 #promptAccessCodeInput {
 	font: normal 14px monospace;
 }
+
+#clockOffsetTime {
+	background: #def;
+	border: 1px solid #888;
+	padding: 2px 4px;
+}
+

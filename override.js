@@ -9,6 +9,7 @@ function getElement(id) { return document.getElementById(id); }
 
 var gAccessConfirmed = false;
 var gAccessRequiredInput;
+var gClockOffset;
 var gOverrideConfirm;
 var gOverrideMins;
 
@@ -29,6 +30,8 @@ function initializePage() {
 
 	function onGot(options) {
 		setTheme(options["theme"]);
+
+		gClockOffset = options["clockOffset"];
 
 		gOverrideConfirm = options["orc"];
 		gOverrideMins = options["orm"];
@@ -134,7 +137,7 @@ function activateOverride() {
 
 	if (gOverrideConfirm) {
 		// Calculate end time
-		let endTime = new Date(Date.now() + gOverrideMins * 60000);
+		let endTime = new Date(Date.now() + (gClockOffset + gOverrideMins) * 60000);
 
 		// Show confirmation dialog
 		$("#alertOverrideEndTime").html(endTime.toLocaleTimeString());

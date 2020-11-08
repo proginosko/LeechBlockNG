@@ -58,7 +58,8 @@ function refreshPage() {
 		setTheme(options["theme"]);
 
 		// Get current time in seconds
-		let now = Math.floor(Date.now() / 1000);
+		let clockOffset = options["clockOffset"];
+		let now = Math.floor(Date.now() / 1000) + (clockOffset * 60);
 
 		for (let set = 1; set <= gNumSets; set++) {
 			let setName = options[`setName${set}`];
@@ -73,7 +74,7 @@ function refreshPage() {
 			}
 
 			if (Array.isArray(timedata) && timedata.length == 5) {
-				let fs = getFormattedStats(timedata);
+				let fs = getFormattedStats(now, timedata);
 				getElement(`startTime${set}`).innerText = fs.startTime;
 				getElement(`totalTime${set}`).innerText = fs.totalTime;
 				getElement(`perWeekTime${set}`).innerText = fs.perWeekTime;
@@ -105,9 +106,9 @@ function refreshPage() {
 
 // Return formatted times based on time data
 //
-function getFormattedStats(timedata) {
+function getFormattedStats(now, timedata) {
 	let days = 1
-			+ Math.floor(Date.now() / 86400000)
+			+ Math.floor(now / 86400)
 			- Math.floor(timedata[0] / 86400);
 	let weeks = Math.floor((days + 6) / 7);
 	return {
