@@ -66,6 +66,7 @@ const GENERAL_OPTIONS = {
 	toolsMenu: { type: "boolean", def: true, id: "toolsMenu" }, // default: enabled
 	matchSubdomains: { type: "boolean", def: false, id: "matchSubdomains" }, // default: disabled
 	saveSecs: { type: "string", def: "10", id: "saveSecs" }, // default: every 10 seconds
+	allFocused: { type: "boolean", def: false, id: "allFocused" }, // default: disabled
 	processActiveTabs: { type: "boolean", def: false, id: "processActiveTabs" }, // default: disabled
 	accessCodeImage: { type: "boolean", def: false, id: "accessCodeImage" }, // default: disabled
 	autoExportSync: { type: "boolean", def: true, id: "autoExportSync" }, // default: enabled

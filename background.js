@@ -20,6 +20,7 @@ var gSetCounted = [];
 var gSavedTimeData = [];
 var gRegExps = [];
 var gFocusWindowId = 0;
+var gAllFocused = false;
 var gOverrideIcon = false;
 var gSaveSecsCount = 0;
 
@@ -144,6 +145,8 @@ function retrieveOptions(update) {
 		cleanTimeData(gOptions);
 
 		gNumSets = +gOptions["numSets"];
+
+		gAllFocused = gOptions["allFocused"];
 
 		createRegExps();
 		refreshMenus();
@@ -304,7 +307,7 @@ function processTabs(active) {
 
 	function onGot(tabs) {
 		for (let tab of tabs) {
-			let focus = tab.active && (!gFocusWindowId || tab.windowId == gFocusWindowId);
+			let focus = tab.active && (gAllFocused || !gFocusWindowId || tab.windowId == gFocusWindowId);
 
 			// Force update of time spent on this page
 			clockPageTime(tab.id, false, false);
@@ -1223,7 +1226,7 @@ function handleTabUpdated(tabId, changeInfo, tab) {
 		return;
 	}
 
-	let focus = tab.active && (!gFocusWindowId || tab.windowId == gFocusWindowId);
+	let focus = tab.active && (gAllFocused || !gFocusWindowId || tab.windowId == gFocusWindowId);
 
 	if (changeInfo.status && changeInfo.status == "complete") {
 		clockPageTime(tab.id, true, focus);
@@ -1249,7 +1252,7 @@ function handleTabActivated(activeInfo) {
 		return;
 	}
 
-	let focus = (!gFocusWindowId || activeInfo.windowId == gFocusWindowId);
+	let focus = (gAllFocused || !gFocusWindowId || activeInfo.windowId == gFocusWindowId);
 
 	clockPageTime(activeInfo.tabId, true, focus);
 	updateTimer(activeInfo.tabId);
