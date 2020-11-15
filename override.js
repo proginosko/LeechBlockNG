@@ -29,6 +29,8 @@ function initializePage() {
 	}
 
 	function onGot(options) {
+		cleanOptions(options);
+
 		setTheme(options["theme"]);
 
 		gClockOffset = options["clockOffset"];
