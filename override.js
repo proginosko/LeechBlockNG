@@ -139,7 +139,7 @@ function activateOverride() {
 
 	if (gOverrideConfirm) {
 		// Calculate end time
-		let endTime = new Date(Date.now() + (gClockOffset + gOverrideMins) * 60000);
+		let endTime = new Date(Date.now() + (gClockOffset * 60000) + (gOverrideMins * 60000));
 
 		// Show confirmation dialog
 		$("#alertOverrideEndTime").html(endTime.toLocaleTimeString());
