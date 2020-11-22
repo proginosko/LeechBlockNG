@@ -12,6 +12,7 @@ body {
 
 .ui-button {
 	background: #eee;
+	color: #333;
 	border: 1px solid #888;
 }
 
@@ -28,7 +29,9 @@ body {
 .ui-widget button {
 	padding: 2px 8px;
 	background: #eee;
+	color: #333;
 	border: 1px solid #888;
+	border-radius: 3px;
 }
 
 .ui-widget button:hover:enabled {

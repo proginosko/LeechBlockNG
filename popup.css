@@ -19,6 +19,7 @@ button {
 	padding: 2px;
 	background: #eee;
 	border: 1px solid #888;
+	border-radius: 6px;
 }
 
 button:hover:enabled {
