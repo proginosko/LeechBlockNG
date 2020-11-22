@@ -366,6 +366,11 @@
 								Save time data every <input id="saveSecs" type="text" size="2" title="Default: 10"> seconds
 							</p>
 							<p>
+								Offset clock by <input id="clockOffset" type="text" size="4" title="Leave blank for no offset"> minutes
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<span id="clockOffsetTime" style="display: none;"></span>
+							</p>
+							<p>
 								<input id="allFocused" type="checkbox">
 								<label for="allFocused">Treat browser windows as always focused</label>
 							</p>
@@ -447,6 +452,9 @@
 			</div>
 			<div id="alertBadTimeLimitOffset" title="LeechBlock Options">
 				<p>Please enter the time limit offset in the correct format (as a non-zero integer).</p>
+			</div>
+			<div id="alertBadClockOffset" title="LeechBlock Options">
+				<p>Please enter the clock offset in the correct format (as a non-zero integer).</p>
 			</div>
 			<div id="alertBadSeconds" title="LeechBlock Options">
 				<p>Please enter the number of seconds in the correct format (as a positive whole number).</p>

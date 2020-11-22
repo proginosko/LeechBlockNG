@@ -11,6 +11,7 @@ var gStorage = browser.storage.local;
 
 var gFormHTML;
 var gNumSets;
+var gClockOffset;
 
 // Initialize form (with specified number of block sets)
 //
@@ -63,6 +64,8 @@ function refreshPage() {
 
 		setTheme(options["theme"]);
 
+		gClockOffset = options["clockOffset"];
+
 		let lockdownHours = options["lockdownHours"];
 		if (lockdownHours > 0) {
 			getElement("hours").value = lockdownHours;
@@ -110,8 +113,8 @@ function onActivate() {
 		return;
 	}
 
-	// Calculate end time for lockdown	
-	let endTime = Math.floor(Date.now() / 1000) + duration;
+	// Calculate end time for lockdown
+	let endTime = Math.floor(Date.now() / 1000) + (gClockOffset * 60) + duration;
 
 	// Request lockdown for each selected set
 	let noneSelected = true;
