@@ -1,3 +1,8 @@
+### Version 1.0.8 (22 Nov 2020)
+* Add option to treat browser windows as always focused.
+* Add option to specify clock offset (for correct time zone).
+* Minor code tweaks.
+
 ### Version 1.0.7.2 (28 Oct 2020)
 * Fixed bug affecting keyword blocking.
 
