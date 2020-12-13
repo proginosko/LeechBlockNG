@@ -484,7 +484,8 @@ function checkTab(id, url, isRepeat) {
 			let override = (overrideEndTime > now) && allowOverride;
 
 			// Check if the set has been allowed after a delay
-			let delayAllowSet = gOptions[`delayAllowedEndTimes${set}`] && gOptions[`delayAllowedEndTimes${set}`] > now;
+			let delayAllowSetEndTime = gOptions[`delayAllowedEndTimes${set}`];
+			let delayAllowSet = delayAllowSetEndTime && delayAllowSetEndTime > now;
 
 			// Determine whether this page should now be blocked
 			let doBlock = lockdown
@@ -559,7 +560,7 @@ function checkTab(id, url, isRepeat) {
 				secsLeft = Math.max(secsLeft, overrideEndTime - now);
 			}
 			if (delayAllowSet) {
-				secsLeft = Math.max(secsLeft, gOptions[`delayAllowedEndTimes${set}`] - now);
+				secsLeft = Math.max(secsLeft, delayAllowSetEndTime - now);
 			}
 			if (showTimer && secsLeft < gTabs[id].secsLeft) {
 				gTabs[id].secsLeft = secsLeft;
@@ -1146,14 +1147,6 @@ function openDelayedPage(id, url, set, pickedAllowSecs) {
 		} else {
 			warn("Did not recognize selected delay method");
 		}
-
-		// Test this:
-		// What about overlapping unblocks (in different tabs)? What happens then?
-		// What about more than one ruleset?
-		// What about existing normal blocking schedule?
-		// What about override?
-		
-		// Maybe add a button to clear the unblock.
 	}
 
 	// Redirect page
