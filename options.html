@@ -154,8 +154,11 @@
 								<label for="countFocus1">Count time spent on these sites only when browser tab is active</label>
 							</p>
 							<p>
-								<input id="delayFirst1" type="checkbox">
-								<label for="delayFirst1">Block only first accessed page of site when delaying page is used</label>
+								Allow pages after a delay by <select id="delayMethod1">
+									<option value="consecutive">unblocking any consecutive accesses on the domain</option>
+									<option value="first">only unblocking the first accessed page</option>
+									<option value="setTimer">unblocking the block set for a specified duration</option>
+								</select> when delaying page is used
 							</p>
 							<p>
 								Delay access to sites by <input id="delaySecs1" type="text" size="2"> seconds when delaying page is used

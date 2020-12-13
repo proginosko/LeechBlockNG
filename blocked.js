@@ -2,10 +2,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+var gBlockInfo;
+
 // Processes info for blocking/delaying page
 //
 function processBlockInfo(info) {
 	if (!info) return;
+
+	gBlockInfo = info;
 
 	if (info.theme) {
 		// Set theme
@@ -44,16 +48,24 @@ function processBlockInfo(info) {
 		unblockTime.innerText = info.unblockTime;
 	}
 
+	let loadedText = document.getElementById("lbLoaded");
+	let availableText = document.getElementById("lbAvailable");
+	if (info.delayPickDuration && loadedText && availableText) {
+		loadedText.style = "display: none;";
+		availableText.style = "display: inline;";
+	}
+
+	let durationSelect = document.getElementById("durationSelect");
+	if (info.delayPickDuration && durationSelect) {
+		durationSelect.onchange = function() { pickDuration(this.value); };
+	}
+
 	let delaySecs = document.getElementById("lbDelaySeconds");
 	if (info.delaySecs && delaySecs) {
 		delaySecs.innerText = info.delaySecs;
 
 		// Start countdown timer
-		let countdown = {
-			blockedURL: info.blockedURL,
-			blockedSet: info.blockedSet,
-			delaySecs: info.delaySecs
-		};
+		let countdown = { delaySecs: info.delaySecs };
 		countdown.interval = window.setInterval(onCountdownTimer, 1000, countdown);
 	}
 
@@ -91,15 +103,40 @@ function onCountdownTimer(countdown) {
 	if (countdown.delaySecs == 0) {
 		// Clear countdown timer
 		window.clearInterval(countdown.interval);
-
-		// Request extension allow blocked page and redirect
-		let message = {
-			type: "delayed",
-			blockedURL: countdown.blockedURL,
-			blockedSet: countdown.blockedSet
-		};
-		browser.runtime.sendMessage(message);
+		
+		// Present duration choice if appropriate and otherwise allow page
+		let pickDuration = document.getElementById("pickDuration");
+		let countdownText = document.getElementById("lbCountdownText");
+		if (gBlockInfo.delayPickDuration && pickDuration && countdownText) {
+			// Let the user pick a duration
+			pickDuration.style = "display: block;";
+			countdownText.style = "display: none;";
+		} else {
+			// Request extension allow blocked page and redirect
+			let message = {
+				type: "delayed",
+				blockedURL: gBlockInfo.blockedURL,
+				blockedSet: gBlockInfo.blockedSet
+			};
+			browser.runtime.sendMessage(message);
+		}
 	}
+}
+
+// Handle user selecting a duration
+//
+function pickDuration(value) {
+	if (value == "") return;
+	secs = Number(value) * 60;
+
+	// Request extension allow the set for duration and redirect
+	let message = {
+		type: "delayed",
+		blockedURL: gBlockInfo.blockedURL,
+		blockedSet: gBlockInfo.blockedSet,
+		pickedAllowSecs: secs
+	};
+	browser.runtime.sendMessage(message);
 }
 
 // Attempt to reload blocked page

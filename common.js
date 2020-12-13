@@ -29,7 +29,7 @@ const PER_SET_OPTIONS = {
 	filterName: { type: "string", def: "grayscale", id: "filterName" },
 	activeBlock: { type: "boolean", def: false, id: "activeBlock" },
 	countFocus: { type: "boolean", def: true, id: "countFocus" },
-	delayFirst: { type: "boolean", def: true, id: "delayFirst" },
+	delayMethod: { type: "string", def: "consecutive", id: "delayMethod" },
 	delaySecs: { type: "string", def: "60", id: "delaySecs" },
 	reloadSecs: { type: "string", def: "", id: "reloadSecs" },
 	allowOverride: { type: "boolean", def: false, id: "allowOverride" },

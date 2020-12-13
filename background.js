@@ -18,6 +18,7 @@ var gNumSets;
 var gTabs = [];
 var gSetCounted = [];
 var gSavedTimeData = [];
+var gDelayAllowedEndTimes = [];
 var gRegExps = [];
 var gFocusWindowId = 0;
 var gAllFocused = false;
@@ -483,13 +484,16 @@ function checkTab(id, url, isRepeat) {
 			// Check override condition
 			let override = (overrideEndTime > now) && allowOverride;
 
+			// Check if the set has been allowed after a delay
+			let delayAllowSet = gDelayAllowedEndTimes[set] && gDelayAllowedEndTimes[set] > now;
+
 			// Determine whether this page should now be blocked
 			let doBlock = lockdown
 					|| (!conjMode && (withinTimePeriods || afterTimeLimit))
 					|| (conjMode && (withinTimePeriods && afterTimeLimit));
 
 			// Apply block if all relevant block conditions are fulfilled
-			if (!override && doBlock && (!isRepeat || activeBlock)) {
+			if (!override && !delayAllowSet && doBlock && (!isRepeat || activeBlock)) {
 				// Get final URL for block page
 				blockURL = blockURL.replace(/\$S/g, set).replace(/\$U/g, pageURLWithHash);
 
@@ -535,7 +539,7 @@ function checkTab(id, url, isRepeat) {
 			}
 
 			// Clear filter if no longer blocked
-			if (set == gTabs[id].filterSet && (override || !doBlock)) {
+			if (set == gTabs[id].filterSet && (override || delayAllowSet || !doBlock)) {
 				gTabs[id].filterSet = undefined;
 
 				// Send message to tab
@@ -554,6 +558,9 @@ function checkTab(id, url, isRepeat) {
 					: Math.min(secsLeftBeforePeriod, secsLeftBeforeLimit);
 			if (override) {
 				secsLeft = Math.max(secsLeft, overrideEndTime - now);
+			}
+			if (delayAllowSet) {
+				secsLeft = Math.max(secsLeft, gDelayAllowedEndTimes[set] - now);
 			}
 			if (showTimer && secsLeft < gTabs[id].secsLeft) {
 				gTabs[id].secsLeft = secsLeft;
@@ -852,6 +859,9 @@ function createBlockInfo(url) {
 	// Get delaying time for block set
 	let delaySecs = gOptions[`delaySecs${blockedSet}`];
 
+	// Get whether a duration should be selected by the user after the delay
+	let delayPickDuration = gOptions[`delayMethod${blockedSet}`] == "setTimer";
+
 	// Get reloading time (if specified)
 	let reloadSecs = gOptions[`reloadSecs${blockedSet}`];
 
@@ -862,6 +872,7 @@ function createBlockInfo(url) {
 		blockedURL: blockedURL,
 		unblockTime: unblockTime,
 		delaySecs: delaySecs,
+		delayPickDuration: delayPickDuration,
 		reloadSecs: reloadSecs
 	};
 }
@@ -1093,7 +1104,7 @@ function openExtensionPage(url) {
 
 // Open page blocked by delaying page
 //
-function openDelayedPage(id, url, set) {
+function openDelayedPage(id, url, set, pickedAllowSecs) {
 	//log("openDelayedPage: " + id + " " + url);
 
 	if (!gGotOptions || set < 1 || set > gNumSets) {
@@ -1103,10 +1114,49 @@ function openDelayedPage(id, url, set) {
 	// Get parsed URL for this page
 	let parsedURL = getParsedURL(url);
 
-	// Set parameters for allowing host
-	gTabs[id].allowedHost = parsedURL.host;
-	gTabs[id].allowedPath = gOptions[`delayFirst${set}`] ? null : parsedURL.path;
-	gTabs[id].allowedSet = set;
+	// Allow pages according to delay method
+	let delayMethod = gOptions[`delayMethod${set}`];
+	if (delayMethod == "consecutive" || delayMethod == "first") {
+		// Allowing should be associated with the tab so set parameters accordingly
+		gTabs[id].allowedHost = parsedURL.host;
+		gTabs[id].allowedPath = delayMethod == "consecutive" ? null : parsedURL.path;
+		gTabs[id].allowedSet = set;
+	} else {
+		// Allowing should happen globally so do not track at the tab level
+		gTabs[id].allowedHost = null;
+		gTabs[id].allowedPath = null;
+		gTabs[id].allowedSet = 0;
+
+		// Track it globally for the set
+		if (delayMethod == "setTimer") {
+			let clockOffset = gOptions["clockOffset"];
+			let now = Math.floor(Date.now() / 1000) + (clockOffset * 60);
+			let delayAllowEndTime = now + pickedAllowSecs;
+			gDelayAllowedEndTimes[set] = delayAllowEndTime;
+		} else {
+			warn("Did not recognize selected delay method");
+		}
+		
+		// Later can tie to host+set (domainTimer) as well as just set (setTimer)
+
+		// Add to settings? Maximum block duration.
+
+		// Test this. A lot. With times of day and override.
+
+		// And should you save to localstorage?
+		// That'd be cumbersome. But you can read it in. OnGot tells you.
+		/*
+				// Save updated option to local storage
+				let options = {};
+				options["oret"] = overrideEndTime;
+				gStorage.set(options).catch(
+					function (error) { warn("Cannot set options: " + error); }
+				);
+
+				updateIcon();
+			}
+		*/
+	}
 
 	// Redirect page
 	browser.tabs.update(id, { url: url });
@@ -1210,7 +1260,7 @@ function handleMessage(message, sender, sendResponse) {
 		sendResponse(info);
 	} else if (message.type == "delayed") {
 		// Redirect requested by delaying page
-		openDelayedPage(sender.tab.id, message.blockedURL, message.blockedSet);
+		openDelayedPage(sender.tab.id, message.blockedURL, message.blockedSet, message.pickedAllowSecs);
 	}
 }
 

@@ -26,10 +26,29 @@
 		</div>
 
 		<!-- blocked site info -->
-		<div>
+		<div id="blockedInfo">
 			<a id="lbBlockedURLLink" target="_self"><span id="lbBlockedURL"></span></a>
 			(<span id="lbBlockedSet">Block Set</span>)
-			<p id="lbCountdownText">The page will be loaded in <strong><span id="lbDelaySeconds">0</span></strong> second(s).</p>
+
+			<p id="lbCountdownText">
+				The page will be
+				<span id="lbLoaded">loaded</span>
+				<span id="lbAvailable" style="display: none;">available</span>
+				in <strong><span id="lbDelaySeconds">0</span></strong> second(s).
+			</p>
+
+			<!-- allow duration selection after delay -->
+			<p id="pickDuration" style="display: none;">
+				Allow pages in this set for <select id="durationSelect">
+					<option value=""></option>
+					<option value="5">5 minutes</option>
+					<option value="10">10 minutes</option>
+					<option value="15">15 minutes</option>
+					<option value="30">30 minutes</option>
+					<option value="45">45 minutes</option>
+					<option value="60">1 hour</option>
+				</select>
+			</p>
 		</div>
 
 		<!-- support info -->
