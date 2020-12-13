@@ -862,6 +862,9 @@ function createBlockInfo(url) {
 	// Get whether a duration should be selected by the user after the delay
 	let delayPickDuration = gOptions[`delayMethod${blockedSet}`] == "setTimer";
 
+	// Get the max duration that can be selected
+	let delayMaxDuration = gOptions[`delayAllowMaxDuration${blockedSet}`]
+
 	// Get reloading time (if specified)
 	let reloadSecs = gOptions[`reloadSecs${blockedSet}`];
 
@@ -873,6 +876,7 @@ function createBlockInfo(url) {
 		unblockTime: unblockTime,
 		delaySecs: delaySecs,
 		delayPickDuration: delayPickDuration,
+		delayMaxDuration: delayMaxDuration,
 		reloadSecs: reloadSecs
 	};
 }

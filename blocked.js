@@ -56,8 +56,11 @@ function processBlockInfo(info) {
 	}
 
 	let durationSelect = document.getElementById("durationSelect");
-	if (info.delayPickDuration && durationSelect) {
+	if (info.delayPickDuration && info.delayMaxDuration && durationSelect) {
 		durationSelect.onchange = function() { pickDuration(this.value); };
+
+		// Right now the select just contains the null element so fill it up with options
+		addDelayAllowDurationsToSelectElement(durationSelect, info.delayMaxDuration);
 	}
 
 	let delaySecs = document.getElementById("lbDelaySeconds");

@@ -55,6 +55,7 @@ function initForm(numSets) {
 		$(`#defaultPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DEFAULT_BLOCK_URL); });
 		$(`#delayingPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DELAYED_BLOCK_URL); });
 		$(`#blankPage${set}`).click(function (e) { $(`#blockURL${set}`).val("about:blank"); });
+		addDelayAllowDurationsToSelectElement($(`#delayAllowMaxDuration${set}`)[0]);
 		$(`#resetOpts${set}`).click(function (e) {
 			resetSetOptions(set);
 			$("#alertResetOptions").dialog("open");

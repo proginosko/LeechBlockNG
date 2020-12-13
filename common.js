@@ -13,6 +13,17 @@ const PARSE_URL = /^((([\w-]+):\/*(\w+(?::\w+)?@)?([\w-\.]+)(?::(\d*))?)([^\?#]*
 
 const LEECHBLOCK_URL = "https://www.proginosko.com/leechblock/";
 
+const DELAY_ALLOW_DURATIONS = [
+	{ minutes: 5,  text: "5 minutes" },
+	{ minutes: 10, text: "10 minutes" },
+	{ minutes: 15, text: "15 minutes" },
+	{ minutes: 30, text: "30 minutes" },
+	{ minutes: 60, text: "1 hour (60 minutes)" },
+	{ minutes: 90, text: "1.5 hours (90 minutes)" },
+	{ minutes: 120, text: "2 hours (120 minutes)" },
+	{ minutes: 180, text: "3 hours (180 minutes)" }
+];
+
 const PER_SET_OPTIONS = {
 	// def: default value, id: form element identifier (see options.html)
 	setName: { type: "string", def: "", id: "setName" },
@@ -30,6 +41,7 @@ const PER_SET_OPTIONS = {
 	activeBlock: { type: "boolean", def: false, id: "activeBlock" },
 	countFocus: { type: "boolean", def: true, id: "countFocus" },
 	delayMethod: { type: "string", def: "consecutive", id: "delayMethod" },
+	delayAllowMaxDuration: { type: "string", def: "60", id: "delayAllowMaxDuration" },
 	delaySecs: { type: "string", def: "60", id: "delaySecs" },
 	reloadSecs: { type: "string", def: "", id: "reloadSecs" },
 	allowOverride: { type: "boolean", def: false, id: "allowOverride" },
@@ -383,6 +395,18 @@ function getTimePeriodStart(now, limitPeriod, limitOffset) {
 	}
 
 	return 0;
+}
+
+// Add new options for each duration in DELAY_ALLOW_DURATIONS into a select element up to limitMins
+//
+function addDelayAllowDurationsToSelectElement(selectElem, limitMins) {
+	for (let duration of DELAY_ALLOW_DURATIONS) {
+		if (limitMins && duration.minutes > limitMins) break;
+		let option = document.createElement("option");
+		option.value = "" + duration.minutes;
+		option.text = duration.text;
+		selectElem.add(option);
+	}
 }
 
 // Format a time in seconds to HH:MM:SS format
