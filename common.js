@@ -254,7 +254,7 @@ function keywordToRegExp(keyword) {
 	return "\\b" + keyword
 			.replace(special, "\\$&")			// fix special chars
 			.replace(/_+/g, "\\s+")				// convert underscores
-			.replace(/\*+/, "\\S*")				// convert wildcards
+			.replace(/\*+/g, "\\S*")			// convert wildcards
 			+ "\\b";
 }
 
