@@ -18,7 +18,6 @@ var gNumSets;
 var gTabs = [];
 var gSetCounted = [];
 var gSavedTimeData = [];
-var gDelayAllowedEndTimes = [];
 var gRegExps = [];
 var gFocusWindowId = 0;
 var gAllFocused = false;
@@ -485,7 +484,7 @@ function checkTab(id, url, isRepeat) {
 			let override = (overrideEndTime > now) && allowOverride;
 
 			// Check if the set has been allowed after a delay
-			let delayAllowSet = gDelayAllowedEndTimes[set] && gDelayAllowedEndTimes[set] > now;
+			let delayAllowSet = gOptions[`delayAllowedEndTimes${set}`] && gOptions[`delayAllowedEndTimes${set}`] > now;
 
 			// Determine whether this page should now be blocked
 			let doBlock = lockdown
@@ -560,7 +559,7 @@ function checkTab(id, url, isRepeat) {
 				secsLeft = Math.max(secsLeft, overrideEndTime - now);
 			}
 			if (delayAllowSet) {
-				secsLeft = Math.max(secsLeft, gDelayAllowedEndTimes[set] - now);
+				secsLeft = Math.max(secsLeft, gOptions[`delayAllowedEndTimes${set}`] - now);
 			}
 			if (showTimer && secsLeft < gTabs[id].secsLeft) {
 				gTabs[id].secsLeft = secsLeft;
@@ -1135,31 +1134,26 @@ function openDelayedPage(id, url, set, pickedAllowSecs) {
 		if (delayMethod == "setTimer") {
 			let clockOffset = gOptions["clockOffset"];
 			let now = Math.floor(Date.now() / 1000) + (clockOffset * 60);
-			let delayAllowEndTime = now + pickedAllowSecs;
-			gDelayAllowedEndTimes[set] = delayAllowEndTime;
+			let delayAllowedEndTime = now + pickedAllowSecs;
+			gOptions[`delayAllowedEndTimes${set}`] = delayAllowedEndTime;
+
+			// Write to local storage
+			let options = {};
+			options[`delayAllowedEndTimes${set}`] = delayAllowedEndTime;
+			gStorage.set(options).catch(
+				function (error) { warn("Cannot set options: " + error); }
+			);
 		} else {
 			warn("Did not recognize selected delay method");
 		}
+
+		// Test this:
+		// What about overlapping unblocks (in different tabs)? What happens then?
+		// What about more than one ruleset?
+		// What about existing normal blocking schedule?
+		// What about override?
 		
-		// Later can tie to host+set (domainTimer) as well as just set (setTimer)
-
-		// Add to settings? Maximum block duration.
-
-		// Test this. A lot. With times of day and override.
-
-		// And should you save to localstorage?
-		// That'd be cumbersome. But you can read it in. OnGot tells you.
-		/*
-				// Save updated option to local storage
-				let options = {};
-				options["oret"] = overrideEndTime;
-				gStorage.set(options).catch(
-					function (error) { warn("Cannot set options: " + error); }
-				);
-
-				updateIcon();
-			}
-		*/
+		// Maybe add a button to clear the unblock.
 	}
 
 	// Redirect page
