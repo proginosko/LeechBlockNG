@@ -109,7 +109,8 @@ function checkKeyword(keywordRE) {
 	//console.log("Checking " + textNodes.snapshotLength + " text node(s) for keyword(s)...");
 
 	for (let i = 0; i < textNodes.snapshotLength; i++) {
-		if (keywordRE.test(textNodes.snapshotItem(i).data)) {
+		let data = textNodes.snapshotItem(i).data;
+		if (data && keywordRE.test(data)) {
 			return true; // keyword(s) found
 		}
 	}
