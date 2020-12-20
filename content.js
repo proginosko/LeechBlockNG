@@ -98,6 +98,10 @@ function hideAlert() {
 // Check page for keyword(s)
 //
 function checkKeyword(keywordRE) {
+	if (!keywordRE) {
+		return false; // nothing to find!
+	}
+
 	// Get all text nodes in document
 	let textNodes = document.evaluate(
 		"//text()", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
@@ -105,7 +109,7 @@ function checkKeyword(keywordRE) {
 	//console.log("Checking " + textNodes.snapshotLength + " text node(s) for keyword(s)...");
 
 	for (let i = 0; i < textNodes.snapshotLength; i++) {
-		if (keywordRE && keywordRE.test(textNodes.snapshotItem(i).data)) {
+		if (keywordRE.test(textNodes.snapshotItem(i).data)) {
 			return true; // keyword(s) found
 		}
 	}

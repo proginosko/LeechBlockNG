@@ -13,6 +13,11 @@ const PARSE_URL = /^((([\w-]+):\/*(\w+(?::\w+)?@)?([\w-\.]+)(?::(\d*))?)([^\?#]*
 
 const LEECHBLOCK_URL = "https://www.proginosko.com/leechblock/";
 
+const U_WORD_CHAR = "[\\p{L}\\p{N}]";
+const U_WORD_BEGIN = `(?<!${U_WORD_CHAR})(?=${U_WORD_CHAR})`;
+const U_WORD_END = `(?<=${U_WORD_CHAR})(?!${U_WORD_CHAR})`;
+const U_WORD_BOUND = `(?:${U_WORD_BEGIN}|${U_WORD_END})`;
+
 const PER_SET_OPTIONS = {
 	// def: default value, id: form element identifier (see options.html)
 	setName: { type: "string", def: "", id: "setName" },
@@ -229,7 +234,9 @@ function getRegExpSites(sites, matchSubdomains) {
 		allow: (allows.length > 0)
 				? "^" + (allowFiles ? "file:|" : "") + "(https?|file):\\/+(" + allows.join("|") + ")"
 				: (allowFiles ? "^file:" : ""),
-		keyword: (keywords.length > 0) ? keywords.join("|") : ""
+		keyword: (keywords.length > 0)
+				? U_WORD_BEGIN + "(" + keywords.join("|") + ")" + U_WORD_END
+				: ""
 	};
 }
 
@@ -251,11 +258,10 @@ function patternToRegExp(pattern, matchSubdomains) {
 //
 function keywordToRegExp(keyword) {
 	let special = /[\.\|\?\:\+\-\^\$\(\)\[\]\{\}\\]/g;
-	return "\\b" + keyword
+	return keyword
 			.replace(special, "\\$&")			// fix special chars
 			.replace(/_+/g, "\\s+")				// convert underscores
-			.replace(/\*+/g, "\\S*")			// convert wildcards
-			+ "\\b";
+			.replace(/\*+/g, "\\S*");			// convert wildcards
 }
 
 // Check time periods format

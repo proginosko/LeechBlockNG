@@ -38,7 +38,7 @@ function createRegExps() {
 		gRegExps[set].allow = allowRE ? new RegExp(allowRE, "i") : null;
 
 		let keywordRE = gOptions[`keywordRE${set}`];
-		gRegExps[set].keyword = keywordRE ? new RegExp(keywordRE, "i") : null;
+		gRegExps[set].keyword = keywordRE ? new RegExp(keywordRE, "iu") : null;
 	}
 }
 
