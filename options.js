@@ -239,6 +239,7 @@ function saveOptions(event) {
 				let regexps = getRegExpSites(sites, options["matchSubdomains"]);
 				options[`blockRE${set}`] = regexps.block;
 				options[`allowRE${set}`] = regexps.allow;
+				options[`referRE${set}`] = regexps.refer;
 				options[`keywordRE${set}`] = regexps.keyword;
 			} else if (name == "times") {
 				let times = cleanTimePeriods(getElement(`${id}${set}`).value);

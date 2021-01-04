@@ -152,3 +152,6 @@ function handleMessage(message, sender, sendResponse) {
 }
 
 browser.runtime.onMessage.addListener(handleMessage);
+
+// Send URL of referring page to background script
+browser.runtime.sendMessage({ type: "referrer", referrer: document.referrer });

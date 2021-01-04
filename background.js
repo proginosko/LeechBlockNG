@@ -37,6 +37,9 @@ function createRegExps() {
 		let allowRE = gOptions[`regexpAllow${set}`] || gOptions[`allowRE${set}`];
 		gRegExps[set].allow = allowRE ? new RegExp(allowRE, "i") : null;
 
+		let referRE = gOptions[`referRE${set}`];
+		gRegExps[set].refer = referRE ? new RegExp(referRE, "i") : null;
+
 		let keywordRE = gOptions[`keywordRE${set}`];
 		gRegExps[set].keyword = keywordRE ? new RegExp(keywordRE, "iu") : null;
 	}
@@ -44,9 +47,11 @@ function createRegExps() {
 
 // Test URL against block/allow regular expressions
 //
-function testURL(pageURL, blockRE, allowRE) {
-	return (blockRE && blockRE.test(pageURL)
-			&& !(allowRE && allowRE.test(pageURL)));
+function testURL(url, referrer, blockRE, allowRE, referRE) {
+	let block = blockRE && blockRE.test(url);
+	let allow = allowRE && allowRE.test(url);
+	let refer = referRE && referRE.test(referrer);
+	return (block || refer) && !allow;
 }
 
 // Refresh menus
@@ -205,6 +210,7 @@ function loadSiteLists() {
 			gOptions[`sites${set}`] = sites;
 			gOptions[`blockRE${set}`] = regexps.block;
 			gOptions[`allowRE${set}`] = regexps.allow;
+			gOptions[`referRE${set}`] = regexps.refer;
 			gOptions[`keywordRE${set}`] = regexps.keyword;
 
 			createRegExps();
@@ -214,6 +220,7 @@ function loadSiteLists() {
 			options[`sites${set}`] = sites;
 			options[`blockRE${set}`] = regexps.block;
 			options[`allowRE${set}`] = regexps.allow;
+			options[`referRE${set}`] = regexps.refer;
 			options[`keywordRE${set}`] = regexps.keyword;
 			gStorage.set(options).catch(
 				function (error) { warn("Cannot set options: " + error); }
@@ -343,7 +350,7 @@ function checkTab(id, url, isRepeat) {
 
 	if (!gTabs[id]) {
 		// Create object to track this tab
-		gTabs[id] = { allowedHost: null, allowedPath: null, allowedSet: 0 };
+		gTabs[id] = { allowedHost: null, allowedPath: null, allowedSet: 0, referrer: "" };
 	}
 
 	gTabs[id].blockable = BLOCKABLE_URL.test(url);
@@ -379,6 +386,9 @@ function checkTab(id, url, isRepeat) {
 		gTabs[id].allowedSet = 0;
 	}
 
+	// Get referrer URL for this page
+	let referrer = gTabs[id].referrer;
+
 	// Get current time in seconds
 	let clockOffset = gOptions["clockOffset"];
 	let now = Math.floor(Date.now() / 1000) + (clockOffset * 60);
@@ -409,16 +419,17 @@ function checkTab(id, url, isRepeat) {
 
 		// Get regular expressions for matching sites to block/allow
 		let blockRE = gRegExps[set].block;
-		if (!blockRE) continue; // no block for this set
 		let allowRE = gRegExps[set].allow;
+		let referRE = gRegExps[set].refer;
 		let keywordRE = gRegExps[set].keyword;
+		if (!blockRE && !referRE) continue; // no block for this set
 
 		// Get options for preventing access to about:addons and about:support
 		let prevAddons = gOptions[`prevAddons${set}`];
 		let prevSupport = gOptions[`prevSupport${set}`];
 
 		// Test URL against block/allow regular expressions
-		if (testURL(pageURL, blockRE, allowRE)
+		if (testURL(pageURL, referrer, blockRE, allowRE, referRE)
 				|| (prevAddons && /^about:addons/i.test(pageURL))
 				|| (prevSupport && /^about:support/i.test(pageURL))) {
 			// Get options for this set
@@ -649,13 +660,13 @@ function clockPageTime(id, open, focus) {
 
 	// Update time data if necessary
 	if (secsOpen > 0 || secsFocus > 0) {
-		updateTimeData(gTabs[id].url, secsOpen, secsFocus);
+		updateTimeData(gTabs[id].url, gTabs[id].referrer, secsOpen, secsFocus);
 	}
 }
 
 // Update time data for specified page
 //
-function updateTimeData(url, secsOpen, secsFocus) {
+function updateTimeData(url, referrer, secsOpen, secsFocus) {
 	//log("updateTimeData: " + url + " " + secsOpen + " " + secsFocus);
 
 	// Get parsed URL for this page
@@ -672,11 +683,12 @@ function updateTimeData(url, secsOpen, secsFocus) {
 	for (let set = 1; set <= gNumSets; set++) {
 		// Get regular expressions for matching sites to block/allow
 		let blockRE = gRegExps[set].block;
-		if (!blockRE) continue; // no block for this set
 		let allowRE = gRegExps[set].allow;
+		let referRE = gRegExps[set].refer;
+		if (!blockRE && !referRE) continue; // no block for this set
 
 		// Test URL against block/allow regular expressions
-		if (testURL(pageURL, blockRE, allowRE)) {
+		if (testURL(pageURL, referrer, blockRE, allowRE, referRE)) {
 			// Get options for this set
 			let timedata = gOptions[`timedata${set}`];
 			let countFocus = gOptions[`countFocus${set}`];
@@ -1142,6 +1154,7 @@ function addSiteToSet(url, set) {
 		gOptions[`sites${set}`] = sites;
 		gOptions[`blockRE${set}`] = regexps.block;
 		gOptions[`allowRE${set}`] = regexps.allow;
+		gOptions[`referRE${set}`] = regexps.refer;
 		gOptions[`keywordRE${set}`] = regexps.keyword;
 
 		createRegExps();
@@ -1151,6 +1164,7 @@ function addSiteToSet(url, set) {
 		options[`sites${set}`] = sites;
 		options[`blockRE${set}`] = regexps.block;
 		options[`allowRE${set}`] = regexps.allow;
+		options[`referRE${set}`] = regexps.refer;
 		options[`keywordRE${set}`] = regexps.keyword;
 		gStorage.set(options).catch(
 			function (error) { warn("Cannot set options: " + error); }
@@ -1211,6 +1225,9 @@ function handleMessage(message, sender, sendResponse) {
 	} else if (message.type == "delayed") {
 		// Redirect requested by delaying page
 		openDelayedPage(sender.tab.id, message.blockedURL, message.blockedSet);
+	} else if (message.type == "referrer") {
+		// URL of referring page received
+		gTabs[sender.tab.id].referrer = message.referrer;
 	}
 }
 
@@ -1219,7 +1236,7 @@ function handleTabCreated(tab) {
 
 	if (!gTabs[tab.id]) {
 		// Create object to track this tab
-		gTabs[tab.id] = { allowedHost: null, allowedPath: null, allowedSet: 0 };
+		gTabs[tab.id] = { allowedHost: null, allowedPath: null, allowedSet: 0, referrer: "" };
 
 		if (tab.openerTabId) {
 			// Inherit properties from opener tab
