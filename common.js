@@ -14,6 +14,8 @@ const PARSE_URL = /^((([\w-]+):\/*(\w+(?::\w+)?@)?([\w-\.]+)(?::(\d*))?)([^\?#]*
 const LEECHBLOCK_URL = "https://www.proginosko.com/leechblock/";
 
 const U_WORD_CHAR = "[\\p{L}\\p{N}]";
+const U_WORD_CHARS0 = `${U_WORD_CHAR}*`;
+const U_WORD_CHARS1 = `${U_WORD_CHAR}+`;
 const U_WORD_BEGIN = `(?<!${U_WORD_CHAR})(?=${U_WORD_CHAR})`;
 const U_WORD_END = `(?<=${U_WORD_CHAR})(?!${U_WORD_CHAR})`;
 const U_WORD_BOUND = `(?:${U_WORD_BEGIN}|${U_WORD_END})`;
@@ -261,7 +263,7 @@ function keywordToRegExp(keyword) {
 	return keyword
 			.replace(special, "\\$&")			// fix special chars
 			.replace(/_+/g, "\\s+")				// convert underscores
-			.replace(/\*+/g, "\\S*");			// convert wildcards
+			.replace(/\*+/g, U_WORD_CHARS0);	// convert wildcards
 }
 
 // Check time periods format
