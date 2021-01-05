@@ -39,6 +39,16 @@ function processBlockInfo(info) {
 		document.title += " (" + blockedSet.innerText + ")";
 	}
 
+	let keywordMatched = document.getElementById("lbKeywordMatched");
+	let keywordMatch = document.getElementById("lbKeywordMatch");
+	if (keywordMatched && keywordMatch) {
+		if (info.keywordMatch) {
+			keywordMatch.innerText = info.keywordMatch;
+		} else {
+			keywordMatched.style.display = "none";
+		}
+	}
+
 	let unblockTime = document.getElementById("lbUnblockTime");
 	if (info.unblockTime && unblockTime) {
 		unblockTime.innerText = info.unblockTime;

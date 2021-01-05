@@ -36,6 +36,7 @@ const PER_SET_OPTIONS = {
 	filterName: { type: "string", def: "grayscale", id: "filterName" },
 	activeBlock: { type: "boolean", def: false, id: "activeBlock" },
 	countFocus: { type: "boolean", def: true, id: "countFocus" },
+	showKeyword: { type: "boolean", def: true, id: "showKeyword" },
 	delayFirst: { type: "boolean", def: true, id: "delayFirst" },
 	delaySecs: { type: "string", def: "60", id: "delaySecs" },
 	reloadSecs: { type: "string", def: "", id: "reloadSecs" },
