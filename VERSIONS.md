@@ -1,3 +1,6 @@
+### Version 1.0.9 (04 Jan 2021)
+* Add option to show matched keyword on blocking page.
+
 ### Version 1.0.8 (20 Dec 2020)
 * Add option to treat browser windows as always focused.
 * Add option to specify clock offset (for correct time zone).

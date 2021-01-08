@@ -99,7 +99,7 @@ function hideAlert() {
 //
 function checkKeyword(keywordRE) {
 	if (!keywordRE) {
-		return false; // nothing to find!
+		return null; // nothing to find!
 	}
 
 	// Get all text nodes in document
@@ -109,13 +109,14 @@ function checkKeyword(keywordRE) {
 	//console.log("Checking " + textNodes.snapshotLength + " text node(s) for keyword(s)...");
 
 	for (let i = 0; i < textNodes.snapshotLength; i++) {
+		let matches;
 		let data = textNodes.snapshotItem(i).data;
-		if (data && keywordRE.test(data)) {
-			return true; // keyword(s) found
+		if (data && (matches = keywordRE.exec(data)) != null) {
+			return matches[0]; // keyword(s) found
 		}
 	}
 
-	return false; // keyword(s) not found
+	return null; // keyword(s) not found
 }
 
 // Apply filter

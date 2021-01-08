@@ -504,7 +504,7 @@ function checkTab(id, url, isRepeat) {
 				// Get final URL for block page
 				blockURL = blockURL.replace(/\$S/g, set).replace(/\$U/g, pageURLWithHash);
 
-				function applyBlock() {
+				function applyBlock(keyword) {
 					if (closeTab) {
 						// Close tab
 						browser.tabs.remove(id);
@@ -520,6 +520,8 @@ function checkTab(id, url, isRepeat) {
 							function (error) {}
 						);
 					} else {
+						gTabs[id].keyword = keyword;
+
 						// Redirect page
 						browser.tabs.update(id, { url: blockURL });
 					}
@@ -533,8 +535,9 @@ function checkTab(id, url, isRepeat) {
 					};
 					browser.tabs.sendMessage(id, message).then(
 						function (keyword) {
-							if (typeof keyword == "boolean" && keyword != allowKeywords) {
-								applyBlock();
+							if ((!allowKeywords && typeof keyword == "string")
+									|| (allowKeywords && keyword == null)) {
+								applyBlock(keyword);
 							}
 						},
 						function (error) {}
@@ -823,7 +826,7 @@ function updateIcon() {
 
 // Create info for blocking/delaying page
 //
-function createBlockInfo(url) {
+function createBlockInfo(id, url) {
 	// Get theme
 	let theme = gOptions["theme"];
 
@@ -843,6 +846,9 @@ function createBlockInfo(url) {
 	if (parsedURL.hash != null) {
 		blockedURL += "#" + parsedURL.hash;
 	}
+
+	// Get keyword match (if applicable)
+	let keywordMatch = gOptions[`showKeyword${blockedSet}`] ? gTabs[id].keyword : null;
 
 	// Get unblock time for block set
 	let unblockTime = getUnblockTime(blockedSet);
@@ -872,6 +878,7 @@ function createBlockInfo(url) {
 		blockedSet: blockedSet,
 		blockedSetName: blockedSetName,
 		blockedURL: blockedURL,
+		keywordMatch: keywordMatch,
 		unblockTime: unblockTime,
 		delaySecs: delaySecs,
 		reloadSecs: reloadSecs
@@ -1220,7 +1227,7 @@ function handleMessage(message, sender, sendResponse) {
 		sendResponse();
 	} else if (message.type == "blocked") {
 		// Block info requested by blocking/delaying page
-		let info = createBlockInfo(sender.url);
+		let info = createBlockInfo(sender.tab.id, sender.url);
 		sendResponse(info);
 	} else if (message.type == "delayed") {
 		// Redirect requested by delaying page
