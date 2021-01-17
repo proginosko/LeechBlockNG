@@ -260,7 +260,7 @@ function saveTimeData() {
 function restartTimeData(set) {
 	//log("restartTimeData: " + set);
 
-	if (!gGotOptions || set < 1 || set > gNumSets) {
+	if (!gGotOptions || set < 0 || set > gNumSets) {
 		return;
 	}
 
