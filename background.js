@@ -1204,37 +1204,55 @@ function handleMessage(message, sender, sendResponse) {
 
 	//log("handleMessage: " + sender.tab.id + " " + message.type);
 
-	if (message.type == "close") {
-		// Close tab requested
-		browser.tabs.remove(sender.tab.id);
-	} else if (message.type == "options") {
-		// Options updated
-		retrieveOptions(true);
-	} else if (message.type == "lockdown") {
-		if (!message.endTime) {
-			// Lockdown canceled
-			cancelLockdown(message.set);
-		} else {
-			// Lockdown requested
-			applyLockdown(message.set, message.endTime);
-		}
-	} else if (message.type == "override") {
-		// Override requested
-		applyOverride();
-	} else if (message.type == "restart") {
-		// Restart time data requested by statistics page
-		restartTimeData(message.set);
-		sendResponse();
-	} else if (message.type == "blocked") {
-		// Block info requested by blocking/delaying page
-		let info = createBlockInfo(sender.tab.id, sender.url);
-		sendResponse(info);
-	} else if (message.type == "delayed") {
-		// Redirect requested by delaying page
-		openDelayedPage(sender.tab.id, message.blockedURL, message.blockedSet);
-	} else if (message.type == "referrer") {
-		// URL of referring page received
-		gTabs[sender.tab.id].referrer = message.referrer;
+	switch (message.type) {
+
+		case "blocked":
+			// Block info requested by blocking/delaying page
+			let info = createBlockInfo(sender.tab.id, sender.url);
+			sendResponse(info);
+			break;
+
+		case "close":
+			// Close tab requested
+			browser.tabs.remove(sender.tab.id);
+			break;
+
+		case "delayed":
+			// Redirect requested by delaying page
+			openDelayedPage(sender.tab.id, message.blockedURL, message.blockedSet);
+			break;
+
+		case "lockdown":
+			if (!message.endTime) {
+				// Lockdown canceled
+				cancelLockdown(message.set);
+			} else {
+				// Lockdown requested
+				applyLockdown(message.set, message.endTime);
+			}
+			break;
+
+		case "options":
+			// Options updated
+			retrieveOptions(true);
+			break;
+
+		case "override":
+			// Override requested
+			applyOverride();
+			break;
+
+		case "referrer":
+			// URL of referring page received
+			gTabs[sender.tab.id].referrer = message.referrer;
+			break;
+
+		case "restart":
+			// Restart time data requested by statistics page
+			restartTimeData(message.set);
+			sendResponse();
+			break;
+
 	}
 }
 
