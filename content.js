@@ -140,16 +140,28 @@ function applyFilter(name) {
 /*** EVENT HANDLERS BEGIN HERE ***/
 
 function handleMessage(message, sender, sendResponse) {
-	if (message.type == "timer") {
-		updateTimer(message.text, message.size, message.location);
-	} else if (message.type == "alert") {
-		showAlert(message.text);
-	} else if (message.type == "keyword") {
-		let keyword = checkKeyword(message.keywordRE);
-		sendResponse(keyword);
-	} else if (message.type == "filter") {
-		applyFilter(message.name);
+
+	switch (message.type) {
+
+		case "alert":
+			showAlert(message.text);
+			break;
+
+		case "filter":
+			applyFilter(message.name);
+			break;
+
+		case "keyword":
+			let keyword = checkKeyword(message.keywordRE);
+			sendResponse(keyword);
+			break;
+
+		case "timer":
+			updateTimer(message.text, message.size, message.location);
+			break;
+
 	}
+
 }
 
 browser.runtime.onMessage.addListener(handleMessage);
