@@ -1,11 +1,5 @@
 {
 
-	"applications": {
-		"gecko": {
-			"id": "leechblockng@proginosko.com"
-		}
-	},
-
 	"author": "James Anderson",
 
 	"background": {
@@ -20,6 +14,12 @@
 		},
 		"default_popup": "popup.html",
 		"default_title": "LeechBlock"
+	},
+
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "leechblockng@proginosko.com"
+		}
 	},
 
 	"content_scripts": [
