@@ -564,7 +564,7 @@ function checkTab(id, url, isRepeat) {
 
 			// Update seconds left before block
 			let secsLeft = conjMode
-					? (secsLeftBeforePeriod + secsLeftBeforeLimit)
+					? (withinTimePeriods ? secsLeftBeforeLimit : Infinity)
 					: Math.min(secsLeftBeforePeriod, secsLeftBeforeLimit);
 			if (override) {
 				secsLeft = Math.max(secsLeft, overrideEndTime - now);
