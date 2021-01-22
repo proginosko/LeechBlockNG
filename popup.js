@@ -2,6 +2,28 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+// Initialize page
+//
+function initializePage() {
+	browser.storage.local.get("sync").then(onGotSync);
+
+	function onGotSync(options) {
+		if (options["sync"]) {
+			browser.storage.sync.get("theme").then(onGot);
+		} else {
+			browser.storage.local.get("theme").then(onGot);
+		}
+	}
+
+	function onGot(options) {
+		let theme = options["theme"];
+		let link = document.getElementById("themeLink");
+		if (link) {
+			link.href = theme ? `themes/${theme}.css` : "";
+		}
+	}
+}
+
 // Open options page
 //
 function openOptions() {
@@ -53,3 +75,5 @@ document.querySelector("#options").addEventListener("click", openOptions);
 document.querySelector("#lockdown").addEventListener("click", openLockdown);
 document.querySelector("#override").addEventListener("click", openOverride);
 document.querySelector("#stats").addEventListener("click", openStats);
+
+document.addEventListener("DOMContentLoaded", initializePage);
