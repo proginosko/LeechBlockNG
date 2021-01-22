@@ -283,6 +283,10 @@
 								<input id="hidePassword" type="checkbox">
 								<label for="hidePassword">Hide password characters when entered at prompt</label>
 							</p>
+							<p>
+								<label>Prevent all access to options during these time periods:</label><br>
+								<div><input id="accessPreventTimes" type="text" size="60" placeholder="Example: 0900-1230,1330-1700"></div>
+							</p>
 						</fieldset>
 						<fieldset>
 							<legend>Countdown Timer</legend>
@@ -450,6 +454,12 @@
 		<div id="alerts" style="display: none;">
 			<div id="alertRetrieveError" title="LeechBlock Options">
 				<p><strong>Error:</strong> Unable to retrieve options from browser storage.</p>
+			</div>
+			<div id="alertAccessPrevent" title="LeechBlock Options">
+				<p>You have prevented access to options during these time periods: <strong><span id="alertAccessPreventTimes"></span></strong></p>
+			</div>
+			<div id="alertBadAccessPreventTimes" title="LeechBlock Options">
+				<p>Completely preventing access to options is a bad idea! Please enter different time periods.</p>
 			</div>
 			<div id="alertBadTimes" title="LeechBlock Options">
 				<p>Please enter the time periods in the correct format. Use 24-hour clock format (HHMM) for times,

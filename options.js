@@ -17,6 +17,7 @@ var gAccessRequiredInput;
 var gFormHTML;
 var gNumSets, gNumSetsMin;
 var gTabIndex = 0;
+var gNewOpen = true;
 
 // Initialize form (with specified number of block sets)
 //
@@ -175,6 +176,13 @@ function saveOptions(event) {
 		$("#alertBadNumSets").dialog("open");
 		return false;
 	}
+	let accessPreventTimes = $("#accessPreventTimes").val();
+	if (!checkTimePeriodsFormat(accessPreventTimes)) {
+		$("#tabs").tabs("option", "active", gNumSets);
+		$("#accessPreventTimes").focus();
+		$("#alertBadTimes").dialog("open");
+		return false;
+	}
 	let overrideMins = $("#overrideMins").val();
 	if (!checkPosIntFormat(overrideMins)) {
 		$("#tabs").tabs("option", "active", gNumSets);
@@ -207,6 +215,16 @@ function saveOptions(event) {
 	// Prevent removal of block sets with disabled options
 	if (numSets < gNumSetsMin) {
 		$("#numSets").val(gNumSetsMin);
+	}
+
+	// Clean time periods for preventing access to options (and disallow 0000-2400)
+	accessPreventTimes = cleanTimePeriods(accessPreventTimes);
+	$("#accessPreventTimes").val(accessPreventTimes);
+	if (accessPreventTimes == ALL_DAY_TIMES) {
+		$("#tabs").tabs("option", "active", gNumSets);
+		$("#accessPreventTimes").focus();
+		$("#alertBadAccessPreventTimes").dialog("open");
+		return false;
 	}
 
 	let options = {};
@@ -337,6 +355,25 @@ function retrieveOptions() {
 		// Get current time/date
 		let timedate = new Date(now * 1000);
 
+		// Get number of minutes elapsed since midnight
+		let mins = timedate.getHours() * 60 + timedate.getMinutes();
+
+		if (gNewOpen) {
+			// Check whether access to options is prevented at this time
+			let apt = options["apt"];
+			let aptMinPeriods = getMinPeriods(apt);
+			for (let mp of aptMinPeriods) {
+				if (mins >= mp.start && mins < mp.end) {
+					$("#alertAccessPreventTimes").html(apt);
+					$("#alertAccessPrevent").dialog("open");
+					$("#alertAccessPrevent").on("dialogclose", closeOptions);
+					return;
+				}
+			}
+		}
+
+		gNewOpen = false;
+
 		// Check whether a lockdown is currently active
 		for (let set = 1; set <= gNumSets; set++) {
 			let timedata = options[`timedata${set}`];
@@ -363,9 +400,6 @@ function retrieveOptions() {
 			// Check time periods
 			let withinTimePeriods = false;
 			if (onSelectedDay && times) {
-				// Get number of minutes elapsed since midnight
-				let mins = timedate.getHours() * 60 + timedate.getMinutes();
-
 				// Check each time period in turn
 				for (let mp of minPeriods) {
 					if (mins >= mp.start && mins < mp.end) {

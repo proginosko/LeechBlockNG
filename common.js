@@ -61,6 +61,7 @@ const GENERAL_OPTIONS = {
 	oa: { type: "string", def: "0", id: "optionsAccess" }, // default: no password or code
 	password: { type: "string", def: "", id: "accessPassword" }, // default: blank
 	hpp: { type: "boolean", def: true, id: "hidePassword" }, // default: hidden
+	apt: { type: "string", def: "", id: "accessPreventTimes" }, // default: blank
 	timerVisible: { type: "boolean", def: true, id: "timerVisible" }, // default: visible
 	timerSize: { type: "string", def: "1", id: "timerSize" }, // default: medium
 	timerLocation: { type: "string", def: "0", id: "timerLocation" }, // default: top left
