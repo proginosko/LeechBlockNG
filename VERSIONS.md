@@ -1,11 +1,17 @@
+### Version 1.0.10 (24 Jan 2021)
+* Added option to prevent access to options page during specified time periods.
+* Added more options for time limit periods (5, 10, and 20 minutes).
+* Theme now applied to popup menu.
+* Bug fixes and minor code tweaks.
+
 ### Version 1.0.9 (17 Jan 2021)
-* Add option to show matched keyword on blocking page.
-* Add option to block pages based on referring site.
+* Added option to show matched keyword on blocking page.
+* Added option to block pages based on referring site.
 
 ### Version 1.0.8 (20 Dec 2020)
-* Add option to treat browser windows as always focused.
-* Add option to specify clock offset (for correct time zone).
-* Add support for non-English keywords.
+* Added option to treat browser windows as always focused.
+* Added option to specify clock offset (for correct time zone).
+* Added support for non-English keywords.
 * Bug fixes and minor code tweaks.
 
 ### Version 1.0.7.2 (28 Oct 2020)
