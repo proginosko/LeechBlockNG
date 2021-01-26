@@ -890,12 +890,13 @@ function disableGeneralOptions() {
 	// Disable all general options
 	let items = [
 		"numSets",
-		"optionsAccess", "accessPassword", "hidePassword",
+		"optionsAccess", "accessPassword", "hidePassword", "accessPreventTimes",
 		"timerVisible", "timerSize", "timerLocation", "timerBadge",
 		"warnSecs", "warnImmediate",
 		"overrideMins", "overrideAccess", "overrideConfirm",
 		"theme", "contextMenu", "toolsMenu", "matchSubdomains",
-		"saveSecs", "processActiveTabs", "accessCodeImage", "syncStorage",
+		"saveSecs", "clockOffset", "allFocused",
+		"processActiveTabs", "accessCodeImage", "syncStorage",
 		"exportOptions", "importOptions", "importFile",
 		"exportOptionsSync", "importOptionsSync", "autoExportSync"
 	];
