@@ -24,6 +24,23 @@ var gAllFocused = false;
 var gOverrideIcon = false;
 var gSaveSecsCount = 0;
 
+// Initialize object to track tab (returns false if already initialized)
+//
+function initTab(id) {
+	if (gTabs[id]) {
+		return false;
+	} else {
+		gTabs[id] = {
+			allowedHost: null,
+			allowedPath: null,
+			allowedSet: 0,
+			referrer: "",
+			url: "about:blank"
+		};
+		return true;
+	}
+}
+
 // Create (precompile) regular expressions
 //
 function createRegExps() {
@@ -315,13 +332,15 @@ function processTabs(active) {
 
 	function onGot(tabs) {
 		for (let tab of tabs) {
+			initTab(tab.id);
+
 			let focus = tab.active && (gAllFocused || !gFocusWindowId || tab.windowId == gFocusWindowId);
 
 			// Force update of time spent on this page
 			clockPageTime(tab.id, false, false);
 			clockPageTime(tab.id, true, focus);
 
-			let blocked = checkTab(tab.id, tab.url, true);
+			let blocked = checkTab(tab.id, false, true);
 
 			if (!blocked && tab.active) {
 				updateTimer(tab.id);
@@ -336,8 +355,8 @@ function processTabs(active) {
 
 // Check the URL of a tab and applies block if necessary (returns true if blocked)
 //
-function checkTab(id, url, isRepeat) {
-	//log("checkTab: " + id + " " + url + " " + isRepeat);
+function checkTab(id, isBeforeNav, isRepeat) {
+	//log("checkTab: " + id + " " + isBeforeNav + " " + isRepeat);
 
 	function isSameHost(host1, host2) {
 		return (host1 == host2)
@@ -345,17 +364,13 @@ function checkTab(id, url, isRepeat) {
 				|| (host2 == "www." + host1);
 	}
 
+	let url = gTabs[id].url;
+
 	// Remove view-source prefix if necessary
 	url = url.replace(/^view-source:/i, "");
 
-	if (!gTabs[id]) {
-		// Create object to track this tab
-		gTabs[id] = { allowedHost: null, allowedPath: null, allowedSet: 0, referrer: "" };
-	}
-
 	gTabs[id].blockable = BLOCKABLE_URL.test(url);
 	gTabs[id].clockable = CLOCKABLE_URL.test(url);
-	gTabs[id].url = url;
 
 	// Quick exit for about:blank
 	if (url == "about:blank") {
@@ -1259,21 +1274,20 @@ function handleMessage(message, sender, sendResponse) {
 function handleTabCreated(tab) {
 	//log("handleTabCreated: " + tab.id);
 
-	if (!gTabs[tab.id]) {
-		// Create object to track this tab
-		gTabs[tab.id] = { allowedHost: null, allowedPath: null, allowedSet: 0, referrer: "" };
+	initTab(tab.id);
 
-		if (tab.openerTabId) {
-			// Inherit properties from opener tab
-			gTabs[tab.id].allowedHost = gTabs[tab.openerTabId].allowedHost;
-			gTabs[tab.id].allowedPath = gTabs[tab.openerTabId].allowedPath;
-			gTabs[tab.id].allowedSet = gTabs[tab.openerTabId].allowedSet;
-		}
+	if (tab.openerTabId) {
+		// Inherit properties from opener tab
+		gTabs[tab.id].allowedHost = gTabs[tab.openerTabId].allowedHost;
+		gTabs[tab.id].allowedPath = gTabs[tab.openerTabId].allowedPath;
+		gTabs[tab.id].allowedSet = gTabs[tab.openerTabId].allowedSet;
 	}
 }
 
 function handleTabUpdated(tabId, changeInfo, tab) {
 	//log("handleTabUpdated: " + tabId);
+
+	initTab(tabId);
 
 	if (!gGotOptions) {
 		return;
@@ -1281,10 +1295,14 @@ function handleTabUpdated(tabId, changeInfo, tab) {
 
 	let focus = tab.active && (gAllFocused || !gFocusWindowId || tab.windowId == gFocusWindowId);
 
+	if (changeInfo.url) {
+		gTabs[tabId].url = changeInfo.url;
+	}
+
 	if (changeInfo.status && changeInfo.status == "complete") {
 		clockPageTime(tab.id, true, focus);
 
-		let blocked = checkTab(tab.id, tab.url, false);
+		let blocked = checkTab(tab.id, false, false);
 
 		if (!blocked && tab.active) {
 			updateTimer(tab.id);
@@ -1293,7 +1311,10 @@ function handleTabUpdated(tabId, changeInfo, tab) {
 }
 
 function handleTabActivated(activeInfo) {
-	//log("handleTabActivated: " + activeInfo.tabId);
+	let tabId = activeInfo.tabId;
+	//log("handleTabActivated: " + tabId);
+
+	initTab(tabId);
 
 	if (!gGotOptions) {
 		return;
@@ -1307,8 +1328,8 @@ function handleTabActivated(activeInfo) {
 
 	let focus = (gAllFocused || !gFocusWindowId || activeInfo.windowId == gFocusWindowId);
 
-	clockPageTime(activeInfo.tabId, true, focus);
-	updateTimer(activeInfo.tabId);
+	clockPageTime(tabId, true, focus);
+	updateTimer(tabId);
 }
 
 function handleTabRemoved(tabId, removeInfo) {
@@ -1322,16 +1343,21 @@ function handleTabRemoved(tabId, removeInfo) {
 }
 
 function handleBeforeNavigate(navDetails) {
-	//log("handleBeforeNavigate: " + navDetails.tabId);
+	let tabId = navDetails.tabId;
+	//log("handleBeforeNavigate: " + tabId);
+
+	initTab(tabId);
 
 	if (!gGotOptions) {
 		return;
 	}
 
-	clockPageTime(navDetails.tabId, false, false);
+	clockPageTime(tabId, false, false);
 
 	if (navDetails.frameId == 0) {
-		checkTab(navDetails.tabId, navDetails.url, false);
+		gTabs[tabId].url = navDetails.url;
+
+		let blocked = checkTab(tabId, true, false);
 	}
 }
 
