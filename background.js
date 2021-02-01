@@ -439,6 +439,8 @@ function checkTab(id, isBeforeNav, isRepeat) {
 		let keywordRE = gRegExps[set].keyword;
 		if (!blockRE && !referRE) continue; // no block for this set
 
+		if (keywordRE && isBeforeNav) continue; // too soon to check for keywords!
+
 		// Get options for preventing access to about:addons and about:support
 		let prevAddons = gOptions[`prevAddons${set}`];
 		let prevSupport = gOptions[`prevSupport${set}`];
