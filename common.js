@@ -46,6 +46,7 @@ const PER_SET_OPTIONS = {
 	prevAddons: { type: "boolean", def: false, id: "prevAddons" },
 	prevSupport: { type: "boolean", def: false, id: "prevSupport" },
 	showTimer: { type: "boolean", def: true, id: "showTimer" },
+	allowRefers: { type: "boolean", def: false, id: "allowRefers" },
 	allowKeywords: { type: "boolean", def: false, id: "allowKeywords" },
 	sitesURL: { type: "string", def: "", id: "sitesURL" },
 	regexpBlock: { type: "string", def: "", id: "regexpBlock" },

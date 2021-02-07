@@ -64,11 +64,13 @@ function createRegExps() {
 
 // Test URL against block/allow regular expressions
 //
-function testURL(url, referrer, blockRE, allowRE, referRE) {
+function testURL(url, referrer, blockRE, allowRE, referRE, allowRefers) {
 	let block = blockRE && blockRE.test(url);
 	let allow = allowRE && allowRE.test(url);
 	let refer = referRE && referRE.test(referrer);
-	return (block || refer) && !allow;
+	return allowRefers
+		? block && !(allow || refer)	// refer as allow-condition
+		: (block || refer) && !allow;	// refer as block-condition
 }
 
 // Refresh menus
@@ -441,12 +443,17 @@ function checkTab(id, isBeforeNav, isRepeat) {
 
 		if (keywordRE && isBeforeNav) continue; // too soon to check for keywords!
 
+		// Get option for treating referrers as allow-conditions
+		let allowRefers = gOptions[`allowRefers${set}`];
+
+		if (referRE && allowRefers && isBeforeNav) continue; // too soon to check for referrers!
+
 		// Get options for preventing access to about:addons and about:support
 		let prevAddons = gOptions[`prevAddons${set}`];
 		let prevSupport = gOptions[`prevSupport${set}`];
 
 		// Test URL against block/allow regular expressions
-		if (testURL(pageURL, referrer, blockRE, allowRE, referRE)
+		if (testURL(pageURL, referrer, blockRE, allowRE, referRE, allowRefers)
 				|| (prevAddons && /^about:addons/i.test(pageURL))
 				|| (prevSupport && /^about:support/i.test(pageURL))) {
 			// Get options for this set
@@ -707,8 +714,11 @@ function updateTimeData(url, referrer, secsOpen, secsFocus) {
 		let referRE = gRegExps[set].refer;
 		if (!blockRE && !referRE) continue; // no block for this set
 
+		// Get option for treating referrers as allow-conditions
+		let allowRefers = gOptions[`allowRefers${set}`];
+
 		// Test URL against block/allow regular expressions
-		if (testURL(pageURL, referrer, blockRE, allowRE, referRE)) {
+		if (testURL(pageURL, referrer, blockRE, allowRE, referRE, allowRefers)) {
 			// Get options for this set
 			let timedata = gOptions[`timedata${set}`];
 			let countFocus = gOptions[`countFocus${set}`];
