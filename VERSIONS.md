@@ -1,3 +1,7 @@
+### Version 1.0.11 (07 Feb 2021)
+* Added option to treat referrers as allow-conditions rather than block-conditions.
+* Bug fixes and minor code tweaks.
+
 ### Version 1.0.10 (24 Jan 2021)
 * Added option to prevent access to options page during specified time periods.
 * Added more options for time limit periods (5, 10, and 20 minutes).
