@@ -13,7 +13,7 @@
 	color: #000;
 	border: 1px solid #000;
 	border-radius: 4px;
-	font: normal 12px "Lucida Console", Monaco, monospace;
+	font: normal 12px "Lucida Console", Monaco, monospace !important;
 	user-select: none;
 	-moz-user-select: none;
 }
@@ -45,7 +45,7 @@
 	color: #000;
 	border: 1px solid #000;
 	border-radius: 4px;
-	font: normal 16px Arial, Helvetica, sans-serif;
+	font: normal 16px Arial, Helvetica, sans-serif !important;
 	box-shadow: 2px 2px 2px #888;
 	user-select: none;
 	-moz-user-select: none;
