@@ -525,8 +525,6 @@ function checkTab(id, isBeforeNav, isRepeat) {
 
 			// Apply block if all relevant block conditions are fulfilled
 			if (!override && doBlock && (!isRepeat || activeBlock)) {
-				// Get final URL for block page
-				blockURL = blockURL.replace(/\$S/g, set).replace(/\$U/g, pageURLWithHash);
 
 				function applyBlock(keyword) {
 					if (closeTab) {
@@ -545,6 +543,12 @@ function checkTab(id, isBeforeNav, isRepeat) {
 						);
 					} else {
 						gTabs[id].keyword = keyword;
+
+						// Get final URL for block page
+						blockURL = blockURL
+								.replace(/\$K/g, keyword ? keyword : "")
+								.replace(/\$S/g, set)
+								.replace(/\$U/g, pageURLWithHash);
 
 						// Redirect page
 						browser.tabs.update(id, { url: blockURL });
