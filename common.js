@@ -24,7 +24,7 @@ const PER_SET_OPTIONS = {
 	// def: default value, id: form element identifier (see options.html)
 	setName: { type: "string", def: "", id: "setName" },
 	sites: { type: "string", def: "", id: "sites" },
-	times: { type: "string", def: "0900-1700", id: "times" },
+	times: { type: "string", def: "", id: "times" },
 	limitMins: { type: "string", def: "", id: "limitMins" },
 	limitPeriod: { type: "string", def: "", id: "limitPeriod" },
 	limitOffset: { type: "string", def: "", id: "limitOffset" },
