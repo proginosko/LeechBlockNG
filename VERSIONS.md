@@ -1,3 +1,6 @@
+### Version 1.0.12 (01 Jun 2021)
+* Minor usability tweaks.
+
 ### Version 1.0.11 (07 Feb 2021)
 * Added option to treat referrers as allow-conditions rather than block-conditions.
 * Bug fixes and minor code tweaks.
