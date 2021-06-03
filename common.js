@@ -42,6 +42,8 @@ const PER_SET_OPTIONS = {
 	reloadSecs: { type: "string", def: "", id: "reloadSecs" },
 	allowOverride: { type: "boolean", def: false, id: "allowOverride" },
 	prevOpts: { type: "boolean", def: false, id: "prevOpts" },
+	prevOffToggle: { type: "boolean", def: false, id: "prevOffToggle"},
+	prevOffset: { type: "string", def: "", id: "prevOffset"},
 	prevGenOpts: { type: "boolean", def: false, id: "prevGenOpts" },
 	prevAddons: { type: "boolean", def: false, id: "prevAddons" },
 	prevSupport: { type: "boolean", def: false, id: "prevSupport" },
@@ -316,15 +318,30 @@ function getMinPeriods(times) {
 	return minPeriods;
 }
 
-// Clean time periods
+// Convert minute periods to a string
 //
-function cleanTimePeriods(times) {
-	// Convert to minute periods
-	let minPeriods = getMinPeriods(times);
-	if (minPeriods.length == 0) {
-		return ""; // nothing to do
+function minPeriodsToString(minPeriods) {
+	// Convert back to string list of time periods
+	let cleanTimes = [];
+	for (let mp of minPeriods) {
+		let h1 = Math.floor(mp.start / 60);
+		let m1 = (mp.start % 60);
+		let h2 = Math.floor(mp.end / 60);
+		let m2 = (mp.end % 60);
+		let period =
+			((h1 < 10) ? "0" : "") + h1 +
+			((m1 < 10) ? "0" : "") + m1 +
+			"-" +
+			((h2 < 10) ? "0" : "") + h2 +
+			((m2 < 10) ? "0" : "") + m2;
+		cleanTimes.push(period);
 	}
+	return cleanTimes.join(",");
+}
 
+// Trim, merge and sort minute periods
+//
+function processMinPeriods(minPeriods) {
 	// Step 1: Fix any times > 2400
 	for (let mp of minPeriods) {
 		mp.start = Math.min(mp.start, 1440);
@@ -353,22 +370,21 @@ function cleanTimePeriods(times) {
 		}
 	}
 
-	// Convert back to string list of time periods
-	let cleanTimes = [];
-	for (let mp of minPeriods) {
-		let h1 = Math.floor(mp.start / 60);
-		let m1 = (mp.start % 60);
-		let h2 = Math.floor(mp.end / 60);
-		let m2 = (mp.end % 60);
-		let period =
-				((h1 < 10) ? "0" : "") + h1 +
-				((m1 < 10) ? "0" : "") + m1 +
-				"-" +
-				((h2 < 10) ? "0" : "") + h2 +
-				((m2 < 10) ? "0" : "") + m2;
-		cleanTimes.push(period);
+	return minPeriods;
+}
+
+// Clean time periods
+//
+function cleanTimePeriods(times) {
+	// Convert to minute periods
+	let minPeriods = getMinPeriods(times);
+	if (minPeriods.length == 0) {
+		return ""; // nothing to do
 	}
-	return cleanTimes.join(",");
+
+	const cleanPeriods = processMinPeriods(minPeriods);
+
+	return minPeriodsToString(cleanPeriods);
 }
 
 // Calculate start of time period from current time and time limit period
@@ -402,6 +418,46 @@ function getTimePeriodStart(now, limitPeriod, limitOffset) {
 	}
 
 	return 0;
+}
+
+// Convert times to minute periods with adjusted start times
+//
+function getExtendedMinPeriods(times, startOffset) {
+	const fullDay = 24 * 60;
+	const offset = Math.max(0, Math.min(fullDay - 1, parseInt(startOffset)));
+	//(startOffset < 0 || startOffset >= fullDay) ? 0 : startOffset;
+
+	// Convert input string to array
+	const minPeriods = getMinPeriods(times);
+	if (minPeriods.length == 0) {
+		return ""; // nothing to do
+	}
+
+	// Merge and sort MPs
+	const mergedMPs = processMinPeriods(minPeriods);
+
+	// Skip adjustment if offset is 0/NaN/null/etc
+	if (!startOffset || !offset) {
+		return mergedMPs;
+	}
+
+	// Offset start of MPs
+	const offsetMPs = mergedMPs.reduce((newMPs, mp) => {
+		mp.start -= offset;
+		// Wrap MPs. This will act strangely on days preceding/following an unblocked day
+		if (mp.start < 0) {
+			newMPs.push({
+				start: mp.start + fullDay,
+				end: fullDay
+			});
+			mp.start = 0;
+		}
+		newMPs.push(mp);
+		return newMPs;
+	}, []);
+
+	// Return merged and sorted MPs
+	return processMinPeriods(offsetMPs);
 }
 
 // Format a time in seconds to HH:MM:SS format

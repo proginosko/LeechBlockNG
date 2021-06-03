@@ -127,6 +127,7 @@ function saveOptions(event) {
 		let delaySecs = $(`#delaySecs${set}`).val();
 		let reloadSecs = $(`#reloadSecs${set}`).val();
 		let blockURL = $(`#blockURL${set}`).val();
+		let optBlockOffset = $(`#prevOffset${set}`).val();
 
 		// Check field values
 		if (!checkTimePeriodsFormat(times)) {
@@ -164,6 +165,12 @@ function saveOptions(event) {
 			$("#tabs").tabs("option", "active", (set - 1));
 			$(`#blockURL${set}`).focus();
 			$("#alertBadBlockURL").dialog("open");
+			return false;
+		}
+		if (!checkPosIntFormat(optBlockOffset)) {
+			$("#tabs").tabs("option", "active", (set - 1));
+			$(`#prevOffset${set}`).focus();
+			$("#alertBadSeconds").dialog("open");
 			return false;
 		}
 	}
@@ -393,9 +400,18 @@ function retrieveOptions() {
 			let periodStart = getTimePeriodStart(now, limitPeriod, limitOffset);
 			let conjMode = options[`conjMode${set}`];
 			let days = options[`days${set}`];
+			let blockOffToggle = options[`prevOffToggle${set}`];
+			let blockOffset = options[`prevOffset${set}`];
 
 			// Check day
 			let onSelectedDay = days[timedate.getDay()];
+
+			if(blockOffToggle && blockOffset) {
+				minPeriods = getExtendedMinPeriods(times, blockOffset);
+				times = minPeriodsToString(minPeriods);
+
+				limitMins = limitMins ? limitMins - blockOffset : limitMins;
+			}
 
 			// Check time periods
 			let withinTimePeriods = false;
