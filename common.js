@@ -420,46 +420,6 @@ function getTimePeriodStart(now, limitPeriod, limitOffset) {
 	return 0;
 }
 
-// Convert times to minute periods with adjusted start times
-//
-function getExtendedMinPeriods(times, startOffset) {
-	const fullDay = 24 * 60;
-	const offset = Math.max(0, Math.min(fullDay - 1, parseInt(startOffset)));
-	//(startOffset < 0 || startOffset >= fullDay) ? 0 : startOffset;
-
-	// Convert input string to array
-	const minPeriods = getMinPeriods(times);
-	if (minPeriods.length == 0) {
-		return ""; // nothing to do
-	}
-
-	// Merge and sort MPs
-	const mergedMPs = processMinPeriods(minPeriods);
-
-	// Skip adjustment if offset is 0/NaN/null/etc
-	if (!startOffset || !offset) {
-		return mergedMPs;
-	}
-
-	// Offset start of MPs
-	const offsetMPs = mergedMPs.reduce((newMPs, mp) => {
-		mp.start -= offset;
-		// Wrap MPs. This will act strangely on days preceding/following an unblocked day
-		if (mp.start < 0) {
-			newMPs.push({
-				start: mp.start + fullDay,
-				end: fullDay
-			});
-			mp.start = 0;
-		}
-		newMPs.push(mp);
-		return newMPs;
-	}, []);
-
-	// Return merged and sorted MPs
-	return processMinPeriods(offsetMPs);
-}
-
 // Format a time in seconds to HH:MM:SS format
 //
 function formatTime(secs) {

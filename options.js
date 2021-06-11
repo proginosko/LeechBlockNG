@@ -393,7 +393,7 @@ function retrieveOptions() {
 			// Get options
 			let timedata = options[`timedata${set}`];
 			let times = options[`times${set}`];
-			let minPeriods = getMinPeriods(times);
+			let minPeriods = processMinPeriods(getMinPeriods(times));
 			let limitMins = options[`limitMins${set}`];
 			let limitPeriod = options[`limitPeriod${set}`];
 			let limitOffset = options[`limitOffset${set}`];
@@ -404,42 +404,61 @@ function retrieveOptions() {
 			let blockOffset = options[`prevOffset${set}`];
 
 			// Check day
-			let onSelectedDay = days[timedate.getDay()];
+			let currentDay = timedate.getDay();
+			let onSelectedDay = days[currentDay];
 
-			if(blockOffToggle && blockOffset) {
-				minPeriods = getExtendedMinPeriods(times, blockOffset);
-				times = minPeriodsToString(minPeriods);
+			const useBlockTimes = Boolean(times);
+			const useTimeLimit = Boolean(limitMins && limitPeriod);
 
-				limitMins = limitMins ? limitMins - blockOffset : limitMins;
-			}
+			// Check if any special lock scheme is used
+			const lockScheme = Boolean(blockOffToggle && blockOffset);
+			let locked = false;
+			if (lockScheme) {
+				const fullDay = 24 * 60; // 24 hours in minutes
+				const startOffset = Math.max(0, Math.min(fullDay, parseInt(blockOffset))) || 0;
+				const lockedMPs = minPeriods.map(mp => { return { start: mp.start - startOffset, end: mp.end } });
+				const unlockedMins = limitMins - blockOffset;
 
-			// Check time periods
-			let withinTimePeriods = false;
-			if (onSelectedDay && times) {
-				// Check each time period in turn
-				for (let mp of minPeriods) {
-					if (mins >= mp.start && mins < mp.end) {
-						withinTimePeriods = true;
+				const tomorrowSelected = days[(currentDay + 1) % 7];
+				// Negative start times should affect the previous day.
+				const timePeriodLock = (onSelectedDay && lockedMPs.some(mp => mins >= mp.start && mins < mp.end)) ||
+					(tomorrowSelected && lockedMPs.some(mp => (mins - fullDay) >= mp.start && (mins - fullDay) < mp.end));
+
+				const timeLimitLock = useTimeLimit && onSelectedDay && unlockedMins &&
+					(unlockedMins < 0 || (timedata[2] == periodStart && timedata[3] >= (unlockedMins * 60)));
+
+				locked = (!conjMode && (timePeriodLock || timeLimitLock)) ||
+					(conjMode && (timePeriodLock && timeLimitLock));
+			} else {
+				// Check time periods
+				let withinTimePeriods = false;
+				if (useBlockTimes && onSelectedDay) {
+					// Check each time period in turn
+					for (let mp of minPeriods) {
+						if (mins >= mp.start && mins < mp.end) {
+							withinTimePeriods = true;
+						}
 					}
 				}
-			}
 
-			// Check time limit
-			let afterTimeLimit = false;
-			if (onSelectedDay && limitMins && limitPeriod) {
-				// Check time period and time limit
-				if (timedata[2] == periodStart && timedata[3] >= (limitMins * 60)) {
-					afterTimeLimit = true;
+				// Check time limit
+				let afterTimeLimit = false;
+				if (useTimeLimit && onSelectedDay) {
+					// Check time period and time limit
+					if (timedata[2] == periodStart && timedata[3] >= (limitMins * 60)) {
+						afterTimeLimit = true;
+					}
 				}
+
+				locked = (!conjMode && (withinTimePeriods || afterTimeLimit))
+					|| (conjMode && (withinTimePeriods && afterTimeLimit));
 			}
 
 			// Check lockdown condition
 			let lockdown = (timedata[4] > now);
 
 			// Disable options if specified block conditions are fulfilled
-			if (lockdown
-					|| (!conjMode && (withinTimePeriods || afterTimeLimit))
-					|| (conjMode && (withinTimePeriods && afterTimeLimit))) {
+			if (lockdown || locked) {
 				if (options[`prevOpts${set}`]) {
 					gNumSetsMin = set;
 					// Disable options for this set
