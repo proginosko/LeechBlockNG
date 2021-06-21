@@ -11,6 +11,8 @@ const OVERRIDE_ICON = { 16: "icons/leechblock16o.png", 32: "icons/leechblock32o.
 
 const PARSE_URL = /^((([\w-]+):\/*(\w+(?::\w+)?@)?([\w-\.]+)(?::(\d*))?)([^\?#]*))(\?[^#]*)?(#.*)?$/;
 
+const ABSOLUTE_URL = /^[\w-]+:/;
+
 const LEECHBLOCK_URL = "https://www.proginosko.com/leechblock/";
 
 const U_WORD_CHAR = "[\\p{L}\\p{N}]";
@@ -467,6 +469,14 @@ function createAccessCode(len) {
 function setTheme(theme) {
 	let link = document.getElementById("themeLink");
 	if (link) {
-		link.href = theme ? `themes/${theme}.css` : "";
+		link.href = theme ? `/themes/${theme}.css` : "";
 	}
+}
+
+// Get localized version of extension page
+//
+function getLocalizedURL(url) {
+	return (ABSOLUTE_URL.test(url))
+			? url // no localization for absolute URL
+			: browser.i18n.getMessage("localePath") + url;
 }

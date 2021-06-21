@@ -12,7 +12,7 @@
 			"16": "icons/leechblock16.png",
 			"32": "icons/leechblock32.png"
 		},
-		"default_popup": "popup.html",
+		"default_popup": "__MSG_localePath__popup.html",
 		"default_title": "LeechBlock"
 	},
 
@@ -31,7 +31,9 @@
 		}
 	],
 
-	"description": "LeechBlock is a simple productivity tool designed to block those time-wasting sites that can suck the life out of your working day.",
+	"default_locale": "en",
+
+	"description": "__MSG_extensionDescription__",
 
 	"homepage_url": "https://www.proginosko.com/leechblock/",
 
@@ -46,7 +48,7 @@
 
 	"manifest_version": 2,
 
-	"name": "LeechBlock NG",
+	"name": "__MSG_extensionName__",
 
 	"optional_permissions": [
 		"<all_urls>"

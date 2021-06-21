@@ -88,28 +88,28 @@ function refreshMenus() {
 	// Options
 	browser.menus.create({
 		id: "options",
-		title: "Options",
+		title: browser.i18n.getMessage("optionsMenuItem"),
 		contexts: contexts
 	});
 
 	// Lockdown
 	browser.menus.create({
 		id: "lockdown",
-		title: "Lockdown",
+		title: browser.i18n.getMessage("lockdownMenuItem"),
 		contexts: contexts
 	});
 
 	// Override
 	browser.menus.create({
 		id: "override",
-		title: "Override",
+		title: browser.i18n.getMessage("overrideMenuItem"),
 		contexts: contexts
 	});
 
 	// Statistics
 	browser.menus.create({
 		id: "stats",
-		title: "Statistics",
+		title: browser.i18n.getMessage("statisticsMenuItem"),
 		contexts: contexts
 	});
 
@@ -121,17 +121,15 @@ function refreshMenus() {
 	// Add Site
 	browser.menus.create({
 		id: "addSite",
-		title: "Add Site",
+		title: browser.i18n.getMessage("addSiteMenuItem"),
 		contexts: [context] // never in tools menu
 	});
 
 	// Add Site submenu
 	for (let set = 1; set <= gNumSets; set++) {
-		let title = `Add Site to Block Set ${set}`;
+		let title = browser.i18n.getMessage("addSiteToBlockSetMenuItem");
 		let setName = gOptions[`setName${set}`];
-		if (setName) {
-			title += ` (${setName})`;
-		}
+		title += setName ? ` ${set} (${setName})` : ` ${set}`;
 		browser.menus.create({
 			id: `addSite-${set}`,
 			parentId: "addSite",
@@ -545,7 +543,7 @@ function checkTab(id, isBeforeNav, isRepeat) {
 						gTabs[id].keyword = keyword;
 
 						// Get final URL for block page
-						blockURL = blockURL
+						blockURL = getLocalizedURL(blockURL)
 								.replace(/\$K/g, keyword ? keyword : "")
 								.replace(/\$S/g, set)
 								.replace(/\$U/g, pageURLWithHash);
