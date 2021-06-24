@@ -417,7 +417,8 @@ function retrieveOptions() {
 			// Change 'if(lockScheme)' to 'switch(lockScheme)' if more schemes are added
 			let optionsLocked = false;
 			if (lockScheme) {
-				const fullDay = 24 * 60; // 24 hours in minutes
+				/** 24 hours in minutes */
+				const fullDay = 24 * 60;
 
 				// Get required info
 				let startOffset = Math.max(0, Math.min(fullDay, parseInt(blockOffset))) || 0;
@@ -442,14 +443,15 @@ function retrieveOptions() {
 				}
 
 				// Check 'selected day' proximity
-				let checkTomorrow = ((now / 60) - fullDay + startOffset) > 0;
+				let checkTomorrow = (mins - fullDay + startOffset) > 0;
 				let checkTimeLimit = onSelectedDay || (checkTomorrow && tomorrowSelected);
 
 				// Check time limit proximity
 				let nearTimeLimit = false;
 				if (useTimeLimit && checkTimeLimit) {
-					// Check option-specific time limit
+					// Lock 'X' mins early ==> Reduce time limit by 'X' mins
 					let maxUnlockTime = limitMins - blockOffset;
+					// Positive lock limit: normal behaviour
 					if (maxUnlockTime > 0) {
 						let secondsLeft = maxUnlockTime * 60;
 						if (timedata[2] == periodStart) {
@@ -457,7 +459,8 @@ function retrieveOptions() {
 						}
 						nearTimeLimit = secondsLeft <= 0;
 					} else {
-						// Done for simplicity, technically incorrect in certain situations
+						// Negative lock limit: Complex* interactions with time periods/timedata/day borders
+						// *skipped for simplicity
 						nearTimeLimit = true;
 					}
 				}
