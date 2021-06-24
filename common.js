@@ -346,7 +346,7 @@ function processMinPeriods(minPeriods) {
 	for (let mp of minPeriods) {
 		mp.start = Math.min(mp.start, 1440);
 		mp.end = Math.min(mp.end, 1440);
-	}		
+	}
 
 	// Step 2: Remove any periods without +ve duration
 	for (let i = 0; i < minPeriods.length; i++) {
