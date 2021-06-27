@@ -126,6 +126,11 @@ function applyFilter(name) {
 		"blur (1px)": "blur(1px)",
 		"blur (2px)": "blur(2px)",
 		"blur (4px)": "blur(4px)",
+		"blur (8px)": "blur(8px)",
+		"blur (16px)": "blur(16px)",
+		"blur (32px)": "blur(32px)",
+		"fade (80%)": "opacity(20%)",
+		"fade (90%)": "opacity(10%)",
 		"grayscale": "grayscale(100%)",
 		"invert": "invert(100%)",
 		"sepia": "sepia(100%)"
