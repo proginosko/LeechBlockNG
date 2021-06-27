@@ -468,8 +468,9 @@ function checkTab(id, isBeforeNav, isRepeat) {
 			let days = gOptions[`days${set}`];
 			let blockURL = gOptions[`blockURL${set}`];
 			let applyFilter = gOptions[`applyFilter${set}`];
-			let closeTab = gOptions[`closeTab${set}`];
 			let filterName = gOptions[`filterName${set}`];
+			let filterMute = gOptions[`filterMute${set}`];
+			let closeTab = gOptions[`closeTab${set}`];
 			let activeBlock = gOptions[`activeBlock${set}`];
 			let allowOverride = gOptions[`allowOverride${set}`];
 			let showTimer = gOptions[`showTimer${set}`];
@@ -533,6 +534,11 @@ function checkTab(id, isBeforeNav, isRepeat) {
 					} else if (applyFilter) {
 						gTabs[id].filterSet = set;
 
+						// Mute tab if option selected
+						if (filterMute) {
+							browser.tabs.update(id, { "muted": true });
+						}
+
 						// Send message to tab
 						let message = {
 							type: "filter",
@@ -579,6 +585,11 @@ function checkTab(id, isBeforeNav, isRepeat) {
 			// Clear filter if no longer blocked
 			if (set == gTabs[id].filterSet && (override || !doBlock)) {
 				gTabs[id].filterSet = undefined;
+
+				// Unmute tab if option selected
+				if (filterMute) {
+					browser.tabs.update(id, { "muted": false });
+				}
 
 				// Send message to tab
 				let message = {
