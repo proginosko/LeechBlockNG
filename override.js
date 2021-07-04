@@ -107,8 +107,13 @@ function displayAccessCode(code, asImage) {
 		codeImage.style.display = "";
 		let ctx = codeCanvas.getContext("2d");
 		ctx.font = "normal 14px monospace";
-		codeCanvas.width = ctx.measureText(code.substring(0, 64)).width + 8;
-		codeCanvas.height = (code.length == 128) ? 40 : 24;
+		let width = ctx.measureText(code.substring(0, 64)).width + 8;
+		let height = (code.length == 128) ? 40 : 24;
+		codeCanvas.width = width * devicePixelRatio;
+		codeCanvas.height = height * devicePixelRatio;
+		ctx.scale(devicePixelRatio, devicePixelRatio);
+		codeCanvas.style.width = width + 'px';
+		codeCanvas.style.height = height + 'px';
 		ctx.font = "normal 14px monospace"; // resizing canvas resets font!
 		ctx.fillStyle = "#000";
 		if (code.length == 128) {
