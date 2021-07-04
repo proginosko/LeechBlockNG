@@ -1,3 +1,9 @@
+### Version 1.0.13 (04 Jul 2021)
+* Added option to mute tab with filter.
+* Added more filter options.
+* Improved image resolution for random access code.
+* Fixed issues with countdown timer and warning message.
+
 ### Version 1.0.12 (01 Jun 2021)
 * Minor usability tweaks.
 
