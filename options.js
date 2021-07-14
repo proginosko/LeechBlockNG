@@ -420,47 +420,53 @@ function retrieveOptions() {
 				/** 24 hours in minutes */
 				const fullDay = 24 * 60;
 
-				// Get required info
-				let startOffset = Math.max(0, Math.min(fullDay, parseInt(blockOffset))) || 0;
+				// Setup
+				let earlyStart = Math.max(0, Math.min(fullDay, parseInt(blockOffset))) || 0;
 				let tomorrowSelected = days[(currentDay + 1) % 7];
+				let checkTomorrow = tomorrowSelected && ((mins - fullDay + earlyStart) >= 0);
 
-				// Check time period proximity
+				/** If any minPeriod is active or within range */
 				let nearTimePeriods = false;
+				// Check time period proximity
 				for (let mp of minPeriods) {
+					// Check time periods as normal if today is selected
 					if (onSelectedDay) {
-						if (mins >= (mp.start - startOffset) && mins <= mp.end) {
+						if (mins >= (mp.start - earlyStart) && mins <= mp.end) {
 							nearTimePeriods = true;
 						}
 					}
 
+					// Check across day boundary if tomorrow is selected
 					if (tomorrowSelected) {
-						// Check across day boundary
+						/** 'mins' relative to midnight tomorrow */
 						let shiftedMins = mins - fullDay;
-						if (shiftedMins >= (mp.start - startOffset) && shiftedMins <= mp.end) {
+						// Check tomorrow's time periods
+						if (shiftedMins >= (mp.start - earlyStart) && shiftedMins <= mp.end) {
 							nearTimePeriods = true;
 						}
 					}
 				}
 
-				// Check 'selected day' proximity
-				let checkTomorrow = (mins - fullDay + startOffset) > 0;
-				let checkTimeLimit = onSelectedDay || (checkTomorrow && tomorrowSelected);
+				/** If timelimits need to be checked at all */
+				let checkTimeLimit = onSelectedDay || checkTomorrow;
 
-				// Check time limit proximity
+				/** If a current/upcoming timelimit does not have enough time left */
 				let nearTimeLimit = false;
+				// Check time limit proximity
 				if (useTimeLimit && checkTimeLimit) {
-					// Lock 'X' mins early ==> Reduce time limit by 'X' mins
-					let maxUnlockTime = limitMins - blockOffset;
-					// Positive lock limit: normal behaviour
-					if (maxUnlockTime > 0) {
-						let secondsLeft = maxUnlockTime * 60;
+					/** The amount of the timelimit that can be used before options lock */
+					let lockTimeLimit = limitMins - earlyStart;
+
+					// Positive lock TL: Check only the active time limit period
+					if (lockTimeLimit > 0) {
+						let secondsLeft = lockTimeLimit * 60;
 						if (timedata[2] == periodStart) {
 							secondsLeft = Math.max(0, secondsLeft - timedata[3]);
 						}
 						nearTimeLimit = secondsLeft <= 0;
 					} else {
-						// Negative lock limit: Complex* interactions with time periods/timedata/day borders
-						// *skipped for simplicity
+						// Negative lock TL: Complex interactions with timedata/time periods/day borders
+						//   skipped for simplicity
 						nearTimeLimit = true;
 					}
 				}
