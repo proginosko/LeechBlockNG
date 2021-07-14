@@ -450,9 +450,8 @@ function retrieveOptions() {
 				let nearTimeLimit = false;
 				if (useTimeLimit && checkTimeLimit) {
 					// Lock 'X' mins early ==> Reduce time limit by 'X' mins
-
 					let maxUnlockTime = limitMins - blockOffset;
-					// Time limit > lock offset: normal behaviour
+					// Positive lock limit: normal behaviour
 					if (maxUnlockTime > 0) {
 						let secondsLeft = maxUnlockTime * 60;
 						if (timedata[2] == periodStart) {
@@ -460,62 +459,9 @@ function retrieveOptions() {
 						}
 						nearTimeLimit = secondsLeft <= 0;
 					} else {
-						// Negative lock limit: Complex* interactions between time periods/timedata/day borders
+						// Negative lock limit: Complex* interactions with time periods/timedata/day borders
 						// *skipped for simplicity
-						nearTimeLimit = false;
-						// Possible: Check if future time limit contains time period start
-						//const midnight = new Date(timedate.getTime());
-						//const midStamp = midnight.setHours(0, 0, 0, 0);
-						const intersect = (a, b) => Math.max(0, Math.min(a[1], b[1]) - Math.max(a[0], b[0]));
-						const limitSecs = limitMins * 60;
-						const predictionCutoff = now + (blockOffset * 60);
-						const mps = conjMode ? minPeriods : cleanTimePeriods(ALL_DAY_TIMES);
-
-						for(let startTP = periodStart; !nearTimeLimit && (startTP <= predictionCutoff); startTP = getTimePeriodStart(+startTP + +limitPeriod, limitPeriod, limitOffset)) {
-							const nextTP = getTimePeriodStart(+startTP + +limitPeriod, limitPeriod, limitOffset);
-							const startTime = Math.max(startTP, now); // Don't check the past
-							const endTime = nextTP - 1;
-
-							let thisDay = new Date(startTime * 1000);
-							let dayStart = thisDay.setHours(0, 0, 0, 0) / 1000;
-
-							let usedSeconds = (timedata[2] == periodStart) ? timedata[3] : 0;
-							for(;!nearTimeLimit && (dayStart <= endTime); thisDay.setDate(thisDay.getDate() + 1)) {
-								dayStart = thisDay.setHours(0, 0, 0, 0) / 1000;
-
-								for (const mp of mps) {
-									const adjusted = {
-										start: mp.start * 60 + dayStart,
-										end: mp.end * 60 + dayStart
-									}
-
-
-									const activeDay = days[thisDay.getDay()];
-									if (!activeDay || adjusted.start >= endTime)
-										break;
-
-									const overlap = intersect([adjusted.start, adjusted.end], [startTime, endTime]);
-									// Time periods MUST overlamp with block periods
-									if (overlap > 0) {
-										const totalUsed = usedSeconds + overlap;
-
-										// This MP is where locking could occur
-										if (totalUsed >= limitSecs) {
-											// Calc __WHEN__ lock could activate
-											const engageTime = adjusted.start + Math.max(0, limitSecs - usedSeconds);
-											const lockTime = engageTime - blockOffset * 60;
-											if (now >= lockTime) {
-												nearTimeLimit = true;
-												break;
-											}
-
-										} else {
-											usedSeconds = totalUsed;
-										}
-									}
-								}
-							}
-						}
+						nearTimeLimit = true;
 					}
 				}
 
