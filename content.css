@@ -13,7 +13,9 @@
 	color: #000;
 	border: 1px solid #000;
 	border-radius: 4px;
-	font: normal 12px "Lucida Console", Monaco, monospace !important;
+	font-size: 12px;
+	font-style: normal !important;
+	font-family: "Lucida Console", Monaco, monospace !important;
 	user-select: none;
 	-moz-user-select: none;
 }
