@@ -1,3 +1,7 @@
+### Version 1.1 (19 Sep 2021)
+* Added partial Spanish and Hebrew localization.
+* Fixed issue with timer size.
+
 ### Version 1.0.13 (04 Jul 2021)
 * Added option to mute tab with filter.
 * Added more filter options.
