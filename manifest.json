@@ -12,7 +12,7 @@
 			"16": "icons/leechblock16.png",
 			"32": "icons/leechblock32.png"
 		},
-		"default_popup": "__MSG_localePath__popup.html",
+		"default_popup": "popup.html",
 		"default_title": "LeechBlock"
 	},
 
