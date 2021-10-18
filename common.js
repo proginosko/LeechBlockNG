@@ -13,6 +13,8 @@ const PARSE_URL = /^((([\w-]+):\/*(\w+(?::\w+)?@)?([\w-\.]+)(?::(\d*))?)([^\?#]*
 
 const ABSOLUTE_URL = /^[\w-]+:/;
 
+const INTERNAL_BLOCK_URL = /^(\w+\/)?(blocked|delayed)\.html\?\$S&\$U$/;
+
 const LEECHBLOCK_URL = "https://www.proginosko.com/leechblock/";
 
 const U_WORD_CHAR = "[\\p{L}\\p{N}]";
@@ -296,6 +298,12 @@ function checkPosIntFormat(value) {
 //
 function checkPosNegIntFormat(value) {
 	return (value == "") || /^-?[1-9][0-9]*$/.test(value);
+}
+
+// Check blocking page URL format
+//
+function checkBlockURLFormat(url) {
+	return INTERNAL_BLOCK_URL.test(url) || getParsedURL(url).page;
 }
 
 // Convert times to minute periods

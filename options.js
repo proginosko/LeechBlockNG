@@ -159,8 +159,7 @@ function saveOptions(event) {
 			$("#alertBadSeconds").dialog("open");
 			return false;
 		}
-		if (blockURL != DEFAULT_BLOCK_URL && blockURL != DELAYED_BLOCK_URL
-				&& !getParsedURL(blockURL).page) {
+		if (!checkBlockURLFormat(blockURL)) {
 			$("#tabs").tabs("option", "active", (set - 1));
 			$(`#blockURL${set}`).focus();
 			$("#alertBadBlockURL").dialog("open");
