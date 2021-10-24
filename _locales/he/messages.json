@@ -25,6 +25,6 @@
 
 	"addSiteMenuItem": { "message": "הוספת אתר" },
 
-	"addSiteToBlockSetMenuItem": { "message": "הוספת האתר לקבוצת האתרים החסומים" }
+	"addSiteToBlockSetMenuItem": { "message": "הוספת האתר לקבוצת החסימה" }
 
 }
