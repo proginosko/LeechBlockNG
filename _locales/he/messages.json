@@ -6,25 +6,25 @@
 	},
 
 	"extensionDescription": {
-		"message": "LeechBlock is a simple productivity tool designed to block those time-wasting sites that can suck the life out of your working day.",
+		"message": "‏LeechBlock הוא כלי פשוט לשיפור הפרודקטיביות שמטרתו לחסום את האתרים מסיחי־הדעת שעלולים להסיח את דעתך במהלך יום העבודה שלך.",
 		"description": "Description of the extension."
 	},
 
 	"localePath": {
 		"message": "/he/",
-		"description": "Path to localized files."
+		"description": "הנתיב לקובצי התרגומים."
 	},
 
-	"optionsMenuItem": { "message": "Options" },
+	"optionsMenuItem": { "message": "אפשרויות" },
 
-	"lockdownMenuItem": { "message": "Lockdown" },
+	"lockdownMenuItem": { "message": "חסימת כל האתרים" },
 
-	"overrideMenuItem": { "message": "Override" },
+	"overrideMenuItem": { "message": "עקיפה" },
 
-	"statisticsMenuItem": { "message": "Statistics" },
+	"statisticsMenuItem": { "message": "סטטיסטיקה" },
 
-	"addSiteMenuItem": { "message": "Add Site" },
+	"addSiteMenuItem": { "message": "הוספת אתר" },
 
-	"addSiteToBlockSetMenuItem": { "message": "Add Site to Block Set" }
+	"addSiteToBlockSetMenuItem": { "message": "הוספת האתר לקבוצת האתרים החסומים" }
 
 }
