@@ -1,3 +1,6 @@
+### Version 1.1.1 (30 Oct 2021)
+* Minor code tweaks.
+
 ### Version 1.1 (19 Sep 2021)
 * Added partial Spanish and Hebrew localization.
 * Fixed issue with timer size.
