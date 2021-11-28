@@ -52,6 +52,7 @@ function initForm(numSets) {
 	// Set up JQuery UI widgets
 	$("#tabs").tabs({ activate: onActivate });
 	for (let set = 1; set <= gNumSets; set++) {
+		$(`#setName${set}`).change(function (e) { updateBlockSetName(set, $(`#setName${set}`).val()); });
 		$(`#allDay${set}`).click(function (e) { $(`#times${set}`).val(ALL_DAY_TIMES); });
 		$(`#defaultPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DEFAULT_BLOCK_URL); });
 		$(`#delayingPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DELAYED_BLOCK_URL); });
@@ -111,6 +112,12 @@ function initForm(numSets) {
 		let index = ui.newTab.index();
 		gTabIndex = (index < gNumSets) ? index : (index - gNumSets - 2);
 	}
+}
+
+// Update block set name on tab
+//
+function updateBlockSetName(set, name) {
+	getElement(`blockSetName${set}`).innerText = name ? name : `Block Set ${set}`;
 }
 
 // Save options to local storage (returns true if success)
@@ -461,10 +468,7 @@ function retrieveOptions() {
 			}
 
 			// Apply custom set name to tab (if specified)
-			let setName = options[`setName${set}`];
-			if (setName) {
-				getElement(`blockSetName${set}`).innerText = setName;
-			}
+			updateBlockSetName(set, options[`setName${set}`]);
 		}
 
 		// General options
@@ -674,10 +678,7 @@ function applyImportOptions(options) {
 		}
 
 		// Apply custom set name to tab (if specified)
-		let setName = options[`setName${set}`];
-		if (setName) {
-			getElement(`blockSetName${set}`).innerText = setName;
-		}
+		updateBlockSetName(set, options[`setName${set}`]);
 	}
 
 	// General options
@@ -832,7 +833,7 @@ function importOptionsSync(event) {
 //
 function resetSetOptions(set) {
 	// Restore default set name to tab
-	getElement(`blockSetName${set}`).innerText = `Block Set ${set}`;
+	updateBlockSetName(set, "");
 
 	// Restore per-set options
 	for (let name in PER_SET_OPTIONS) {
