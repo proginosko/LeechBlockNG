@@ -875,7 +875,7 @@ function updateIcon() {
 
 // Create info for blocking/delaying page
 //
-function createBlockInfo(id, url) {
+function createBlockInfo(id, url, phrase) {
 	// Get theme
 	let theme = gOptions["theme"];
 
@@ -895,6 +895,7 @@ function createBlockInfo(id, url) {
 	if (parsedURL.hash != null) {
 		blockedURL += "#" + parsedURL.hash;
 	}
+	let blockedPhrase = phrase.trim();
 
 	// Get keyword match (if applicable)
 	let keywordMatch = gOptions[`showKeyword${blockedSet}`] ? gTabs[id].keyword : null;
@@ -927,6 +928,7 @@ function createBlockInfo(id, url) {
 		blockedSet: blockedSet,
 		blockedSetName: blockedSetName,
 		blockedURL: blockedURL,
+		blockedPhrase : blockedPhrase,
 		keywordMatch: keywordMatch,
 		unblockTime: unblockTime,
 		delaySecs: delaySecs,

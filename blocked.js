@@ -15,6 +15,13 @@ function processBlockInfo(info) {
 		}
 	}
 
+	let blockedPhrase = document.getElementById("lbBlockedPhrase");
+	if (info.blockedPhrase && blockedPhrase) {
+		if (info.blockedPhrase.length > 0) {
+			blockedPhrase.innerText = info.blockedPhrase;
+		}
+	}
+
 	let blockedURL = document.getElementById("lbBlockedURL");
 	if (info.blockedURL && blockedURL) {
 		if (info.blockedURL.length > 60) {
