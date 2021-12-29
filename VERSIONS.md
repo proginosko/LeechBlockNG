@@ -1,3 +1,7 @@
+### Version 1.2 (28 Dec 2021)
+* Added option to choose whether delay countdown is canceled when delaying page loses focus.
+* Minor code tweaks.
+
 ### Version 1.1.1 (30 Oct 2021)
 * Minor code tweaks.
 
