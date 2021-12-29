@@ -916,8 +916,9 @@ function createBlockInfo(id, url) {
 		}
 	}
 
-	// Get delaying time for block set
+	// Get delaying info for block set
 	let delaySecs = gOptions[`delaySecs${blockedSet}`];
+	let delayCancel = gOptions[`delayCancel${blockedSet}`];
 
 	// Get reloading time (if specified)
 	let reloadSecs = gOptions[`reloadSecs${blockedSet}`];
@@ -930,6 +931,7 @@ function createBlockInfo(id, url) {
 		keywordMatch: keywordMatch,
 		unblockTime: unblockTime,
 		delaySecs: delaySecs,
+		delayCancel: delayCancel,
 		reloadSecs: reloadSecs
 	};
 }
