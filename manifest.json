@@ -64,6 +64,7 @@
 		"menus",
 		"storage",
 		"tabs",
+		"unlimitedStorage",
 		"webNavigation"
 	],
 
