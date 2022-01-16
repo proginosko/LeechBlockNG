@@ -1113,26 +1113,20 @@ function cancelLockdown(set) {
 
 // Apply override
 //
-function applyOverride() {
-	//log("applyOverride");
+function applyOverride(endTime) {
+	//log("applyOverride: " + endTime);
 
 	if (!gGotOptions) {
 		return;
 	}
 
-	let overrideMins = gOptions["orm"];
-	if (overrideMins) {
-		// Calculate end time
-		let clockOffset = gOptions["clockOffset"];
-		let now = Math.floor(Date.now() / 1000) + (clockOffset * 60);
-		let overrideEndTime = now + (overrideMins * 60);
-
+	if (endTime) {
 		// Update option
-		gOptions["oret"] = overrideEndTime;
+		gOptions["oret"] = endTime;
 
-		// Save updated option to local storage
+		// Save updated option to storage
 		let options = {};
-		options["oret"] = overrideEndTime;
+		options["oret"] = endTime;
 		gStorage.set(options).catch(
 			function (error) { warn("Cannot set options: " + error); }
 		);
@@ -1217,7 +1211,7 @@ function addSiteToSet(url, set) {
 
 		createRegExps();
 
-		// Save updated options to local storage
+		// Save updated options to storage
 		let options = {};
 		options[`sites${set}`] = sites;
 		options[`blockRE${set}`] = regexps.block;
@@ -1290,7 +1284,7 @@ function handleMessage(message, sender, sendResponse) {
 
 		case "override":
 			// Override requested
-			applyOverride();
+			applyOverride(message.endTime);
 			break;
 
 		case "referrer":

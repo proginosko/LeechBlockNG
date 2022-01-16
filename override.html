@@ -16,12 +16,32 @@
 
 	<body>
 
+		<div id="form-container">
+
+			<form id="form" style="display: none;" action="javascript: null;">
+
+				<fieldset class="ui-widget ui-widget-content">
+					<legend>LeechBlock Override</legend>
+					<p>
+						Allow blocking to be suspended for <input id="mins" type="text" size="2"> minute(s)
+					</p>
+				</fieldset>
+
+				<p style="text-align: center;">
+					<button id="activate" type="button">Activate Override</button>
+					<button id="cancel" type="button">Cancel</button>
+				</p>
+
+			</form>
+
+		</div>
+
 		<div id="alerts" style="display: none;">
 			<div id="alertRetrieveError" title="LeechBlock Override">
 				<p><strong>Error:</strong> Unable to retrieve options from browser storage.</p>
 			</div>
-			<div id="alertNoOverride" title="LeechBlock Override">
-				<p>Override unavailable. No override period has been set in the options.</p>
+			<div id="alertNoDuration" title="LeechBlock Override">
+				<p>Please enter a non-zero duration for the override.</p>
 			</div>
 			<div id="alertOverrideActivated" title="LeechBlock Override">
 				<p>Override activated. Blocking will be suspended until <strong><span id="alertOverrideEndTime"></span></strong>.</p>
