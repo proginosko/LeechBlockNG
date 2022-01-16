@@ -25,6 +25,10 @@
 
 	"addSiteMenuItem": { "message": "Add Site" },
 
-	"addSiteToBlockSetMenuItem": { "message": "Add Site to Block Set" }
+	"addSiteToBlockSetMenuItem": { "message": "Add Site to Block Set" },
+
+	"addPageMenuItem": { "message": "Add Page" },
+
+	"addPageToBlockSetMenuItem": { "message": "Add Page to Block Set" }
 
 }

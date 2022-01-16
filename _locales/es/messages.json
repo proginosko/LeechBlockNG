@@ -25,6 +25,10 @@
 
 	"addSiteMenuItem": { "message": "Añadir Sitio" },
 
-	"addSiteToBlockSetMenuItem": { "message": "Añadir Sitio a Set de Bloqueo" }
+	"addSiteToBlockSetMenuItem": { "message": "Añadir Sitio a Set de Bloqueo" },
+
+	"addPageMenuItem": { "message": "Añadir Página" },
+
+	"addPageToBlockSetMenuItem": { "message": "Añadir Página a Set de Bloqueo" }
 
 }

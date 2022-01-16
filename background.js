@@ -137,6 +137,26 @@ function refreshMenus() {
 			contexts: contexts
 		});
 	}
+
+	// Add Page
+	browser.menus.create({
+		id: "addPage",
+		title: browser.i18n.getMessage("addPageMenuItem"),
+		contexts: [context] // never in tools menu
+	});
+
+	// Add Page submenu
+	for (let set = 1; set <= gNumSets; set++) {
+		let title = browser.i18n.getMessage("addPageToBlockSetMenuItem");
+		let setName = gOptions[`setName${set}`];
+		title += setName ? ` ${set} (${setName})` : ` ${set}`;
+		browser.menus.create({
+			id: `addPage-${set}`,
+			parentId: "addPage",
+			title: title,
+			contexts: contexts
+		});
+	}
 }
 
 // Retrieve options from storage
@@ -1178,8 +1198,8 @@ function openDelayedPage(id, url, set) {
 
 // Add site to block set
 //
-function addSiteToSet(url, set) {
-	//log("addSiteToSet: " + url + " " + set);
+function addSiteToSet(url, set, includePath) {
+	//log("addSiteToSet: " + url + " " + set + " " + includePath);
 
 	if (!gGotOptions || set < 1 || set > gNumSets || !/^http/i.test(url)) {
 		return;
@@ -1193,6 +1213,9 @@ function addSiteToSet(url, set) {
 
 	// Add site if not already included
 	let site = parsedURL.host.replace(/^www\./, "");
+	if (includePath) {
+		site += parsedURL.path; // include full path to page
+	}
 	let patterns = sites.split(/\s+/);
 	if (patterns.indexOf(site) < 0) {
 		// Get sorted list of sites including new one
@@ -1237,7 +1260,9 @@ function handleMenuClick(info, tab) {
 	} else if (id == "stats") {
 		openExtensionPage("stats.html");
 	} else if (id.startsWith("addSite-")) {
-		addSiteToSet(info.pageUrl, id.substr(8));
+		addSiteToSet(info.pageUrl, id.substr(8), false);
+	} else if (id.startsWith("addPage-")) {
+		addSiteToSet(info.pageUrl, id.substr(8), true);
 	}
 }
 
