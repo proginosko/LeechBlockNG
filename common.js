@@ -199,7 +199,8 @@ function getParsedURL(url) {
 // Clean list of sites
 //
 function cleanSites(sites) {
-	sites = sites.replace(/\s+/g, " ").replace(/(^ +)|( +$)|(\w+:\/+)/g, "");
+	sites = sites.replace(/\s+/g, " ").replace(/(^ +)|( +$)/g, ""); // remove extra whitespace
+	sites = sites.replace(/^\w+:\/+/, "").replace(/ \w+:\/+/g, " "); // remove protocols
 	sites = sites.split(" ").sort().join(" "); // sort alphabetically
 	return sites;
 }
