@@ -1,3 +1,6 @@
+### Version 1.3.1 (13 Feb 2022)
+* Fix security issue (updated jQuery libraries).
+
 ### Version 1.3 (16 Jan 2022)
 * Added "Move Set" buttons for easy reordering of block sets.
 * Added "Add Page" menu (like "Add Site" but includes full path).
