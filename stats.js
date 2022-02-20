@@ -51,6 +51,7 @@ function refreshPage() {
 
 	function onGot(options) {
 		cleanOptions(options);
+		cleanTimeData(options);
 
 		// Initialize form
 		initForm(options["numSets"]);
@@ -68,31 +69,37 @@ function refreshPage() {
 			let limitPeriod = options[`limitPeriod${set}`];
 			let limitOffset = options[`limitOffset${set}`];
 			let periodStart = getTimePeriodStart(now, limitPeriod, limitOffset);
+			let rollover = options[`rollover${set}`];
+
+			updateRolloverTime(timedata, limitMins, limitPeriod, periodStart);
 
 			if (setName) {
 				getElement(`blockSetName${set}`).innerText = setName;
 			}
 
-			if (Array.isArray(timedata) && timedata.length == 5) {
-				let fs = getFormattedStats(now, timedata);
-				getElement(`startTime${set}`).innerText = fs.startTime;
-				getElement(`totalTime${set}`).innerText = fs.totalTime;
-				getElement(`perWeekTime${set}`).innerText = fs.perWeekTime;
-				getElement(`perDayTime${set}`).innerText = fs.perDayTime;
+			let fs = getFormattedStats(now, timedata);
+			getElement(`startTime${set}`).innerText = fs.startTime;
+			getElement(`totalTime${set}`).innerText = fs.totalTime;
+			getElement(`perWeekTime${set}`).innerText = fs.perWeekTime;
+			getElement(`perDayTime${set}`).innerText = fs.perDayTime;
 
-				if (limitMins && limitPeriod) {
-					// Calculate total seconds left in this time period
-					let secsLeft = (timedata[2] == periodStart)
-							? Math.max(0, (limitMins * 60) - timedata[3])
-							: (limitMins * 60);
-					let timeLeft = formatTime(secsLeft);
-					getElement(`timeLeft${set}`).innerText = timeLeft;
+			if (limitMins && limitPeriod) {
+				// Calculate total seconds left in this time period
+				let secsRollover = rollover ? timedata[5] : 0;
+				let secsLeft = (timedata[2] == periodStart)
+						? Math.max(0, secsRollover + (limitMins * 60) - timedata[3])
+						: secsRollover + (limitMins * 60);
+				let timeLeft = formatTime(secsLeft);
+				getElement(`timeLeft${set}`).innerText = timeLeft;
+				if (rollover) {
+					let rolloverTime = formatTime(secsRollover);
+					getElement(`rolloverTime${set}`).innerText = rolloverTime;
 				}
+			}
 
-				if (timedata[4] > now) {
-					let ldEndTime = new Date(timedata[4] * 1000).toLocaleString();
-					getElement(`ldEndTime${set}`).innerText = ldEndTime;
-				}
+			if (timedata[4] > now) {
+				let ldEndTime = new Date(timedata[4] * 1000).toLocaleString();
+				getElement(`ldEndTime${set}`).innerText = ldEndTime;
 			}
 		}
 
