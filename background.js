@@ -6,6 +6,7 @@ const TICK_TIME = 1000; // update every second
 
 const BLOCKABLE_URL = /^(http|file|about)/i;
 const CLOCKABLE_URL = /^(http|file)/i;
+const EXTENSION_URL = browser.runtime.getURL("");
 
 function log(message) { console.log("[LBNG] " + message); }
 function warn(message) { console.warn("[LBNG] " + message); }
@@ -19,6 +20,7 @@ var gTabs = [];
 var gSetCounted = [];
 var gSavedTimeData = [];
 var gRegExps = [];
+var gPrevActiveTabId = 0;
 var gFocusWindowId = 0;
 var gAllFocused = false;
 var gOverrideIcon = false;
@@ -1369,6 +1371,8 @@ function handleTabActivated(activeInfo) {
 	let tabId = activeInfo.tabId;
 	//log("handleTabActivated: " + tabId);
 
+	gPrevActiveTabId = activeInfo.previousTabId;
+
 	initTab(tabId);
 
 	if (!gGotOptions) {
@@ -1395,6 +1399,11 @@ function handleTabRemoved(tabId, removeInfo) {
 	}
 
 	clockPageTime(tabId, false, false);
+
+	// If extension page closed, activate previously active tab
+	if (gTabs[tabId] && gTabs[tabId].url.startsWith(EXTENSION_URL)) {
+		browser.tabs.update(gPrevActiveTabId, { active: true });
+	}
 }
 
 function handleBeforeNavigate(navDetails) {
