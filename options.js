@@ -419,6 +419,9 @@ function retrieveOptions() {
 
 		// Check whether access to options should be prevented
 		for (let set = 1; set <= gNumSets; set++) {
+			// Do nothing if set is disabled
+			if (options[`disable${set}`]) continue;
+
 			// Get options
 			let timedata = options[`timedata${set}`];
 			let times = options[`times${set}`];

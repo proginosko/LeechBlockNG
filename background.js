@@ -441,6 +441,9 @@ function checkTab(id, isBeforeNav, isRepeat) {
 	gTabs[id].showTimer = false;
 
 	for (let set = 1; set <= gNumSets; set++) {
+		// Do nothing if set is disabled
+		if (gOptions[`disable${set}`]) continue;
+
 		if (allowHost && allowPath && allowSet == set) {
 			// Allow delayed site/page
 			continue;

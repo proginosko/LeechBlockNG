@@ -51,6 +51,7 @@ const PER_SET_OPTIONS = {
 	prevGenOpts: { type: "boolean", def: false, id: "prevGenOpts" },
 	prevAddons: { type: "boolean", def: false, id: "prevAddons" },
 	prevSupport: { type: "boolean", def: false, id: "prevSupport" },
+	disable: { type: "boolean", def: false, id: "disable" },
 	showTimer: { type: "boolean", def: true, id: "showTimer" },
 	allowRefers: { type: "boolean", def: false, id: "allowRefers" },
 	allowKeywords: { type: "boolean", def: false, id: "allowKeywords" },
