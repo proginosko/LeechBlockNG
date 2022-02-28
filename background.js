@@ -4,7 +4,7 @@
 
 const TICK_TIME = 1000; // update every second
 
-const BLOCKABLE_URL = /^(http|file|about)/i;
+const BLOCKABLE_URL = /^(http|file|about|moz-extension)/i;
 const CLOCKABLE_URL = /^(http|file)/i;
 const EXTENSION_URL = browser.runtime.getURL("");
 
