@@ -48,6 +48,8 @@ const PER_SET_OPTIONS = {
 	reloadSecs: { type: "string", def: "", id: "reloadSecs" },
 	allowOverride: { type: "boolean", def: false, id: "allowOverride" },
 	prevOpts: { type: "boolean", def: false, id: "prevOpts" },
+	prevOffToggle: { type: "boolean", def: false, id: "prevOffToggle"},
+	prevOffset: { type: "string", def: "", id: "prevOffset"},
 	prevGenOpts: { type: "boolean", def: false, id: "prevGenOpts" },
 	prevAddons: { type: "boolean", def: false, id: "prevAddons" },
 	prevSupport: { type: "boolean", def: false, id: "prevSupport" },
@@ -330,20 +332,35 @@ function getMinPeriods(times) {
 	return minPeriods;
 }
 
-// Clean time periods
+// Convert minute periods to a string
 //
-function cleanTimePeriods(times) {
-	// Convert to minute periods
-	let minPeriods = getMinPeriods(times);
-	if (minPeriods.length == 0) {
-		return ""; // nothing to do
+function minPeriodsToString(minPeriods) {
+	// Convert back to string list of time periods
+	let cleanTimes = [];
+	for (let mp of minPeriods) {
+		let h1 = Math.floor(mp.start / 60);
+		let m1 = (mp.start % 60);
+		let h2 = Math.floor(mp.end / 60);
+		let m2 = (mp.end % 60);
+		let period =
+			((h1 < 10) ? "0" : "") + h1 +
+			((m1 < 10) ? "0" : "") + m1 +
+			"-" +
+			((h2 < 10) ? "0" : "") + h2 +
+			((m2 < 10) ? "0" : "") + m2;
+		cleanTimes.push(period);
 	}
+	return cleanTimes.join(",");
+}
 
+// Trim, merge and sort minute periods
+//
+function processMinPeriods(minPeriods) {
 	// Step 1: Fix any times > 2400
 	for (let mp of minPeriods) {
 		mp.start = Math.min(mp.start, 1440);
 		mp.end = Math.min(mp.end, 1440);
-	}		
+	}
 
 	// Step 2: Remove any periods without +ve duration
 	for (let i = 0; i < minPeriods.length; i++) {
@@ -367,22 +384,21 @@ function cleanTimePeriods(times) {
 		}
 	}
 
-	// Convert back to string list of time periods
-	let cleanTimes = [];
-	for (let mp of minPeriods) {
-		let h1 = Math.floor(mp.start / 60);
-		let m1 = (mp.start % 60);
-		let h2 = Math.floor(mp.end / 60);
-		let m2 = (mp.end % 60);
-		let period =
-				((h1 < 10) ? "0" : "") + h1 +
-				((m1 < 10) ? "0" : "") + m1 +
-				"-" +
-				((h2 < 10) ? "0" : "") + h2 +
-				((m2 < 10) ? "0" : "") + m2;
-		cleanTimes.push(period);
+	return minPeriods;
+}
+
+// Clean time periods
+//
+function cleanTimePeriods(times) {
+	// Convert to minute periods
+	let minPeriods = getMinPeriods(times);
+	if (minPeriods.length == 0) {
+		return ""; // nothing to do
 	}
-	return cleanTimes.join(",");
+
+	const cleanPeriods = processMinPeriods(minPeriods);
+
+	return minPeriodsToString(cleanPeriods);
 }
 
 // Calculate start of time period from current time and time limit period

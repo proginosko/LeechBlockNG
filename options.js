@@ -164,6 +164,7 @@ function saveOptions(event) {
 		let delaySecs = $(`#delaySecs${set}`).val();
 		let reloadSecs = $(`#reloadSecs${set}`).val();
 		let blockURL = $(`#blockURL${set}`).val();
+		let optBlockOffset = $(`#prevOffset${set}`).val();
 
 		// Check field values
 		if (!checkTimePeriodsFormat(times)) {
@@ -200,6 +201,12 @@ function saveOptions(event) {
 			$("#tabs").tabs("option", "active", (set - 1));
 			$(`#blockURL${set}`).focus();
 			$("#alertBadBlockURL").dialog("open");
+			return false;
+		}
+		if (!checkPosIntFormat(optBlockOffset)) {
+			$("#tabs").tabs("option", "active", (set - 1));
+			$(`#prevOffset${set}`).focus();
+			$("#alertBadSeconds").dialog("open");
 			return false;
 		}
 	}
@@ -425,44 +432,116 @@ function retrieveOptions() {
 			// Get options
 			let timedata = options[`timedata${set}`];
 			let times = options[`times${set}`];
-			let minPeriods = getMinPeriods(times);
+			let minPeriods = processMinPeriods(getMinPeriods(times));
 			let limitMins = options[`limitMins${set}`];
 			let limitPeriod = options[`limitPeriod${set}`];
 			let limitOffset = options[`limitOffset${set}`];
 			let periodStart = getTimePeriodStart(now, limitPeriod, limitOffset);
 			let conjMode = options[`conjMode${set}`];
 			let days = options[`days${set}`];
+			let blockOffToggle = options[`prevOffToggle${set}`];
+			let blockOffset = options[`prevOffset${set}`];
 
 			// Check day
-			let onSelectedDay = days[timedate.getDay()];
+			let currentDay = timedate.getDay();
+			let onSelectedDay = days[currentDay];
 
-			// Check time periods
-			let withinTimePeriods = false;
-			if (onSelectedDay && times) {
-				// Check each time period in turn
+			// Check inputs
+			let useBlockTimes = times;
+			let useTimeLimit = limitMins && limitPeriod && ((limitMins * 60) < limitPeriod);
+
+			// Check option lock scheme
+			let lockScheme = blockOffToggle && blockOffset;
+
+			// Change 'if(lockScheme)' to 'switch(lockScheme)' if more schemes are added
+			let optionsLocked = false;
+			if (lockScheme) {
+				/** 24 hours in minutes */
+				const fullDay = 24 * 60;
+
+				// Setup
+				let earlyStart = Math.max(0, Math.min(fullDay, parseInt(blockOffset))) || 0;
+				let tomorrowSelected = days[(currentDay + 1) % 7];
+				let checkTomorrow = tomorrowSelected && ((mins - fullDay + earlyStart) >= 0);
+
+				/** If any minPeriod is active or within range */
+				let nearTimePeriods = false;
+				// Check time period proximity
 				for (let mp of minPeriods) {
-					if (mins >= mp.start && mins < mp.end) {
-						withinTimePeriods = true;
+					// Check time periods as normal if today is selected
+					if (onSelectedDay) {
+						if (mins >= (mp.start - earlyStart) && mins <= mp.end) {
+							nearTimePeriods = true;
+						}
+					}
+
+					// Check across day boundary if tomorrow is selected
+					if (tomorrowSelected) {
+						/** 'mins' relative to midnight tomorrow */
+						let shiftedMins = mins - fullDay;
+						// Check tomorrow's time periods
+						if (shiftedMins >= (mp.start - earlyStart) && shiftedMins <= mp.end) {
+							nearTimePeriods = true;
+						}
 					}
 				}
-			}
 
-			// Check time limit
-			let afterTimeLimit = false;
-			if (onSelectedDay && limitMins && limitPeriod) {
-				// Check time period and time limit
-				if (timedata[2] == periodStart && timedata[3] >= (limitMins * 60)) {
-					afterTimeLimit = true;
+				/** If timelimits need to be checked at all */
+				let checkTimeLimit = onSelectedDay || checkTomorrow;
+
+				/** If a current/upcoming timelimit does not have enough time left */
+				let nearTimeLimit = false;
+				// Check time limit proximity
+				if (useTimeLimit && checkTimeLimit) {
+					/** The amount of the timelimit that can be used before options lock */
+					let lockTimeLimit = limitMins - earlyStart;
+
+					// Positive lock TL: Check only the active time limit period
+					if (lockTimeLimit > 0) {
+						let secondsLeft = lockTimeLimit * 60;
+						if (timedata[2] == periodStart) {
+							secondsLeft = Math.max(0, secondsLeft - timedata[3]);
+						}
+						nearTimeLimit = secondsLeft <= 0;
+					} else {
+						// Negative lock TL: Complex interactions with timedata/time periods/day borders
+						//   skipped for simplicity
+						nearTimeLimit = true;
+					}
 				}
+
+				optionsLocked = (!conjMode && (nearTimePeriods || nearTimeLimit)) ||
+					(conjMode && (nearTimePeriods && nearTimeLimit));
+			} else {
+				// Check time periods
+				let withinTimePeriods = false;
+				if (useBlockTimes && onSelectedDay) {
+					// Check each time period in turn
+					for (let mp of minPeriods) {
+						if (mins >= mp.start && mins < mp.end) {
+							withinTimePeriods = true;
+						}
+					}
+				}
+
+				// Check time limit
+				let afterTimeLimit = false;
+				if (useTimeLimit && onSelectedDay) {
+					// Check time period and time limit
+					if (timedata[2] == periodStart && timedata[3] >= (limitMins * 60)) {
+						afterTimeLimit = true;
+					}
+				}
+
+				optionsLocked = (!conjMode && (withinTimePeriods || afterTimeLimit))
+					|| (conjMode && (withinTimePeriods && afterTimeLimit));
 			}
 
 			// Check lockdown condition
 			let lockdown = (timedata[4] > now);
 
 			// Disable options if specified block conditions are fulfilled
-			if (lockdown
-					|| (!conjMode && (withinTimePeriods || afterTimeLimit))
-					|| (conjMode && (withinTimePeriods && afterTimeLimit))) {
+			if (lockdown || optionsLocked) {
 				if (options[`prevOpts${set}`]) {
 					gNumSetsMin = set;
 					// Disable options for this set
