@@ -37,7 +37,8 @@ function initTab(id) {
 			allowedPath: null,
 			allowedSet: 0,
 			referrer: "",
-			url: "about:blank"
+			url: "about:blank",
+			loaded: false
 		};
 		return true;
 	}
@@ -362,10 +363,12 @@ function processTabs(active) {
 			clockPageTime(tab.id, false, false);
 			clockPageTime(tab.id, true, focus);
 
-			let blocked = checkTab(tab.id, false, true);
-
-			if (!blocked && tab.active) {
-				updateTimer(tab.id);
+			if (gTabs[tab.id].loaded) {
+				let blocked = checkTab(tab.id, false, true);
+	
+				if (!blocked && tab.active) {
+					updateTimer(tab.id);
+				}
 			}
 		}
 	}
@@ -1328,6 +1331,11 @@ function handleMessage(message, sender, sendResponse) {
 			sendResponse();
 			break;
 
+		case "loaded":
+			// Register that content script has been loaded
+			gTabs[sender.tab.id].loaded = true;
+			break;
+
 	}
 }
 
@@ -1422,6 +1430,7 @@ function handleBeforeNavigate(navDetails) {
 	clockPageTime(tabId, false, false);
 
 	if (navDetails.frameId == 0) {
+		gTabs[tabId].loaded = false
 		gTabs[tabId].url = navDetails.url;
 
 		let blocked = checkTab(tabId, true, false);
