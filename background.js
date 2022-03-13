@@ -15,6 +15,7 @@ var gStorage = browser.storage.local;
 var gIsAndroid = false;
 var gGotOptions = false;
 var gOptions = {};
+var gDiagMode = false;
 var gNumSets;
 var gTabs = [];
 var gSetCounted = [];
@@ -187,6 +188,8 @@ function retrieveOptions(update) {
 
 		cleanOptions(gOptions);
 		cleanTimeData(gOptions);
+
+		gDiagMode = gOptions["diagMode"];
 
 		gNumSets = +gOptions["numSets"];
 
@@ -553,6 +556,35 @@ function checkTab(id, isBeforeNav, isRepeat) {
 			if (!override && doBlock && (!isRepeat || activeBlock)) {
 
 				function applyBlock(keyword) {
+					if (gDiagMode) {
+						log("### BLOCK APPLIED ###");
+						log(`id: ${id}`);
+						log(`isBeforeNav: ${isBeforeNav}`);
+						log(`isRepeat: ${isRepeat}`);
+						log(`timedate: ${timedate}`);
+						log(`set: ${set}`);
+						log(`pageURL: ${pageURL}`);
+						log(`referrer: ${referrer}`);
+						log(`lockdown: ${lockdown}`);
+						log(`withinTimePeriods: ${withinTimePeriods}`);
+						log(`afterTimeLimit: ${afterTimeLimit}`);
+						log(`blockURL: ${blockURL}`);
+						if (blockRE) {
+							let result = blockRE.exec(pageURL);
+							if (result) {
+								log(`blockRE.exec: ${result[0]}`);
+							}
+						}
+						if (referRE) {
+							let result = referRE.exec(referrer);
+							if (result) {
+								log(`referRE.exec: ${result[0]}`);
+							}
+						}
+						if (keyword) {
+							log(`keyword: ${keyword}`);
+						}
+					}
 					if (closeTab) {
 						// Close tab
 						browser.tabs.remove(id);
