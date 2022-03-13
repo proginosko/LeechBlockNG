@@ -402,8 +402,9 @@ function checkTab(id, isBeforeNav, isRepeat) {
 		return false; // not blocked
 	}
 
-	// Quick exit for LeechBlock website (documentation should be always available)
-	if (url.startsWith(LEECHBLOCK_URL)) {
+	// Quick exit for LeechBlock extension/website
+	// (documentation should always be available)
+	if (url.startsWith(EXTENSION_URL) || url.startsWith(LEECHBLOCK_URL)) {
 		return false; // not blocked
 	}
 
