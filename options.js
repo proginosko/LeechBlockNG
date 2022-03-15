@@ -106,6 +106,7 @@ function initForm(numSets) {
 	$("#importOptions").click(importOptions);
 	$("#exportOptionsSync").click(exportOptionsSync);
 	$("#importOptionsSync").click(importOptionsSync);
+	$("#openDiagnostics").click(openDiagnostics);
 	$("#saveOptions").button();
 	$("#saveOptions").click({ closeOptions: false }, saveOptions);
 	$("#saveOptionsClose").button();
@@ -860,6 +861,14 @@ function importOptionsSync(event) {
 			$("#alertImportSyncError").dialog("open");
 		}
 	}
+}
+
+// Open diagnostics page
+//
+function openDiagnostics() {
+	let fullURL = browser.runtime.getURL("diagnostics.html");
+
+	browser.tabs.create({ url: fullURL });
 }
 
 // Swap options for two block sets

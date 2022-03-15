@@ -571,15 +571,15 @@ function checkTab(id, isBeforeNav, isRepeat) {
 						log(`afterTimeLimit: ${afterTimeLimit}`);
 						log(`blockURL: ${blockURL}`);
 						if (blockRE) {
-							let result = blockRE.exec(pageURL);
-							if (result) {
-								log(`blockRE.exec: ${result[0]}`);
+							let res = blockRE.exec(pageURL);
+							if (res) {
+								log(`blockRE.exec: ${res[0]}`);
 							}
 						}
 						if (referRE) {
-							let result = referRE.exec(referrer);
-							if (result) {
-								log(`referRE.exec: ${result[0]}`);
+							let res = referRE.exec(referrer);
+							if (res) {
+								log(`referRE.exec: ${res[0]}`);
 							}
 						}
 						if (keyword) {
