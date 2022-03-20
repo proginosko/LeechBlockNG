@@ -363,12 +363,20 @@
 								<div>
 									<select id="overrideAccess">
 										<option value="0">Don't require the user to enter any password or access code</option>
-										<option value="1">Require the user to enter the access control password</option>
+										<option value="1">Require the user to enter the access control password (see above)</option>
 										<option value="2">Require the user to enter a random 32-character access code</option>
 										<option value="3">Require the user to enter a random 64-character access code</option>
 										<option value="4">Require the user to enter a random 128-character access code</option>
+										<option value="9">Require the user to enter a separate override password (see below)</option>
 									</select>
 								</div>
+							</p>
+							<p>
+								<label>Override password:</label>
+								<input id="overridePassword" type="password" size="20">
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<input id="overridePasswordShow" type="checkbox">
+								<label for="overridePasswordShow">Show password</label>
 							</p>
 							<p>
 								<input id="overrideConfirm" type="checkbox">

@@ -98,6 +98,7 @@ function initForm(numSets) {
 		});
 		$(`#advOpts${set}`).css("display", "none");
 	}
+	$("#overridePasswordShow").change(overridePasswordShow);
 	$("#theme").change(function (e) { setTheme($("#theme").val()); });
 	$("#clockOffset").click(showClockOffsetTime);
 	$("#clockOffset").keyup(showClockOffsetTime);
@@ -615,6 +616,14 @@ function displayAccessCode(code, asImage) {
 			codeText.appendChild(document.createTextNode(code));
 		}
 	}
+}
+
+// Show/hide override password
+//
+function overridePasswordShow() {
+	let input = getElement("overridePassword");
+	let checkbox = getElement("overridePasswordShow");
+	input.type = checkbox.checked ? "text" : "password";
 }
 
 // Show adjusted time based on clock offset

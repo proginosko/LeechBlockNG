@@ -74,8 +74,9 @@ const GENERAL_OPTIONS = {
 	timerSize: { type: "string", def: "1", id: "timerSize" }, // default: medium
 	timerLocation: { type: "string", def: "0", id: "timerLocation" }, // default: top left
 	timerBadge: { type: "boolean", def: true, id: "timerBadge" }, // default: enabled
-	orm: { type: "string", def: "", id: "overrideMins" }, // default: no override
+	orm: { type: "string", def: "", id: "overrideMins" }, // default: no prespecified override
 	ora: { type: "string", def: "0", id: "overrideAccess" }, // default: no password or code
+	orp: { type: "string", def: "", id: "overridePassword" }, // default: blank
 	orc: { type: "boolean", def: true, id: "overrideConfirm" }, // default: enabled
 	warnSecs: { type: "string", def: "", id: "warnSecs" }, // default: no warning
 	warnImmediate: { type: "boolean", def: true, id: "warnImmediate" }, // default: warn only for immediate block
