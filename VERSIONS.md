@@ -1,5 +1,11 @@
+### Version 1.4 (20 Mar 2022)
+* Added option to roll over unused time.
+* Added option for separate override password.
+* Added diagnostic mode and diagnostics page.
+* Minor usability tweaks.
+
 ### Version 1.3.1 (13 Feb 2022)
-* Fix security issue (updated jQuery libraries).
+* Fixed security issue (updated jQuery libraries).
 
 ### Version 1.3 (16 Jan 2022)
 * Added "Move Set" buttons for easy reordering of block sets.
