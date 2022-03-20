@@ -1032,7 +1032,7 @@ function getUnblockTime(set) {
 	let limitPeriod = gOptions[`limitPeriod${set}`];
 	let limitOffset = gOptions[`limitOffset${set}`];
 	let periodStart = getTimePeriodStart(now, limitPeriod, limitOffset);
-	let rollover = options[`rollover${set}`];
+	let rollover = gOptions[`rollover${set}`];
 	let conjMode = gOptions[`conjMode${set}`];
 	let days = gOptions[`days${set}`];
 
