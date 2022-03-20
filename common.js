@@ -32,6 +32,7 @@ const PER_SET_OPTIONS = {
 	limitMins: { type: "string", def: "", id: "limitMins" },
 	limitPeriod: { type: "string", def: "", id: "limitPeriod" },
 	limitOffset: { type: "string", def: "", id: "limitOffset" },
+	rollover: { type: "boolean", def: false, id: "rollover" },
 	conjMode: { type: "boolean", def: false, id: "conjMode" },
 	days: { type: "array", def: [false, true, true, true, true, true, false], id: "day" },
 	blockURL: { type: "string", def: DEFAULT_BLOCK_URL, id: "blockURL" },
@@ -142,6 +143,9 @@ function cleanOptions(options) {
 // timedata[2] = start time for time limit period (secs since epoch)
 // timedata[3] = time spent on sites during this limit period (secs)
 // timedata[4] = end time for lockdown (secs since epoch)
+// timedata[5] = rollover time for current period (secs)
+// timedata[6] = rollover time for next period (secs)
+// timedata[7] = start time for next rollover period (secs since epoch)
 //
 function cleanTimeData(options) {
 	let numSets = +options["numSets"];
@@ -149,8 +153,10 @@ function cleanTimeData(options) {
 	let now = Math.floor(Date.now() / 1000) + (clockOffset * 60);
 	for (let set = 1; set <= numSets; set++) {
 		let timedata = options[`timedata${set}`];
-		if (!Array.isArray(timedata) || timedata.length < 5) {
-			timedata = [now, 0, 0, 0, 0];
+		if (!Array.isArray(timedata)) {
+			timedata = [now, 0, 0, 0, 0, 0, 0, 0];
+		} else while (timedata.length < 8) {
+			timedata.push(0);
 		}
 		options[`timedata${set}`] = timedata;
 	}
@@ -418,6 +424,29 @@ function getTimePeriodStart(now, limitPeriod, limitOffset) {
 	}
 
 	return 0;
+}
+
+// Update rollover time (if new time limit period has been entered)
+//
+function updateRolloverTime(timedata, limitMins, limitPeriod, periodStart) {
+	if (limitMins && limitPeriod) {
+		if (timedata[7] < periodStart) {
+			// Credit full rollover time and start new rollover period
+			timedata[5] = (limitMins * 60);
+			timedata[6] = (limitMins * 60);
+			timedata[7] = periodStart + (+limitPeriod);
+		} else if (timedata[7] == periodStart) {
+			// Credit tracked rollover time and start new rollover period
+			timedata[5] = timedata[6];
+			timedata[6] = (limitMins * 60);
+			timedata[7] = periodStart + (+limitPeriod);
+		}
+	} else {
+		// No time limit set, so no rollover time to track
+		timedata[5] = 0;
+		timedata[6] = 0;
+		timedata[7] = 0;
+	}
 }
 
 // Format a time in seconds to HH:MM:SS format

@@ -432,8 +432,11 @@ function retrieveOptions() {
 			let limitPeriod = options[`limitPeriod${set}`];
 			let limitOffset = options[`limitOffset${set}`];
 			let periodStart = getTimePeriodStart(now, limitPeriod, limitOffset);
+			let rollover = options[`rollover${set}`];
 			let conjMode = options[`conjMode${set}`];
 			let days = options[`days${set}`];
+
+			updateRolloverTime(timedata, limitMins, limitPeriod, periodStart);
 
 			// Check day
 			let onSelectedDay = days[timedate.getDay()];
@@ -450,13 +453,10 @@ function retrieveOptions() {
 			}
 
 			// Check time limit
-			let afterTimeLimit = false;
-			if (onSelectedDay && limitMins && limitPeriod) {
-				// Check time period and time limit
-				if (timedata[2] == periodStart && timedata[3] >= (limitMins * 60)) {
-					afterTimeLimit = true;
-				}
-			}
+			let secsRollover = rollover ? timedata[5] : 0;
+			let afterTimeLimit = (onSelectedDay && limitMins && limitPeriod)
+					&& (timedata[2] == periodStart)
+					&& (timedata[3] >= secsRollover + (limitMins * 60));
 
 			// Check lockdown condition
 			let lockdown = (timedata[4] > now);

@@ -493,6 +493,7 @@ function checkTab(id, isBeforeNav, isRepeat) {
 			let limitPeriod = gOptions[`limitPeriod${set}`];
 			let limitOffset = gOptions[`limitOffset${set}`];
 			let periodStart = getTimePeriodStart(now, limitPeriod, limitOffset);
+			let rollover = gOptions[`rollover${set}`];
 			let conjMode = gOptions[`conjMode${set}`];
 			let days = gOptions[`days${set}`];
 			let blockURL = gOptions[`blockURL${set}`];
@@ -504,6 +505,8 @@ function checkTab(id, isBeforeNav, isRepeat) {
 			let allowOverride = gOptions[`allowOverride${set}`];
 			let showTimer = gOptions[`showTimer${set}`];
 			let allowKeywords = gOptions[`allowKeywords${set}`];
+
+			updateRolloverTime(timedata, limitMins, limitPeriod, periodStart);
 
 			// Check day
 			let onSelectedDay = days[timedate.getDay()];
@@ -532,7 +535,8 @@ function checkTab(id, isBeforeNav, isRepeat) {
 			let secsLeftBeforeLimit = Infinity;
 			if (onSelectedDay && limitMins && limitPeriod) {
 				// Compute exact seconds before this time limit expires
-				secsLeftBeforeLimit = limitMins * 60;
+				let secsRollover = rollover ? timedata[5] : 0;
+				secsLeftBeforeLimit = secsRollover + (limitMins * 60);
 				if (timedata[2] == periodStart) {
 					let secs = secsLeftBeforeLimit - timedata[3];
 					secsLeftBeforeLimit = Math.max(0, secs);
@@ -802,9 +806,11 @@ function updateTimeData(url, referrer, secsOpen, secsFocus) {
 			let countFocus = gOptions[`countFocus${set}`];
 			let times = gOptions[`times${set}`];
 			let minPeriods = getMinPeriods(times);
+			let limitMins = gOptions[`limitMins${set}`];
 			let limitPeriod = gOptions[`limitPeriod${set}`];
 			let limitOffset = gOptions[`limitOffset${set}`];
 			let periodStart = getTimePeriodStart(now, limitPeriod, limitOffset);
+			let rollover = gOptions[`rollover${set}`];
 			let conjMode = gOptions[`conjMode${set}`];
 			let days = gOptions[`days${set}`];
 
@@ -816,9 +822,13 @@ function updateTimeData(url, referrer, secsOpen, secsFocus) {
 			}
 
 			// Reset time data if currently invalid
-			if (!Array.isArray(timedata) || timedata.length != 5) {
-				timedata = [now, 0, 0, 0, 0];
+			if (!Array.isArray(timedata)) {
+				timedata = [now, 0, 0, 0, 0, 0, 0, 0];
+			} else while (timedata.length < 8) {
+				timedata.push(0);
 			}
+
+			updateRolloverTime(timedata, limitMins, limitPeriod, periodStart);
 
 			// Get number of seconds spent on page (focused or open)
 			let secsSpent = countFocus ? secsFocus : secsOpen;
@@ -854,6 +864,10 @@ function updateTimeData(url, referrer, secsOpen, secsFocus) {
 					// We haven't entered a new time period, so keep counting
 					timedata[3] = +timedata[3] + secsSpent;
 				}
+				
+				// Update rollover time for next period
+				timedata[6] = Math.max(0, (limitMins * 60) - timedata[3]);
+				timedata[7] = periodStart + (+limitPeriod);
 			}
 
 			// Update time data for this set
@@ -1018,13 +1032,16 @@ function getUnblockTime(set) {
 	let limitPeriod = gOptions[`limitPeriod${set}`];
 	let limitOffset = gOptions[`limitOffset${set}`];
 	let periodStart = getTimePeriodStart(now, limitPeriod, limitOffset);
+	let rollover = gOptions[`rollover${set}`];
 	let conjMode = gOptions[`conjMode${set}`];
 	let days = gOptions[`days${set}`];
 
 	// Check for valid time data
-	if (!Array.isArray(timedata) || timedata.length != 5) {
+	if (!Array.isArray(timedata) || timedata.length < 8) {
 		return null;
 	}
+
+	updateRolloverTime(timedata, limitMins, limitPeriod, periodStart);
 
 	// Check for 24/7 block
 	if (times == ALL_DAY_TIMES && allTrue(days) && !conjMode) {
@@ -1112,8 +1129,9 @@ function getUnblockTime(set) {
 			// Case 4: within time periods OR after time limit
 
 			// Determine whether time limit was exceeded
+			let secsRollover = rollover ? timedata[5] : 0;
 			let afterTimeLimit = (timedata[2] == periodStart)
-					&& (timedata[3] >= (limitMins * 60));
+					&& (timedata[3] >= secsRollover + (limitMins * 60));
 
 			if (afterTimeLimit) {
 				// Check against end time for current time limit period instead
