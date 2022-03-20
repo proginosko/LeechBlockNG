@@ -52,6 +52,7 @@ const PER_SET_OPTIONS = {
 	prevGenOpts: { type: "boolean", def: false, id: "prevGenOpts" },
 	prevAddons: { type: "boolean", def: false, id: "prevAddons" },
 	prevSupport: { type: "boolean", def: false, id: "prevSupport" },
+	disable: { type: "boolean", def: false, id: "disable" },
 	showTimer: { type: "boolean", def: true, id: "showTimer" },
 	allowRefers: { type: "boolean", def: false, id: "allowRefers" },
 	allowKeywords: { type: "boolean", def: false, id: "allowKeywords" },
@@ -74,8 +75,9 @@ const GENERAL_OPTIONS = {
 	timerSize: { type: "string", def: "1", id: "timerSize" }, // default: medium
 	timerLocation: { type: "string", def: "0", id: "timerLocation" }, // default: top left
 	timerBadge: { type: "boolean", def: true, id: "timerBadge" }, // default: enabled
-	orm: { type: "string", def: "", id: "overrideMins" }, // default: no override
+	orm: { type: "string", def: "", id: "overrideMins" }, // default: no prespecified override
 	ora: { type: "string", def: "0", id: "overrideAccess" }, // default: no password or code
+	orp: { type: "string", def: "", id: "overridePassword" }, // default: blank
 	orc: { type: "boolean", def: true, id: "overrideConfirm" }, // default: enabled
 	warnSecs: { type: "string", def: "", id: "warnSecs" }, // default: no warning
 	warnImmediate: { type: "boolean", def: true, id: "warnImmediate" }, // default: warn only for immediate block
@@ -87,6 +89,7 @@ const GENERAL_OPTIONS = {
 	allFocused: { type: "boolean", def: false, id: "allFocused" }, // default: disabled
 	processActiveTabs: { type: "boolean", def: false, id: "processActiveTabs" }, // default: disabled
 	accessCodeImage: { type: "boolean", def: false, id: "accessCodeImage" }, // default: disabled
+	diagMode: { type: "boolean", def: false, id: "diagMode" }, // default: disabled
 	autoExportSync: { type: "boolean", def: true, id: "autoExportSync" }, // default: enabled
 	lockdownHours: { type: "string", def: "", id: null }, // default: blank
 	lockdownMins: { type: "string", def: "", id: null }, // default: blank

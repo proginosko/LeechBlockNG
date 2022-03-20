@@ -98,6 +98,7 @@ function initForm(numSets) {
 		});
 		$(`#advOpts${set}`).css("display", "none");
 	}
+	$("#overridePasswordShow").change(overridePasswordShow);
 	$("#theme").change(function (e) { setTheme($("#theme").val()); });
 	$("#clockOffset").click(showClockOffsetTime);
 	$("#clockOffset").keyup(showClockOffsetTime);
@@ -106,6 +107,7 @@ function initForm(numSets) {
 	$("#importOptions").click(importOptions);
 	$("#exportOptionsSync").click(exportOptionsSync);
 	$("#importOptionsSync").click(importOptionsSync);
+	$("#openDiagnostics").click(openDiagnostics);
 	$("#saveOptions").button();
 	$("#saveOptions").click({ closeOptions: false }, saveOptions);
 	$("#saveOptionsClose").button();
@@ -419,6 +421,9 @@ function retrieveOptions() {
 
 		// Check whether access to options should be prevented
 		for (let set = 1; set <= gNumSets; set++) {
+			// Do nothing if set is disabled
+			if (options[`disable${set}`]) continue;
+
 			// Get options
 			let timedata = options[`timedata${set}`];
 			let times = options[`times${set}`];
@@ -611,6 +616,14 @@ function displayAccessCode(code, asImage) {
 			codeText.appendChild(document.createTextNode(code));
 		}
 	}
+}
+
+// Show/hide override password
+//
+function overridePasswordShow() {
+	let input = getElement("overridePassword");
+	let checkbox = getElement("overridePasswordShow");
+	input.type = checkbox.checked ? "text" : "password";
 }
 
 // Show adjusted time based on clock offset
@@ -857,6 +870,14 @@ function importOptionsSync(event) {
 			$("#alertImportSyncError").dialog("open");
 		}
 	}
+}
+
+// Open diagnostics page
+//
+function openDiagnostics() {
+	let fullURL = browser.runtime.getURL("diagnostics.html");
+
+	browser.tabs.create({ url: fullURL });
 }
 
 // Swap options for two block sets

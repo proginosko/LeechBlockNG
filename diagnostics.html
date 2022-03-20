@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>LeechBlock Diagnostics</title>
+		<link href="/jquery-ui/jquery-ui.min.css" rel="stylesheet">
+		<link href="/options.css" rel="stylesheet">
+		<link href="/icons/leechblock16.ico" rel="icon" type="image/x-icon">
+		<link href="/icons/leechblock16.ico" rel="shortcut icon" type="image/x-icon">
+		<link id="themeLink" rel="stylesheet">
+	</head>
+
+	<body>
+
+		<div id="form-container">
+
+			<form id="form" style="display: none;" action="javascript: null;">
+
+				<fieldset class="ui-widget ui-widget-content">
+					<legend>LeechBlock Diagnostics</legend>
+					<p>
+						<label>Enter the fully specified URL to test against your current block sets:</label>
+						<div>
+							<input id="url" type="text" size="60" placeholder="https://somesite.com" autocomplete="off">
+							<button id="testURL" type="button">Test URL</button>
+						</div>
+					</p>
+					<p>
+						<strong>Tip:</strong> You can copy/paste from your browser's location bar.
+					</p>
+					<hr>
+					<p>
+						<textarea id="results" cols="80" rows="20" spellcheck="false" readonly="true"></textarea>
+					</p>
+				</fieldset>
+
+			</form>
+
+		</div>
+
+		<div id="alerts" style="display: none;">
+			<div id="alertRetrieveError" title="LeechBlock Diagnostics">
+				<p><strong>Error:</strong> Unable to retrieve options from browser storage.</p>
+			</div>
+			<div id="alertBadTestURL" title="LeechBlock Diagnostics">
+				<p>Please enter the URL in the correct format (as a fully specified URL).</p>
+			</div>
+		</div>
+
+		<script src="/jquery-ui/external/jquery/jquery.js"></script>
+		<script src="/jquery-ui/jquery-ui.min.js"></script>
+	    <script src="/common.js"></script>
+	    <script src="/diagnostics.js"></script>
+
+	</body>
+
+</html>

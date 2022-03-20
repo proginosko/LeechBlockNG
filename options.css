@@ -127,3 +127,6 @@ body {
 	padding: 2px 4px;
 }
 
+#results {
+	font: normal 12px monospace;
+}

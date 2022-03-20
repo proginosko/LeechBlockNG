@@ -73,6 +73,7 @@ function closePage() {
 //
 function confirmAccess(options) {
 	let ora = options["ora"];
+	let orp = options["orp"];
 	let password = options["password"];
 	let hpp = options["hpp"];
 
@@ -86,7 +87,13 @@ function confirmAccess(options) {
 		$("#promptPasswordInput").val("");
 		$("#promptPassword").dialog("open");
 		$("#promptPasswordInput").focus();
-	} else if (ora > 1) {
+	} else if (ora == 9 && orp) {
+		gAccessRequiredInput = orp;
+		$("#promptPasswordInput").attr("type", "password");
+		$("#promptPasswordInput").val("");
+		$("#promptPassword").dialog("open");
+		$("#promptPasswordInput").focus();
+	} else if (ora >= 2 && ora <= 4) {
 		let code = createAccessCode(32);
 		if (ora > 2) {
 			code += createAccessCode(32);

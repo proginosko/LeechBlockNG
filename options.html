@@ -210,6 +210,10 @@
 							</p>
 							<hr>
 							<p>
+								<input id="disable1" type="checkbox">
+								<label for="disable1">Disable this block set (for debugging purposes)</label>
+							</p>
+							<p>
 								<input id="showTimer1" type="checkbox">
 								<label for="showTimer1">Show countdown timer for this block set</label>
 							</p>
@@ -362,12 +366,20 @@
 								<div>
 									<select id="overrideAccess">
 										<option value="0">Don't require the user to enter any password or access code</option>
-										<option value="1">Require the user to enter the access control password</option>
+										<option value="1">Require the user to enter the access control password (see above)</option>
 										<option value="2">Require the user to enter a random 32-character access code</option>
 										<option value="3">Require the user to enter a random 64-character access code</option>
 										<option value="4">Require the user to enter a random 128-character access code</option>
+										<option value="9">Require the user to enter a separate override password (see below)</option>
 									</select>
 								</div>
+							</p>
+							<p>
+								<label>Override password:</label>
+								<input id="overridePassword" type="password" size="20">
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<input id="overridePasswordShow" type="checkbox">
+								<label for="overridePasswordShow">Show password</label>
 							</p>
 							<p>
 								<input id="overrideConfirm" type="checkbox">
@@ -422,6 +434,10 @@
 								<input id="syncStorage" type="checkbox">
 								<label for="syncStorage">Use sync storage for options (experimental: use at your own risk!)</label>
 							</p>
+							<p>
+								<input id="diagMode" type="checkbox">
+								<label for="diagMode">Diagnostic mode (outputs to browser console)</label>
+							</p>
 						</fieldset>
 						<fieldset>
 							<legend>Export / Import</legend>
@@ -457,6 +473,7 @@
 							All you need to do is specify which sites to block and when to block them.
 						</p>
 						<p><strong>Version:</strong> <span id="version">?<span></p>
+						<p><strong>License:</strong> <a href="http://www.mozilla.org/MPL/2.0/" target="_blank">Mozilla Public License 2.0</a></p>
 						<p><strong>Author:</strong> James Anderson</p>
 						<p><strong>Contributors:</strong> Dario Kolac (graphics) &amp; Robert Gützkow (graphics)</p>
 						<p><strong>Examples:</strong>
@@ -467,6 +484,7 @@
 						<a href="https://www.proginosko.com/leechblock/support/" target="_blank">https://www.proginosko.com/leechblock/support/</a></p>
 						<p><strong>Version History:</strong>
 						<a href="https://www.proginosko.com/leechblock/version-history/" target="_blank">https://www.proginosko.com/leechblock/version-history/</a></p>
+						<p><button id="openDiagnostics" type="button">Open Diagnostics Page</button><p>
 					</div>
 				</div>
 

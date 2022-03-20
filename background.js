@@ -4,8 +4,9 @@
 
 const TICK_TIME = 1000; // update every second
 
-const BLOCKABLE_URL = /^(http|file|about)/i;
+const BLOCKABLE_URL = /^(http|file|about|moz-extension)/i;
 const CLOCKABLE_URL = /^(http|file)/i;
+const EXTENSION_URL = browser.runtime.getURL("");
 
 function log(message) { console.log("[LBNG] " + message); }
 function warn(message) { console.warn("[LBNG] " + message); }
@@ -14,11 +15,13 @@ var gStorage = browser.storage.local;
 var gIsAndroid = false;
 var gGotOptions = false;
 var gOptions = {};
+var gDiagMode = false;
 var gNumSets;
 var gTabs = [];
 var gSetCounted = [];
 var gSavedTimeData = [];
 var gRegExps = [];
+var gPrevActiveTabId = 0;
 var gFocusWindowId = 0;
 var gAllFocused = false;
 var gOverrideIcon = false;
@@ -185,6 +188,8 @@ function retrieveOptions(update) {
 
 		cleanOptions(gOptions);
 		cleanTimeData(gOptions);
+
+		gDiagMode = gOptions["diagMode"];
 
 		gNumSets = +gOptions["numSets"];
 
@@ -397,8 +402,9 @@ function checkTab(id, isBeforeNav, isRepeat) {
 		return false; // not blocked
 	}
 
-	// Quick exit for LeechBlock website (documentation should be always available)
-	if (url.startsWith(LEECHBLOCK_URL)) {
+	// Quick exit for LeechBlock extension/website
+	// (documentation should always be available)
+	if (url.startsWith(EXTENSION_URL) || url.startsWith(LEECHBLOCK_URL)) {
 		return false; // not blocked
 	}
 
@@ -439,6 +445,9 @@ function checkTab(id, isBeforeNav, isRepeat) {
 	gTabs[id].showTimer = false;
 
 	for (let set = 1; set <= gNumSets; set++) {
+		// Do nothing if set is disabled
+		if (gOptions[`disable${set}`]) continue;
+
 		if (allowHost && allowPath && allowSet == set) {
 			// Allow delayed site/page
 			continue;
@@ -552,6 +561,35 @@ function checkTab(id, isBeforeNav, isRepeat) {
 			if (!override && doBlock && (!isRepeat || activeBlock)) {
 
 				function applyBlock(keyword) {
+					if (gDiagMode) {
+						log("### BLOCK APPLIED ###");
+						log(`id: ${id}`);
+						log(`isBeforeNav: ${isBeforeNav}`);
+						log(`isRepeat: ${isRepeat}`);
+						log(`timedate: ${timedate}`);
+						log(`set: ${set}`);
+						log(`pageURL: ${pageURL}`);
+						log(`referrer: ${referrer}`);
+						log(`lockdown: ${lockdown}`);
+						log(`withinTimePeriods: ${withinTimePeriods}`);
+						log(`afterTimeLimit: ${afterTimeLimit}`);
+						log(`blockURL: ${blockURL}`);
+						if (blockRE) {
+							let res = blockRE.exec(pageURL);
+							if (res) {
+								log(`blockRE.exec: ${res[0]}`);
+							}
+						}
+						if (referRE) {
+							let res = referRE.exec(referrer);
+							if (res) {
+								log(`referRE.exec: ${res[0]}`);
+							}
+						}
+						if (keyword) {
+							log(`keyword: ${keyword}`);
+						}
+					}
 					if (closeTab) {
 						// Close tab
 						browser.tabs.remove(id);
@@ -1387,6 +1425,8 @@ function handleTabActivated(activeInfo) {
 	let tabId = activeInfo.tabId;
 	//log("handleTabActivated: " + tabId);
 
+	gPrevActiveTabId = activeInfo.previousTabId;
+
 	initTab(tabId);
 
 	if (!gGotOptions) {
@@ -1413,6 +1453,11 @@ function handleTabRemoved(tabId, removeInfo) {
 	}
 
 	clockPageTime(tabId, false, false);
+
+	// If extension page closed, activate previously active tab
+	if (gTabs[tabId] && gTabs[tabId].url.startsWith(EXTENSION_URL)) {
+		browser.tabs.update(gPrevActiveTabId, { active: true });
+	}
 }
 
 function handleBeforeNavigate(navDetails) {
