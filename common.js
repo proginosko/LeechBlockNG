@@ -4,6 +4,8 @@
 
 const MAX_SETS = 30;
 const ALL_DAY_TIMES = "0000-2400";
+const BLOCKED_PAGE = "blocked.html";
+const DELAYED_PAGE = "delayed.html";
 const DEFAULT_BLOCK_URL = "blocked.html?$S&$U";
 const DELAYED_BLOCK_URL = "delayed.html?$S&$U";
 const DEFAULT_ICON = { 16: "icons/leechblock16.png", 32: "icons/leechblock32.png" };

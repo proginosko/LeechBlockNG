@@ -7,6 +7,8 @@ const TICK_TIME = 1000; // update every second
 const BLOCKABLE_URL = /^(http|file|about|moz-extension)/i;
 const CLOCKABLE_URL = /^(http|file)/i;
 const EXTENSION_URL = browser.runtime.getURL("");
+const BLOCKED_PAGE_URL = browser.runtime.getURL(BLOCKED_PAGE);
+const DELAYED_PAGE_URL = browser.runtime.getURL(DELAYED_PAGE);
 
 function log(message) { console.log("[LBNG] " + message); }
 function warn(message) { console.warn("[LBNG] " + message); }
@@ -397,19 +399,16 @@ function checkTab(id, isBeforeNav, isRepeat) {
 	gTabs[id].blockable = BLOCKABLE_URL.test(url);
 	gTabs[id].clockable = CLOCKABLE_URL.test(url);
 
-	// Quick exit for about:blank
-	if (url == "about:blank") {
-		return false; // not blocked
-	}
-
-	// Quick exit for LeechBlock extension/website
-	// (documentation should always be available)
-	if (url.startsWith(EXTENSION_URL) || url.startsWith(LEECHBLOCK_URL)) {
-		return false; // not blocked
-	}
-
-	// Quick exit for non-blockable URLs
-	if (!gTabs[id].blockable) {
+	// Quick exit for the following cases:
+	// - about:blank
+	// - non-blockable URLs
+	// - blocking/delaying pages
+	// - LeechBlock website (documentation should always be available)
+	if (url == "about:blank"
+			|| !gTabs[id].blockable
+			|| url.startsWith(BLOCKED_PAGE_URL)
+			|| url.startsWith(DELAYED_PAGE_URL)
+			|| url.startsWith(LEECHBLOCK_URL)) {
 		return false; // not blocked
 	}
 
