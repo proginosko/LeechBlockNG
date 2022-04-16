@@ -1,0 +1,34 @@
+{
+
+	"extensionName": {
+		"message": "LeechBlock NG",
+		"description": "Nome dell'estensione."
+	},
+
+	"extensionDescription": {
+		"message": "LeechBlock è un semplice strumento di produttività progettato per bloccare quei siti che fanno perdere tempo e possono risucchiare la vita dalla tua giornata lavorativa.",
+		"description": "Descrizione dell'estensione."
+	},
+
+	"localePath": {
+		"message": "/it/",
+		"description": "Percorso dei file localizzati."
+	},
+
+	"optionsMenuItem": { "message": "Opzioni" },
+
+	"lockdownMenuItem": { "message": "Lockdown" },
+
+	"overrideMenuItem": { "message": "Permetti" },
+
+	"statisticsMenuItem": { "message": "Statistiche" },
+
+	"addSiteMenuItem": { "message": "Aggiungi sito" },
+
+	"addSiteToBlockSetMenuItem": { "message": "Aggiungi sito a Lista blocco" },
+
+	"addPageMenuItem": { "message": "Aggiungi pagina" },
+
+	"addPageToBlockSetMenuItem": { "message": "Aggiungi pagina a Lista blocco" }
+
+}
