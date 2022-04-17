@@ -16,7 +16,8 @@ var gAccessConfirmed = false;
 var gAccessRequiredInput;
 var gFormHTML;
 var gNumSets, gNumSetsMin;
-var gSetDisabled = [];
+var gSetDisabled;
+var gSetOrdering, gSetReordered;
 var gTabIndex = 0;
 var gNewOpen = true;
 
@@ -31,10 +32,14 @@ function initForm(numSets) {
 	gNumSets = +numSets;
 	gNumSetsMin = 1;
 
-	// All sets enabled at initialization
+	// All sets enabled and in order at initialization
+	gSetDisabled = [];
+	gSetOrdering = [];
 	for (let set = 1; set <= gNumSets; set++) {
 		gSetDisabled[set] = false;
+		gSetOrdering[set] = set;
 	}
+	gSetReordered = false;
 
 	// Set maximum number of block sets
 	$("#maxSets").text(MAX_SETS);
@@ -137,6 +142,14 @@ function initForm(numSets) {
 // Swap two sets
 //
 function swapSets(set1, set2) {
+	// Keep track of reordering
+	let order1 = gSetOrdering[set1];
+	let order2 = gSetOrdering[set2];
+	gSetOrdering[set1] = order2;
+	gSetOrdering[set2] = order1;
+	gSetReordered = true;
+
+	// Swap set options and update form
 	swapSetOptions(set1, set2);
 	updateBlockSetName(set1, $(`#setName${set1}`).val());
 	updateBlockSetName(set2, $(`#setName${set2}`).val());
@@ -324,12 +337,17 @@ function saveOptions(event) {
 
 	let complete = event.data.closeOptions ? closeOptions : retrieveOptions;
 
+	let message = {
+		type: "options",
+		ordering: gSetReordered ? gSetOrdering : null
+	};
+
 	if (options["sync"]) {
 		// Set sync option in local storage and all options in sync storage
 		browser.storage.local.set({ sync: true });
 		browser.storage.sync.set(options).then(
 			function () {
-				browser.runtime.sendMessage({ type: "options" });
+				browser.runtime.sendMessage(message);
 				$("#form").hide({ effect: "fade", complete: complete });
 			},
 			function (error) { warn("Cannot set options: " + error); }
@@ -343,7 +361,7 @@ function saveOptions(event) {
 		// Set all options in local storage
 		browser.storage.local.set(options).then(
 			function () {
-				browser.runtime.sendMessage({ type: "options" });
+				browser.runtime.sendMessage(message);
 				$("#form").hide({ effect: "fade", complete: complete });
 			},
 			function (error) { warn("Cannot set options: " + error); }

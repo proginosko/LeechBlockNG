@@ -326,6 +326,31 @@ function restartTimeData(set) {
 	saveTimeData();
 }
 
+// Reorder time data
+//
+function reorderTimeData(ordering) {
+	//log("reorderTimeData: " + ordering);
+
+	if (!ordering) {
+		return;
+	}
+
+	// Create copy of time data for each set
+	let timedata = [];
+	for (let set = 1; set <= gNumSets; set++) {
+		timedata[set] = gOptions[`timedata${set}`].slice();
+	}
+
+	// Reorder time data according to specified ordering
+	for (let set = 1; set <= gNumSets; set++) {
+		if (ordering[set] <= gNumSets) {
+			gOptions[`timedata${set}`] = timedata[ordering[set]];
+		}
+	}
+
+	saveTimeData();
+}
+
 // Update ID of focused window
 //
 function updateFocusedWindowId() {
@@ -1363,6 +1388,7 @@ function handleMessage(message, sender, sendResponse) {
 		case "options":
 			// Options updated
 			retrieveOptions(true);
+			reorderTimeData(message.ordering);
 			break;
 
 		case "override":
