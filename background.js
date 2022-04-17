@@ -1223,19 +1223,17 @@ function applyOverride(endTime) {
 		return;
 	}
 
-	if (endTime) {
-		// Update option
-		gOptions["oret"] = endTime;
+	// Update option
+	gOptions["oret"] = endTime;
 
-		// Save updated option to storage
-		let options = {};
-		options["oret"] = endTime;
-		gStorage.set(options).catch(
-			function (error) { warn("Cannot set options: " + error); }
-		);
+	// Save updated option to storage
+	let options = {};
+	options["oret"] = endTime;
+	gStorage.set(options).catch(
+		function (error) { warn("Cannot set options: " + error); }
+	);
 
-		updateIcon();
-	}
+	updateIcon();
 }
 
 // Open extension page (either create new tab or activate existing tab)

@@ -71,9 +71,22 @@ function openExtensionPage(url) {
 	}
 }
 
+// Cancel override
+//
+function cancelOverride() {
+	let message = {
+		type: "override",
+		endTime: 0
+	};
+	browser.runtime.sendMessage(message);
+
+	window.close();
+}
+
 document.querySelector("#options").addEventListener("click", openOptions);
 document.querySelector("#lockdown").addEventListener("click", openLockdown);
 document.querySelector("#override").addEventListener("click", openOverride);
 document.querySelector("#stats").addEventListener("click", openStats);
+document.querySelector("#cancelOverride").addEventListener("click", cancelOverride);
 
 document.addEventListener("DOMContentLoaded", initializePage);
