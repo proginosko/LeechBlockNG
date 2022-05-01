@@ -274,7 +274,7 @@ function getRegExpSites(sites, matchSubdomains) {
 // Convert site pattern to regular expression
 //
 function patternToRegExp(pattern, matchSubdomains) {
-	let special = /[\.\|\?\:\+\-\^\$\(\)\[\]\{\}\\]/g;
+	let special = /[\.\|\?\:\+\^\$\(\)\[\]\{\}\\]/g;
 	let subdomains = matchSubdomains ? "([^/]*\\.)?" : "(www\\.)?"
 	return subdomains + pattern
 			.replace(special, "\\$&")			// fix special chars
