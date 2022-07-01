@@ -74,6 +74,7 @@ function closePage() {
 function confirmAccess(options) {
 	let ora = options["ora"];
 	let orp = options["orp"];
+	let code = options["orcode"];
 	let password = options["password"];
 	let hpp = options["hpp"];
 
@@ -87,6 +88,11 @@ function confirmAccess(options) {
 		$("#promptPasswordInput").val("");
 		$("#promptPassword").dialog("open");
 		$("#promptPasswordInput").focus();
+	} else if (ora == 8 && code) {
+		gAccessRequiredInput = code;
+		displayAccessCode(code, options["accessCodeImage"]);
+		$("#promptAccessCode").dialog("open");
+		$("#promptAccessCodeInput").focus();
 	} else if (ora == 9 && orp) {
 		gAccessRequiredInput = orp;
 		$("#promptPasswordInput").attr("type", "password");
@@ -122,6 +128,19 @@ function displayAccessCode(code, asImage) {
 	let codeImage = getElement("promptAccessCodeImage");
 	let codeCanvas = getElement("promptAccessCodeCanvas");
 
+	let lines = [];
+	let idx = 0;
+	do {
+		let spaceIdx = (idx + 64 >= code.length) ? code.length : code.lastIndexOf(" ", idx + 64);
+		if (spaceIdx == -1) {
+			lines.push(code.substring(idx, idx + 64));
+			idx += 64;
+		} else {
+			lines.push(code.substring(idx, spaceIdx));
+			idx = spaceIdx + 1;
+		}
+	} while (idx < code.length - 1);
+
 	if (asImage) {
 		// Display code as image
 		codeText.style.display = "none";
@@ -129,7 +148,7 @@ function displayAccessCode(code, asImage) {
 		let ctx = codeCanvas.getContext("2d");
 		ctx.font = "normal 14px monospace";
 		let width = ctx.measureText(code.substring(0, 64)).width + 8;
-		let height = (code.length == 128) ? 40 : 24;
+		let height = lines.length * 16 + 8;
 		codeCanvas.width = width * devicePixelRatio;
 		codeCanvas.height = height * devicePixelRatio;
 		ctx.scale(devicePixelRatio, devicePixelRatio);
@@ -137,22 +156,16 @@ function displayAccessCode(code, asImage) {
 		codeCanvas.style.height = height + 'px';
 		ctx.font = "normal 14px monospace"; // resizing canvas resets font!
 		ctx.fillStyle = "#000";
-		if (code.length == 128) {
-			ctx.fillText(code.substring(0, 64), 4, 16);
-			ctx.fillText(code.substring(64), 4, 32);
-		} else {
-			ctx.fillText(code, 4, 16);
+		for (let i = 0; i < lines.length; i++) {
+			ctx.fillText(lines[i], 4, 16 * (i+1));
 		}
 	} else {
 		// Display code as text
 		codeText.style.display = "";
 		codeImage.style.display = "none";
-		if (code.length == 128) {
-			codeText.appendChild(document.createTextNode(code.substring(0, 64)));
+		for (let i = 0; i < lines.length; i++) {
+			codeText.appendChild(document.createTextNode(lines[i]));
 			codeText.appendChild(document.createElement("br"));
-			codeText.appendChild(document.createTextNode(code.substring(64)));
-		} else {
-			codeText.appendChild(document.createTextNode(code));
 		}
 	}
 }
