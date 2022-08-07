@@ -102,21 +102,18 @@ function checkKeyword(keywordRE) {
 		return null; // nothing to find!
 	}
 
-	// Get all text nodes in document
-	let textNodes = document.evaluate(
-		"//text()", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-
-	//console.log("Checking " + textNodes.snapshotLength + " text node(s) for keyword(s)...");
-
-	for (let i = 0; i < textNodes.snapshotLength; i++) {
-		let matches;
-		let data = textNodes.snapshotItem(i).data;
-		if (data && (matches = keywordRE.exec(data)) != null) {
-			return matches[0]; // keyword(s) found
-		}
+	// Get all text from document
+	let text = document.body.innerText;
+	if (!text) {
+		return null; // nothing to search!
 	}
 
-	return null; // keyword(s) not found
+	// Search text for keywords
+	let matches = keywordRE.exec(text);
+	if (!matches) {
+		return null; // keyword(s) not found
+	}
+	return matches[0]; // keyword(s) found
 }
 
 // Apply filter
