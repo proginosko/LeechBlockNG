@@ -1,3 +1,8 @@
+### Version 1.5 (07 Aug 2022)
+* Added option for predefined override access code (thanks to Bailey Kong).
+* Fixed issue with colons and hyphens in keywords.
+* Under-the-hood improvements.
+
 ### Version 1.4.2 (01 May 2022)
 * Added button to cancel override.
 * Fixed issue with hyphens in URLs.
