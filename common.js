@@ -289,7 +289,7 @@ function patternToRegExp(pattern, matchSubdomains) {
 // Convert keyword to regular expression
 //
 function keywordToRegExp(keyword) {
-	let special = /[\.\|\?\:\+\-\^\$\(\)\[\]\{\}\\]/g;
+	let special = /[\.\|\?\+\^\$\(\)\[\]\{\}\\]/g;
 	return keyword
 			.replace(special, "\\$&")			// fix special chars
 			.replace(/_+/g, "\\s+")				// convert underscores
