@@ -1,3 +1,6 @@
+### Version 1.5.1 (12 Aug 2022)
+* Fixed issue with pinned/restored tabs.
+
 ### Version 1.5 (07 Aug 2022)
 * Added option for predefined override access code (thanks to Bailey Kong).
 * Fixed issue with colons and hyphens in keywords.
