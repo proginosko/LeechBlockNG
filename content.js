@@ -14,6 +14,16 @@ const TIMER_LOCATIONS = [
 var gTimer;
 var gAlert;
 
+// Notify background script that page has loaded
+//
+function notifyLoaded() {
+	// Register that this script has now loaded
+	browser.runtime.sendMessage({ type: "loaded", url: document.URL });
+
+	// Send URL of referring page to background script
+	browser.runtime.sendMessage({ type: "referrer", referrer: document.referrer });
+}
+
 // Update timer
 //
 function updateTimer(text, size, location) {
@@ -158,6 +168,10 @@ function handleMessage(message, sender, sendResponse) {
 			sendResponse(keyword);
 			break;
 
+		case "ping":
+			notifyLoaded();
+			break;
+
 		case "timer":
 			updateTimer(message.text, message.size, message.location);
 			break;
@@ -168,8 +182,4 @@ function handleMessage(message, sender, sendResponse) {
 
 browser.runtime.onMessage.addListener(handleMessage);
 
-// Send URL of referring page to background script
-browser.runtime.sendMessage({ type: "referrer", referrer: document.referrer });
-
-// Register that this script has now loaded
-browser.runtime.sendMessage({ type: "loaded" });
+notifyLoaded();

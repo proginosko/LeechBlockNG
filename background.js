@@ -394,11 +394,16 @@ function processTabs(active) {
 			clockPageTime(tab.id, true, focus);
 
 			if (gTabs[tab.id].loaded) {
+				// Check tab to see if page should be blocked
 				let blocked = checkTab(tab.id, false, true);
 	
 				if (!blocked && tab.active) {
 					updateTimer(tab.id);
 				}
+			} else if (CLOCKABLE_URL.test(tab.url)) {
+				// Ping tab to see if content script has loaded
+				let message = { type: "ping" };
+				browser.tabs.sendMessage(tab.id, message).catch(function (error) {});
 			}
 		}
 	}
@@ -1373,6 +1378,12 @@ function handleMessage(message, sender, sendResponse) {
 			openDelayedPage(sender.tab.id, message.blockedURL, message.blockedSet);
 			break;
 
+		case "loaded":
+			// Register that content script has been loaded
+			gTabs[sender.tab.id].loaded = true;
+			gTabs[sender.tab.id].url = message.url;
+			break;
+
 		case "lockdown":
 			if (!message.endTime) {
 				// Lockdown canceled
@@ -1403,11 +1414,6 @@ function handleMessage(message, sender, sendResponse) {
 			// Restart time data requested by statistics page
 			restartTimeData(message.set);
 			sendResponse();
-			break;
-
-		case "loaded":
-			// Register that content script has been loaded
-			gTabs[sender.tab.id].loaded = true;
 			break;
 
 	}
@@ -1444,6 +1450,7 @@ function handleTabUpdated(tabId, changeInfo, tab) {
 	if (changeInfo.status && changeInfo.status == "complete") {
 		clockPageTime(tab.id, true, focus);
 
+		// Check tab to see if page should be blocked
 		let blocked = checkTab(tab.id, false, false);
 
 		if (!blocked && tab.active) {
@@ -1507,6 +1514,7 @@ function handleBeforeNavigate(navDetails) {
 		gTabs[tabId].loaded = false
 		gTabs[tabId].url = navDetails.url;
 
+		// Check tab to see if page should be blocked
 		let blocked = checkTab(tabId, true, false);
 	}
 }
