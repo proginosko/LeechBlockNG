@@ -135,18 +135,40 @@
 								<em>In this section, specify how you want to block these sites.</em>
 							</p>
 							<hr>
+
 							<p>
 								<label>Enter the fully specified URL of the page to show instead of these blocked sites:</label>
-								<div><input id="blockURL1" type="text" size="60" placeholder="http://somesite.com/somepage.html" title="Use $U to pass URL of blocked page"></div>
 							</p>
 							<p>
-								<div>
-									<label>Predefined URLs:</label>
-									<button id="defaultPage1" type="button">Default Page</button>
-									<button id="delayingPage1" type="button">Delaying Page</button>
-									<button id="blankPage1" type="button">Blank Page</button>
-								</div>
+								<label>(If you enter multiple pages each in new line, one of them will be every time randomly selected to show instead of these blocked sites)</label>
 							</p>
+							<div class="whatToShowInsteadOfBlocked">
+								<div class="listOfSites">
+									<textarea id="blockURLs1" cols="60" rows="10" spellcheck="false" placeholder="http://somesite.com/somepage.html" title="Use $U to pass URL of blocked page"></textarea>
+								</div>
+
+								<div class="predefinedOptionsList">
+									<label>Add predefined URLs:</label>
+
+									<div class="predefinedOption">
+										<button id="removeDefaultPage1" type="button">-</button>
+										<div>Default Page</div>
+										<button id="addDefaultPage1" type="button">+</button>
+									</div>
+									<div class="predefinedOption">
+										<button id="removeDelayingPage1" type="button">-</button>
+										<div>Delaying Page</div>
+										<button id="addDelayingPage1" type="button">+</button>
+									</div>
+									<div class="predefinedOption">										
+										<button id="removeBlankPage1" type="button">-</button>
+										<div>Blank Page</div>
+										<button id="addBlankPage1" type="button">+</button>
+									</div>
+
+								</div>
+							</div>
+
 							<hr>
 							<p>
 								<input id="applyFilter1" type="checkbox">
@@ -533,7 +555,7 @@
 			<div id="alertBadMinutes" title="LeechBlock Options">
 				<p>Please enter the number of minutes in the correct format (as a positive whole number).</p>
 			</div>
-			<div id="alertBadBlockURL" title="LeechBlock Options">
+			<div id="alertBadBlockURLs" title="LeechBlock Options">
 				<p>Please enter the URL for the blocking page in the correct format (as a fully specified URL).</p>
 			</div>
 			<div id="alertBadNumSets" title="LeechBlock Options">

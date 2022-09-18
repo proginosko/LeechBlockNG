@@ -73,9 +73,12 @@ function initForm(numSets) {
 		});
 		$(`#setName${set}`).change(function (e) { updateBlockSetName(set, $(`#setName${set}`).val()); });
 		$(`#allDay${set}`).click(function (e) { $(`#times${set}`).val(ALL_DAY_TIMES); });
-		$(`#defaultPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DEFAULT_BLOCK_URL); });
-		$(`#delayingPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DELAYED_BLOCK_URL); });
-		$(`#blankPage${set}`).click(function (e) { $(`#blockURL${set}`).val("about:blank"); });
+		$(`#addDefaultPage${set}`).click(function (e) { addToListOfBlockUrls(DEFAULT_BLOCK_URL, set); });
+		$(`#addDelayingPage${set}`).click(function (e) { addToListOfBlockUrls(DELAYED_BLOCK_URL, set); });
+		$(`#addBlankPage${set}`).click(function (e) { addToListOfBlockUrls("about:blank", set); });
+		$(`#removeDefaultPage${set}`).click(function (e) { removeFromListOfBlockUrls(DEFAULT_BLOCK_URL, set); });
+		$(`#removeDelayingPage${set}`).click(function (e) { removeFromListOfBlockUrls(DELAYED_BLOCK_URL, set); });
+		$(`#removeBlankPage${set}`).click(function (e) { removeFromListOfBlockUrls("about:blank", set); });
 		$(`#resetOpts${set}`).click(function (e) {
 			resetSetOptions(set);
 			$("#alertResetOptions").dialog("open");
@@ -178,7 +181,7 @@ function saveOptions(event) {
 		let limitOffset = $(`#limitOffset${set}`).val();
 		let delaySecs = $(`#delaySecs${set}`).val();
 		let reloadSecs = $(`#reloadSecs${set}`).val();
-		let blockURL = $(`#blockURL${set}`).val();
+		let blockURLs = $(`#blockURLs${set}`).val();
 
 		// Check field values
 		if (!checkTimePeriodsFormat(times)) {
@@ -211,10 +214,10 @@ function saveOptions(event) {
 			$("#alertBadSeconds").dialog("open");
 			return false;
 		}
-		if (!checkBlockURLFormat(blockURL)) {
+		if (!checkBlockURLsFormat(blockURLs)) {
 			$("#tabs").tabs("option", "active", (set - 1));
-			$(`#blockURL${set}`).focus();
-			$("#alertBadBlockURL").dialog("open");
+			$(`#blockURLs${set}`).focus();
+			$("#alertBadBlockURLs").dialog("open");
 			return false;
 		}
 	}
@@ -996,7 +999,8 @@ function disableSetOptions(set, disabled) {
 	let items = [
 		"resetOpts",
 		"allDay",
-		"defaultPage", "delayingPage", "blankPage",
+		"addDefaultPage", "addDelayingPage", "addBlankPage",
+		"removeDefaultPage", "removeDelayingPage", "removeBlankPage",
 		"clearRegExpBlock", "genRegExpBlock",
 		"clearRegExpAllow", "genRegExpAllow",
 		"cancelLockdown"
@@ -1095,6 +1099,18 @@ function handleKeyDown(event) {
 			$("#saveOptionsClose").click();
 		}
 	}
+}
+
+function removeFromListOfBlockUrls(urlToRemove, set) {
+	let listOfBlockUrls = $(`#blockURLs${set}`).val().split("\n");
+	let indexToRemove = listOfBlockUrls.indexOf(urlToRemove);
+	if(indexToRemove >= 0)
+		listOfBlockUrls.splice(indexToRemove, 1);
+	$(`#blockURLs${set}`).val(listOfBlockUrls.join("\n"));
+}
+
+function addToListOfBlockUrls(urlToAdd, set) {
+	$(`#blockURLs${set}`).val($(`#blockURLs${set}`).val() + "\n" + urlToAdd);
 }
 
 /*** STARTUP CODE BEGINS HERE ***/

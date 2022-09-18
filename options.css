@@ -87,6 +87,28 @@ body {
 	width: 408px;
 }
 
+.whatToShowInsteadOfBlocked {
+	display: flex;
+	padding-top: 7px;
+	padding-bottom: 7px;
+}
+
+.listOfSites {
+	float: left;
+	padding-right: 5%;
+}
+
+.predefinedOptionsList {
+	display: flex;
+	flex-direction: column;
+}
+
+.predefinedOption {
+	display: flex;
+	justify-content: space-between;
+	padding: 3px;
+}
+
 #form-container {
 	display: flex;
 	justify-content: center;
