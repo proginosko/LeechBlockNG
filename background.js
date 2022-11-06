@@ -393,6 +393,11 @@ function processTabs(active) {
 			clockPageTime(tab.id, false, false);
 			clockPageTime(tab.id, true, focus);
 
+			if (tab.url.startsWith("about")) {
+				gTabs[tab.id].loaded = true;
+				gTabs[tab.id].url = tab.url;
+			}
+
 			if (gTabs[tab.id].loaded) {
 				// Check tab to see if page should be blocked
 				let blocked = checkTab(tab.id, false, true);
