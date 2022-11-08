@@ -774,7 +774,7 @@ function exportOptions() {
 
 	// Create blob and download it
 	let blob = new Blob(lines, { type: "text/plain", endings: "native" });
-	var url = URL.createObjectURL(blob);
+	let url = URL.createObjectURL(blob);
 	let downloadOptions = { url: url, filename: DEFAULT_OPTIONS_FILE };
 	if (!gIsAndroid) {
 		downloadOptions.saveAs = true;
