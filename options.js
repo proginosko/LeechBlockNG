@@ -63,6 +63,11 @@ function initForm(numSets) {
 	// Set up JQuery UI widgets
 	$("#tabs").tabs({ activate: onActivate });
 	for (let set = 1; set <= gNumSets; set++) {
+		if (gIsAndroid) {
+			// Use alternative arrows on move-left/move-right buttons
+			$(`#moveSetL${set}`).html("&#x25C0; Move Set");
+			$(`#moveSetR${set}`).html("Move Set &#x25B6;");
+		}
 		$(`#moveSetL${set}`).click(function (e) {
 			swapSets(set, set - 1);
 			$("#tabs").tabs("option", "active", set - 2);
