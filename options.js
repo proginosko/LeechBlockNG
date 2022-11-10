@@ -127,6 +127,12 @@ function initForm(numSets) {
 	getElement("moveSetL1").disabled = true;
 	getElement("moveSetR" + gNumSets).disabled = true;
 
+	if (gIsAndroid) {
+		// Hide sync options (sync storage not supported on Android yet)
+		getElement("syncOpts1").style.display = "none";
+		getElement("syncOpts2").style.display = "none";
+	}
+
 	// Set active tab
 	if (gTabIndex < 0) {
 		// -ve index = other tab (General, About)
@@ -540,12 +546,6 @@ function retrieveOptions() {
 					getElement(id).value = options[name];
 				}
 			}
-		}
-
-		if (gIsAndroid) {
-			// Hide sync options (sync storage not supported on Android yet)
-			getElement("syncOpts1").style.display = "none";
-			getElement("syncOpts2").style.display = "none";
 		}
 
 		confirmAccess(options);
