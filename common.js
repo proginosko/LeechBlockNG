@@ -260,12 +260,12 @@ function getRegExpSites(sites, matchSubdomains) {
 	}
 	return {
 		block: (blocks.length > 0)
-				? "^" + (blockFiles ? "file:|" : "") + "(https?|file):\\/+(" + blocks.join("|") + ")"
+				? "^" + (blockFiles ? "file:|" : "") + "(https?|file):\\/+([\\w\\:]+@)?(" + blocks.join("|") + ")"
 				: (blockFiles ? "^file:" : ""),
 		allow: (allows.length > 0)
-				? "^" + (allowFiles ? "file:|" : "") + "(https?|file):\\/+(" + allows.join("|") + ")"
+				? "^" + (allowFiles ? "file:|" : "") + "(https?|file):\\/+([\\w\\:]+@)?(" + allows.join("|") + ")"
 				: (allowFiles ? "^file:" : ""),
-		refer: (refers.length > 0) ? "^(https?|file):\\/+(" + refers.join("|") + ")" : "",
+		refer: (refers.length > 0) ? "^(https?|file):\\/+([\\w\\:]+@)?(" + refers.join("|") + ")" : "",
 		keyword: (keywords.length > 0)
 				? U_WORD_BEGIN + "(" + keywords.join("|") + ")" + U_WORD_END
 				: ""
