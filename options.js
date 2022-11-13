@@ -752,6 +752,12 @@ function applyImportOptions(options) {
 			}
 		}
 
+		// Apply Chrome-specific options
+		let val = options[`prevExts${set}`];
+		if (val != undefined) {
+			getElement(`prevAddons${set}`).checked = val;
+		}
+
 		// Apply custom set name to tab (if specified)
 		updateBlockSetName(set, options[`setName${set}`]);
 	}
