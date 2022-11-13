@@ -108,6 +108,7 @@ function initForm(numSets) {
 		});
 		$(`#advOpts${set}`).css("display", "none");
 	}
+	$("#accessPasswordShow").change(accessPasswordShow);
 	$("#overridePasswordShow").change(overridePasswordShow);
 	$("#theme").change(function (e) { setTheme($("#theme").val()); });
 	$("#clockOffset").click(showClockOffsetTime);
@@ -639,6 +640,14 @@ function displayAccessCode(code, asImage) {
 			codeText.appendChild(document.createTextNode(code));
 		}
 	}
+}
+
+// Show/hide access password
+//
+function accessPasswordShow() {
+	let input = getElement("accessPassword");
+	let checkbox = getElement("accessPasswordShow");
+	input.type = checkbox.checked ? "text" : "password";
 }
 
 // Show/hide override password
