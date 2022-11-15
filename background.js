@@ -1015,13 +1015,20 @@ function createBlockInfo(id, url) {
 		let clockOffset = gOptions["clockOffset"];
 		let date = new Date(Date.now() + (clockOffset * 60000)).getDate();
 
+		// Get clock time format
+		let clockTimeOpts = {};
+		let clockTimeFormat = gOptions["clockTimeFormat"];
+		if (clockTimeFormat > 0) {
+			clockTimeOpts.hour12 = (clockTimeFormat == 1);
+		}
+
 		// Convert to string
 		if (unblockTime.getDate() == date) {
 			// Same day: show time only
-			unblockTime = unblockTime.toLocaleTimeString();
+			unblockTime = unblockTime.toLocaleTimeString(undefined, clockTimeOpts);
 		} else {
 			// Different day: show date and time
-			unblockTime = unblockTime.toLocaleString();
+			unblockTime = unblockTime.toLocaleString(undefined, clockTimeOpts);
 		}
 	}
 

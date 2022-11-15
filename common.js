@@ -87,6 +87,7 @@ const GENERAL_OPTIONS = {
 	contextMenu: { type: "boolean", def: true, id: "contextMenu" }, // default: enabled
 	toolsMenu: { type: "boolean", def: true, id: "toolsMenu" }, // default: enabled
 	matchSubdomains: { type: "boolean", def: false, id: "matchSubdomains" }, // default: disabled
+	clockTimeFormat: { type: "string", def: "0", id: "clockTimeFormat" }, // default: locale default
 	saveSecs: { type: "string", def: "10", id: "saveSecs" }, // default: every 10 seconds
 	clockOffset: { type: "string", def: "", id: "clockOffset" }, // default: no offset
 	allFocused: { type: "boolean", def: false, id: "allFocused" }, // default: disabled

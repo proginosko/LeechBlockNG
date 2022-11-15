@@ -12,6 +12,7 @@ var gAccessRequiredInput;
 var gClockOffset;
 var gOverrideConfirm;
 var gOverrideMins;
+var gClockTimeOpts;
 
 // Initialize form
 //
@@ -47,6 +48,13 @@ function initializePage() {
 		initForm();
 
 		setTheme(options["theme"]);
+
+		// Get clock time format
+		gClockTimeOpts = {};
+		let clockTimeFormat = options["clockTimeFormat"];
+		if (clockTimeFormat > 0) {
+			gClockTimeOpts.hour12 = (clockTimeFormat == 1);
+		}
 
 		gClockOffset = options["clockOffset"];
 
@@ -215,7 +223,7 @@ function activateOverride() {
 	if (gOverrideConfirm) {
 		// Show confirmation dialog
 		endTime = new Date(endTime * 1000);
-		$("#alertOverrideEndTime").html(endTime.toLocaleTimeString());
+		$("#alertOverrideEndTime").html(endTime.toLocaleTimeString(undefined, gClockTimeOpts));
 		$("#alertOverrideActivated").dialog("open");
 	} else {
 		// Close page immediately (no confirmation dialog)

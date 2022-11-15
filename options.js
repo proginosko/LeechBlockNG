@@ -20,6 +20,7 @@ var gSetDisabled;
 var gSetOrdering, gSetReordered;
 var gTabIndex = 0;
 var gNewOpen = true;
+var gClockTimeOpts;
 
 // Initialize form (with specified number of block sets)
 //
@@ -416,6 +417,13 @@ function retrieveOptions() {
 
 		setTheme(options["theme"]);
 
+		// Get clock time format
+		gClockTimeOpts = {};
+		let clockTimeFormat = options["clockTimeFormat"];
+		if (clockTimeFormat > 0) {
+			gClockTimeOpts.hour12 = (clockTimeFormat == 1);
+		}
+
 		// Get current time in seconds
 		let clockOffset = options["clockOffset"];
 		let now = Math.floor(Date.now() / 1000) + (clockOffset * 60);
@@ -666,7 +674,7 @@ function showClockOffsetTime() {
 		$("#clockOffsetTime").css("display", "none");
 	} else {
 		let timedate = new Date(Date.now() + (clockOffset * 60000));
-		$("#clockOffsetTime").html(timedate.toLocaleString());
+		$("#clockOffsetTime").html(timedate.toLocaleString(undefined, gClockTimeOpts));
 		$("#clockOffsetTime").css("display", "inline");
 	}
 }
