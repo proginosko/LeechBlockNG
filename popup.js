@@ -83,10 +83,22 @@ function cancelOverride() {
 	window.close();
 }
 
+// Reset rollover
+//
+function resetRollover() {
+	let message = {
+		type: "reset-rollover",
+	};
+	browser.runtime.sendMessage(message);
+
+	window.close();
+}
+
 document.querySelector("#options").addEventListener("click", openOptions);
 document.querySelector("#lockdown").addEventListener("click", openLockdown);
 document.querySelector("#override").addEventListener("click", openOverride);
 document.querySelector("#stats").addEventListener("click", openStats);
 document.querySelector("#cancelOverride").addEventListener("click", cancelOverride);
+document.querySelector("#resetRollover").addEventListener("click", resetRollover);
 
 document.addEventListener("DOMContentLoaded", initializePage);

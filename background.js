@@ -23,6 +23,7 @@ var gTabs = [];
 var gSetCounted = [];
 var gSavedTimeData = [];
 var gRegExps = [];
+var gActiveTabId = 0;
 var gPrevActiveTabId = 0;
 var gFocusWindowId = 0;
 var gAllFocused = false;
@@ -1253,6 +1254,23 @@ function applyOverride(endTime) {
 	updateIcon();
 }
 
+// Reset rollover time for all sets applicable to active tab
+//
+function resetRolloverTime() {
+	//log("resetRolloverTime");
+
+	if (!gGotOptions || !gActiveTabId) {
+		return;
+	}
+
+	// Get block set for currently active time limit
+	let set = gTabs[gActiveTabId].secsLeftSet;
+	if (set) {
+		// Reset rollover time
+		gOptions[`timedata${set}`][5] = 0;
+	}
+}
+
 // Open extension page (either create new tab or activate existing tab)
 //
 function openExtensionPage(url) {
@@ -1422,6 +1440,11 @@ function handleMessage(message, sender, sendResponse) {
 			gTabs[sender.tab.id].referrer = message.referrer;
 			break;
 
+		case "reset-rollover":
+			// Reset rollover time
+			resetRolloverTime();
+			break;
+
 		case "restart":
 			// Restart time data requested by statistics page
 			restartTimeData(message.set);
@@ -1475,6 +1498,7 @@ function handleTabActivated(activeInfo) {
 	let tabId = activeInfo.tabId;
 	//log("handleTabActivated: " + tabId);
 
+	gActiveTabId = tabId;
 	gPrevActiveTabId = activeInfo.previousTabId;
 
 	initTab(tabId);
