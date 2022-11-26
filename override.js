@@ -241,7 +241,8 @@ function initAccessControlPrompt(prompt) {
 			if (input.val() == gAccessRequiredInput) {
 				gAccessConfirmed = true;
 				if (gOverrideMins) {
-					activateOverride();
+					// Slight delay to allow focus to pass to new dialog
+					setTimeout(activateOverride, 100);
 				} else {
 					$("#form").show();
 				}
