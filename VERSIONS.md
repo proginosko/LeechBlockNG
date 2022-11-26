@@ -1,3 +1,9 @@
+### Version 1.5.2 (26 Nov 2022)
+* Added option to show/hide access password.
+* Added option to select clock time format (12/24-hour).
+* Added button to reset rollover time.
+* Bug fixes, UI tweaks, and under-the-hood improvements.
+
 ### Version 1.5.1 (12 Aug 2022)
 * Fixed issue with pinned/restored tabs.
 
