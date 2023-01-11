@@ -33,7 +33,7 @@ function initializePage() {
 	//log("initializePage");
 
 	browser.storage.local.get("sync").then(onGotSync, onError);
-
+	$("mins").focus();
 	function onGotSync(options) {
 		if (options["sync"]) {
 			browser.storage.sync.get().then(onGot, onError);
