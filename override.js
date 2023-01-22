@@ -33,7 +33,7 @@ function initializePage() {
 	//log("initializePage");
 
 	browser.storage.local.get("sync").then(onGotSync, onError);
-	$("mins").focus();
+
 	function onGotSync(options) {
 		if (options["sync"]) {
 			browser.storage.sync.get().then(onGot, onError);
@@ -91,6 +91,12 @@ function closePage() {
 	browser.runtime.sendMessage({ type: "close" });
 }
 
+// Set focus to minutes input field
+//
+function focusMins() {
+	$("#mins").focus();
+}
+
 // Confirm access to override
 //
 function confirmAccess(options) {
@@ -142,6 +148,7 @@ function confirmAccess(options) {
 	} else {
 		// Override duration not specified in General options
 		$("#form").show();
+		setTimeout(focusMins, 100);
 	}
 }
 
@@ -264,6 +271,7 @@ function initAccessControlPrompt(prompt) {
 					setTimeout(activateOverride, 100);
 				} else {
 					$("#form").show();
+					setTimeout(focusMins, 100);
 				}
 				$(`#${prompt}`).dialog("close");
 			} else {
