@@ -1,3 +1,8 @@
+### Version 1.5.3 (05 Feb 2023)
+* Added option to include passwords in exported file.
+* Added option to enable/disable auto-loading of blocked page after delay countdown.
+* UI tweaks.
+
 ### Version 1.5.2 (26 Nov 2022)
 * Added option to show/hide access password.
 * Added option to select clock time format (12/24-hour).
