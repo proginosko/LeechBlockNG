@@ -9,3 +9,5 @@ LeechBlock NG (Next Generation) is a simple productivity tool designed to block 
 **Contributors:** Dario Kolac (graphics) & Robert Gützkow (graphics)
 
 Note that the latest version of [jQuery UI](https://jqueryui.com/) should be installed in the subfolder `jquery-ui`.
+
+**Policy on PRs:** I'm happy to consider PRs, but unless they're relatively simple (e.g., bug fixes or UI tweaks) it will take me some time to review and test them, and even then I may decide not to approve them. Please understand that LeechBlock is just a hobby for me, and I have very little time even to develop my own code, never mind other people's code! If you want to fork LeechBlock and release your own version, you're more than welcome.
