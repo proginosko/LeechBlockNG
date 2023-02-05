@@ -47,6 +47,7 @@ const PER_SET_OPTIONS = {
 	showKeyword: { type: "boolean", def: true, id: "showKeyword" },
 	delayFirst: { type: "boolean", def: true, id: "delayFirst" },
 	delaySecs: { type: "string", def: "60", id: "delaySecs" },
+	delayAutoLoad: { type: "boolean", def: true, id: "delayAutoLoad" },
 	delayCancel: { type: "boolean", def: true, id: "delayCancel" },
 	reloadSecs: { type: "string", def: "", id: "reloadSecs" },
 	allowOverride: { type: "boolean", def: false, id: "allowOverride" },

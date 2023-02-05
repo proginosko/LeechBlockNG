@@ -103,7 +103,7 @@ function onCountdownTimer(countdown) {
 		// Clear countdown timer
 		window.clearInterval(countdown.interval);
 
-		// Request extension allow blocked page and redirect
+		// Notify extension that delay countdown has completed
 		let message = {
 			type: "delayed",
 			blockedURL: countdown.blockedURL,

@@ -1293,7 +1293,7 @@ function openExtensionPage(url) {
 
 // Open page blocked by delaying page
 //
-function openDelayedPage(id, url, set) {
+function openDelayedPage(id, url, set, autoLoad) {
 	//log("openDelayedPage: " + id + " " + url);
 
 	if (!gGotOptions || set < 1 || set > gNumSets) {
@@ -1308,8 +1308,10 @@ function openDelayedPage(id, url, set) {
 	gTabs[id].allowedPath = gOptions[`delayFirst${set}`] ? null : parsedURL.path;
 	gTabs[id].allowedSet = set;
 
-	// Redirect page
-	browser.tabs.update(id, { url: url });
+	if (autoLoad) {
+		// Redirect page
+		browser.tabs.update(id, { url: url });
+	}
 }
 
 // Add site to block set
@@ -1404,8 +1406,11 @@ function handleMessage(message, sender, sendResponse) {
 			break;
 
 		case "delayed":
-			// Redirect requested by delaying page
-			openDelayedPage(sender.tab.id, message.blockedURL, message.blockedSet);
+			// Delaying page countdown completed
+			let url = message.blockedURL;
+			let set = message.blockedSet;
+			let autoLoad = gOptions[`delayAutoLoad${set}`];
+			openDelayedPage(sender.tab.id, url, set, autoLoad);
 			break;
 
 		case "loaded":
