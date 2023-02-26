@@ -39,13 +39,13 @@ body {
 	border: 1px solid #253;
 }
 
-.ui-widget fieldset, input, select, textarea {
+.ui-widget fieldset, .ui-widget input, .ui-widget select, .ui-widget textarea {
 	background: #031;
 	color: #9ca;
 	border: 1px solid #840;
 }
 
-.ui-widget input:disabled, select:disabled, textarea:disabled {
+.ui-widget input:disabled, .ui-widget select:disabled, .ui-widget textarea:disabled {
 	background: #142;
 	color: #586;
 	border: 1px solid #253;
