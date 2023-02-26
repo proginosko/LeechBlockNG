@@ -11,7 +11,7 @@ function processBlockInfo(info) {
 		// Set theme
 		let link = document.getElementById("themeLink");
 		if (link) {
-			link.href = info.theme ? `/themes/${info.theme}.css` : "";
+			link.href = "/themes/" + (info.theme ? `${info.theme}.css` : "default.css");
 		}
 	}
 

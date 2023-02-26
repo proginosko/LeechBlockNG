@@ -518,7 +518,7 @@ function createAccessCode(len) {
 function setTheme(theme) {
 	let link = document.getElementById("themeLink");
 	if (link) {
-		link.href = theme ? `/themes/${theme}.css` : "";
+		link.href = "/themes/" + (theme ? `${theme}.css` : "default.css");
 	}
 }
 
