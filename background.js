@@ -1254,7 +1254,7 @@ function applyOverride(endTime) {
 	updateIcon();
 }
 
-// Reset rollover time for all sets applicable to active tab
+// Reset rollover time for set applicable to active tab
 //
 function resetRolloverTime() {
 	//log("resetRolloverTime");
@@ -1266,8 +1266,30 @@ function resetRolloverTime() {
 	// Get block set for currently active time limit
 	let set = gTabs[gActiveTabId].secsLeftSet;
 	if (set) {
-		// Reset rollover time
+		// Reset rollover time for current period
 		gOptions[`timedata${set}`][5] = 0;
+	}
+}
+
+// Discard remaining time for set applicable to active tab
+//
+function discardRemainingTime() {
+	//log("discardRemainingTime");
+
+	if (!gGotOptions || !gActiveTabId) {
+		return;
+	}
+
+	// Get block set for currently active time limit
+	let set = gTabs[gActiveTabId].secsLeftSet;
+	if (set) {
+		// Set used time to time limit
+		let limitMins = gOptions[`limitMins${set}`];
+		gOptions[`timedata${set}`][3] = (limitMins * 60);
+		// Reset rollover time for current period
+		gOptions[`timedata${set}`][5] = 0;
+		// Reset rollover time for next period
+		gOptions[`timedata${set}`][6] = 0;
 	}
 }
 
@@ -1411,6 +1433,11 @@ function handleMessage(message, sender, sendResponse) {
 			let set = message.blockedSet;
 			let autoLoad = gOptions[`delayAutoLoad${set}`];
 			openDelayedPage(sender.tab.id, url, set, autoLoad);
+			break;
+
+		case "discard-time":
+			// Discard remaining time
+			discardRemainingTime();
 			break;
 
 		case "loaded":
