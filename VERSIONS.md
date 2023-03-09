@@ -1,3 +1,6 @@
+### Version 1.5.4.1 (08 Mar 2023)
+* Fixed default theme for blocking/delaying pages.
+
 ### Version 1.5.4 (26 Feb 2023)
 * Added button to discard remaining time allowance (including any rollover time).
 * Default theme now honors browser dark/light mode.
