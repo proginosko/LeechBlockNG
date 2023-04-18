@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html id="lbDelayingPage" lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=0.75, shrink-to-fit=no">
+		<title>Site Bloqueado</title>
+		<link rel="shortcut icon" href="/icons/leechblock32.ico" type="image/x-icon">
+		<link rel="icon" href="/icons/leechblock32.ico" type="image/x-icon">
+		<link rel="stylesheet" href="/fonts.css" type="text/css">
+		<link rel="stylesheet" href="/style.css" type="text/css">
+		<link id="themeLink" rel="stylesheet">
+	</head>
+
+	<body>
+
+		<!-- logo -->
+		<div>
+			<img src="/images/leechblock_logo.svg" class="logo" alt="LeechBlock logo" title="LeechBlock">
+		</div>
+
+		<!-- warning message -->
+		<div>
+			<h1>A página que você está tentando acessar foi bloqueada temporariamente por <a href="https://www.proginosko.com/leechblock/">LeechBlock</a>.</h1>
+		</div>
+
+		<!-- blocked site info -->
+		<div>
+			<a id="lbBlockedURLLink" target="_self"><span id="lbBlockedURL"></span></a>
+			(<span id="lbBlockedSet">Lista de Bloqueio</span>)
+			<p id="lbKeywordMatched">Palavra-chave encontrada: <strong><span id="lbKeywordMatch"></span></strong></p>
+			<p id="lbCountdownText">A página será desbloqueada em <strong><span id="lbDelaySeconds">0</span></strong> segundo(s).</p>
+		</div>
+
+		<!-- support info -->
+		<div class="support">
+			LeechBlock sempre será livre de custo para usar, mas se a extensão melhorou
+			a sua vida de alguma forma, considere apoiar o desenvolvimento <br>
+			<a href="https://www.paypal.me/JamesNAnderson">fazendo uma contribuição</a> ou
+			<a href="https://addons.mozilla.org/firefox/addon/leechblock-ng/">escrevendo uma avaliação</a>.
+		</div>
+
+		<script src="/blocked.js"></script>
+
+	</body>
+
+</html>
