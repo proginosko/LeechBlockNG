@@ -1,3 +1,6 @@
+### Version 1.5.5 (23 Apr 2023)
+* Added Brazilian Portuguese localization.
+
 ### Version 1.5.4.1 (08 Mar 2023)
 * Fixed default theme for blocking/delaying pages.
 
