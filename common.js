@@ -319,7 +319,7 @@ function checkPosNegIntFormat(value) {
 
 // Check positive number format (including decimals as well as whole numbers, except 0)
 //
-function isPosNumberFormat(value) {
+function checkPosNumberFormat(value) {
   return (value == "") || /^(0\.\d+|[1-9]\d*(\.\d+)?)$/.test(value);
 }
 
