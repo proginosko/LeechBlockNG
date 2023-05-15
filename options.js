@@ -195,7 +195,7 @@ function saveOptions(event) {
 			$("#alertBadTimes").dialog("open");
 			return false;
 		}
-		if (!checkPosIntFormat(limitMins)) {
+		if (!isPosNumberFormat(limitMins)) {
 			$("#tabs").tabs("option", "active", (set - 1));
 			$(`#limitMins${set}`).focus();
 			$("#alertBadTimeLimit").dialog("open");

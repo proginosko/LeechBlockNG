@@ -317,6 +317,12 @@ function checkPosNegIntFormat(value) {
 	return (value == "") || /^-?[1-9][0-9]*$/.test(value);
 }
 
+// Check positive number format (including decimals as well as whole numbers, except 0)
+//
+function isPosNumberFormat(value) {
+  return (value == "") || /^(0\.\d+|[1-9]\d*(\.\d+)?)$/.test(value);
+}
+
 // Check blocking page URL format
 //
 function checkBlockURLFormat(url) {
