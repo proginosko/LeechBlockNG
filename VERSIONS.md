@@ -1,5 +1,8 @@
+### Version 1.5.6 (28 May 2023)
+* Allowed decimal time limits, e.g., 0.5 or 2.5 (thanks to George Kolasa).
+
 ### Version 1.5.5 (23 Apr 2023)
-* Added Brazilian Portuguese localization.
+* Added Brazilian Portuguese localization (thanks to Pedro-Celeste).
 
 ### Version 1.5.4.1 (08 Mar 2023)
 * Fixed default theme for blocking/delaying pages.
