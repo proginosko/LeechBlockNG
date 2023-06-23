@@ -1038,17 +1038,18 @@ function disableSetOptions(set, disabled) {
 //
 function disableGeneralOptions() {
 	// Disable all general options
+	for (let name in GENERAL_OPTIONS) {
+		let id = GENERAL_OPTIONS[name].id;
+		if (id) {
+			getElement(id).disabled = true;
+		}
+	}
+
+	// Disable other items
 	let items = [
-		"numSets",
-		"optionsAccess", "accessPassword", "hidePassword", "accessPreventTimes",
-		"timerVisible", "timerSize", "timerLocation", "timerBadge",
-		"warnSecs", "warnImmediate",
-		"overrideMins", "overrideAccess", "overrideConfirm",
-		"theme", "contextMenu", "toolsMenu", "matchSubdomains",
-		"saveSecs", "clockOffset", "allFocused",
-		"processActiveTabs", "accessCodeImage", "syncStorage",
+		"accessPasswordShow", "overridePasswordShow",
 		"exportOptions", "importOptions", "importFile",
-		"exportOptionsSync", "importOptionsSync", "autoExportSync"
+		"exportOptionsSync", "importOptionsSync"
 	];
 	for (let item of items) {
 		getElement(item).disabled = true;
