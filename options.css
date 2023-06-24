@@ -83,6 +83,10 @@ body {
 	padding: 4px 12px;
 }
 
+.ui-widget code {
+	font: normal 14px monospace;
+}
+
 .logo {
 	width: 408px;
 }
