@@ -1,3 +1,8 @@
+### Version 1.5.7 (02 Jul 2023)
+* Allowed drive specifiers in site list (e.g., C:/path/).
+* Added link to online documentation.
+* Fixed issue with disabling general options.
+
 ### Version 1.5.6 (28 May 2023)
 * Allowed decimal time limits, e.g., 0.5 or 2.5 (thanks to George Kolasa).
 
