@@ -1195,6 +1195,9 @@ function getUnblockTime(set) {
 							0, mp.end);
 				}
 			}
+			
+			// Return end time for current time limit period
+			return new Date(timedata[2] * 1000 + limitPeriod * 1000);
 		}
 	}
 
