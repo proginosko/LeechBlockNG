@@ -864,6 +864,14 @@ function importOptions() {
 			return;
 		}
 
+		// Preserve passwords if not imported
+		if (options["password"] == undefined) {
+			options["password"] = getElement("accessPassword").value;
+		}
+		if (options["orp"] == undefined) {
+			options["orp"] = getElement("overridePassword").value;
+		}
+
 		cleanOptions(options);
 		applyImportOptions(options);
 
