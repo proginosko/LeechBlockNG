@@ -4,6 +4,10 @@
 
 const DEFAULT_OPTIONS_FILE = "LeechBlockOptions.txt";
 
+const SUB_OPTIONS = {
+	"allowOverride" : "allowOverLock"
+};
+
 function log(message) { console.log("[LBNG] " + message); }
 function warn(message) { console.warn("[LBNG] " + message); }
 
@@ -73,6 +77,9 @@ function initForm(numSets) {
 			$("#tabs").tabs("option", "active", set);
 		});
 		$(`#setName${set}`).change(function (e) { updateBlockSetName(set, $(`#setName${set}`).val()); });
+		for (let name in SUB_OPTIONS) {
+			$(`#${name}${set}`).change(function (e) { updateSubOptions(set); });
+		}
 		$(`#allDay${set}`).click(function (e) { $(`#times${set}`).val(ALL_DAY_TIMES); });
 		$(`#defaultPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DEFAULT_BLOCK_URL); });
 		$(`#delayingPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DELAYED_BLOCK_URL); });
@@ -537,6 +544,9 @@ function retrieveOptions() {
 
 			// Apply custom set name to tab (if specified)
 			updateBlockSetName(set, options[`setName${set}`]);
+
+			// Update enabled/disabled state of sub-options
+			updateSubOptions(set);
 		}
 
 		// General options
@@ -764,6 +774,9 @@ function applyImportOptions(options) {
 
 		// Apply custom set name to tab (if specified)
 		updateBlockSetName(set, options[`setName${set}`]);
+
+		// Update enabled/disabled state of sub-options
+		updateSubOptions(set);
 	}
 
 	// General options
@@ -935,7 +948,7 @@ function openDiagnostics() {
 // Swap options for two block sets
 //
 function swapSetOptions(set1, set2) {
-	// Swap disabled status
+	// Swap disabled state
 	let cl_disabled1 = getElement(`cancelLockdown${set1}`).disabled;
 	let cl_disabled2 = getElement(`cancelLockdown${set2}`).disabled;
 	let disabled1 = gSetDisabled[set1];
@@ -1007,6 +1020,9 @@ function resetSetOptions(set) {
 			}
 		}
 	}
+
+	// Update enabled/disabled state of sub-options
+	updateSubOptions(set);
 }
 
 // Disable (or re-enable) options for block set
@@ -1073,6 +1089,17 @@ function disableImportOptions() {
 	];
 	for (let item of items) {
 		getElement(item).disabled = true;
+	}
+}
+
+// Update enabled/disabled state of sub-options
+//
+function updateSubOptions(set) {
+	for (let name in SUB_OPTIONS) {
+		let subname = SUB_OPTIONS[name];
+		let comp1 = getElement(`${name}${set}`);
+		let comp2 = getElement(`${subname}${set}`);
+		comp2.disabled = comp1.disabled || !comp1.checked;
 	}
 }
 
