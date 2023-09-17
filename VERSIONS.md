@@ -1,3 +1,7 @@
+### Version 1.5.8 (17 Sep 2023)
+* Added option to allow/disallow override during lockdown.
+* Bug fixes.
+
 ### Version 1.5.7 (02 Jul 2023)
 * Allowed drive specifiers in site list (e.g., C:/path/).
 * Added link to online documentation.
