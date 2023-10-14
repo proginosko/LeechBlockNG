@@ -1,13 +1,6 @@
 {
 
-	"author": "James Anderson",
-
-	"background": {
-		"scripts": ["common.js", "background.js"]
-	},
-
-	"browser_action": {
-		"browser_style": false,
+	"action": {
 		"default_icon": {
 			"16": "icons/leechblock16.png",
 			"32": "icons/leechblock32.png",
@@ -16,6 +9,12 @@
 		},
 		"default_popup": "popup.html",
 		"default_title": "LeechBlock"
+	},
+
+	"author": "James Anderson",
+
+	"background": {
+		"scripts": ["common.js", "background.js"]
 	},
 
 	"browser_specific_settings": {
@@ -39,6 +38,10 @@
 
 	"homepage_url": "https://www.proginosko.com/leechblock/",
 
+	"host_permissions": [
+		"<all_urls>"
+	],
+
 	"icons": {
 		"16": "icons/leechblock16.png",
 		"32": "icons/leechblock32.png",
@@ -48,13 +51,9 @@
 		"128": "icons/leechblock128.png"
 	},
 
-	"manifest_version": 2,
+	"manifest_version": 3,
 
 	"name": "__MSG_extensionName__",
-
-	"optional_permissions": [
-		"<all_urls>"
-	],
 
 	"options_ui": {
 		"page": "options.html",
@@ -62,6 +61,7 @@
 	},
 
 	"permissions": [
+		"alarms",
 		"downloads",
 		"menus",
 		"storage",

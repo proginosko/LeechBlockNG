@@ -89,47 +89,47 @@ function refreshMenus() {
 
 	browser.menus.removeAll();
 
-	let context = gOptions["contextMenu"] ? "all" : "browser_action";
-	let contexts = gOptions["toolsMenu"] ? [context, "tools_menu"] : [context];
+	let context = gOptions["contextMenu"] ? "all" : "action";
 
 	// Options
 	browser.menus.create({
 		id: "options",
 		title: browser.i18n.getMessage("optionsMenuItem"),
-		contexts: contexts
+		contexts: [context]
 	});
 
 	// Lockdown
 	browser.menus.create({
 		id: "lockdown",
 		title: browser.i18n.getMessage("lockdownMenuItem"),
-		contexts: contexts
+		contexts: [context]
 	});
 
 	// Override
 	browser.menus.create({
 		id: "override",
 		title: browser.i18n.getMessage("overrideMenuItem"),
-		contexts: contexts
+		contexts: [context]
 	});
 
 	// Statistics
 	browser.menus.create({
 		id: "stats",
 		title: browser.i18n.getMessage("statisticsMenuItem"),
-		contexts: contexts
+		contexts: [context]
 	});
 
 	browser.menus.create({
+		id: "separator",
 		type: "separator",
-		contexts: [context] // never in tools menu
+		contexts: [context]
 	});
 
 	// Add Site
 	browser.menus.create({
 		id: "addSite",
 		title: browser.i18n.getMessage("addSiteMenuItem"),
-		contexts: [context] // never in tools menu
+		contexts: [context]
 	});
 
 	// Add Site submenu
@@ -141,7 +141,7 @@ function refreshMenus() {
 			id: `addSite-${set}`,
 			parentId: "addSite",
 			title: title,
-			contexts: contexts
+			contexts: [context]
 		});
 	}
 
@@ -149,7 +149,7 @@ function refreshMenus() {
 	browser.menus.create({
 		id: "addPage",
 		title: browser.i18n.getMessage("addPageMenuItem"),
-		contexts: [context] // never in tools menu
+		contexts: [context]
 	});
 
 	// Add Page submenu
@@ -161,7 +161,7 @@ function refreshMenus() {
 			id: `addPage-${set}`,
 			parentId: "addPage",
 			title: title,
-			contexts: contexts
+			contexts: [context]
 		});
 	}
 }
@@ -942,10 +942,10 @@ function updateTimer(id) {
 	// Set tooltip
 	if (!gIsAndroid) {
 		if (secsLeft == Infinity) {
-			browser.browserAction.setTitle({ title: null, tabId: id });
+			browser.action.setTitle({ title: null, tabId: id });
 		} else {
 			let title = "LeechBlock [" + formatTime(secsLeft) + "]"
-			browser.browserAction.setTitle({ title: title, tabId: id });
+			browser.action.setTitle({ title: title, tabId: id });
 		}
 	}
 
@@ -954,10 +954,10 @@ function updateTimer(id) {
 		let m = Math.floor(secsLeft / 60);
 		let s = Math.floor(secsLeft) % 60;
 		let text = m + ":" + ((s < 10) ? "0" + s : s);
-		browser.browserAction.setBadgeBackgroundColor({ color: "#666" });
-		browser.browserAction.setBadgeText({ text: text, tabId: id });
+		browser.action.setBadgeBackgroundColor({ color: "#666" });
+		browser.action.setBadgeText({ text: text, tabId: id });
 	} else {
-		browser.browserAction.setBadgeText({ text: "", tabId: id });
+		browser.action.setBadgeText({ text: "", tabId: id });
 	}
 }
 
@@ -977,10 +977,10 @@ function updateIcon() {
 
 	// Change icon only if override status has changed
 	if (!gOverrideIcon && overrideEndTime > now) {
-		browser.browserAction.setIcon({ path: OVERRIDE_ICON });
+		browser.action.setIcon({ path: OVERRIDE_ICON });
 		gOverrideIcon = true;
 	} else if (gOverrideIcon && overrideEndTime <= now) {
-		browser.browserAction.setIcon({ path: DEFAULT_ICON });
+		browser.action.setIcon({ path: DEFAULT_ICON });
 		gOverrideIcon = false;
 	}
 }
@@ -1614,6 +1614,10 @@ function onInterval() {
 	}
 }
 
+function onAlarm(alarmInfo) {
+	//log("onAlarm: " + alarmInfo.name);
+}
+
 /*** STARTUP CODE BEGINS HERE ***/
 
 browser.runtime.getPlatformInfo().then(
@@ -1621,7 +1625,7 @@ browser.runtime.getPlatformInfo().then(
 );
 
 let localePath = browser.i18n.getMessage("localePath");
-browser.browserAction.setPopup({ popup: localePath + "popup.html" });
+browser.action.setPopup({ popup: localePath + "popup.html" });
 
 if (browser.menus) {
 	browser.menus.onClicked.addListener(handleMenuClick);
@@ -1641,3 +1645,14 @@ if (browser.windows) {
 }
 
 window.setInterval(onInterval, TICK_TIME);
+
+// Use alarms to keep background script alive and ticker ticking...
+let now = Date.now();
+for (let alarm = 1; alarm <= 6; alarm++) {
+	let alarmInfo = {
+		when: now + (alarm * 10000),
+		periodInMinutes: 1
+	};
+	browser.alarms.create(`Alarm${alarm}`, alarmInfo);
+}
+browser.alarms.onAlarm.addListener(onAlarm);

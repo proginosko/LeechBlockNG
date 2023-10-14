@@ -87,7 +87,6 @@ const GENERAL_OPTIONS = {
 	warnSecs: { type: "string", def: "", id: "warnSecs" }, // default: no warning
 	warnImmediate: { type: "boolean", def: true, id: "warnImmediate" }, // default: warn only for immediate block
 	contextMenu: { type: "boolean", def: true, id: "contextMenu" }, // default: enabled
-	toolsMenu: { type: "boolean", def: true, id: "toolsMenu" }, // default: enabled
 	matchSubdomains: { type: "boolean", def: false, id: "matchSubdomains" }, // default: disabled
 	clockTimeFormat: { type: "string", def: "0", id: "clockTimeFormat" }, // default: locale default
 	saveSecs: { type: "string", def: "10", id: "saveSecs" }, // default: every 10 seconds
