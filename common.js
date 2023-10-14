@@ -92,6 +92,7 @@ const GENERAL_OPTIONS = {
 	saveSecs: { type: "string", def: "10", id: "saveSecs" }, // default: every 10 seconds
 	clockOffset: { type: "string", def: "", id: "clockOffset" }, // default: no offset
 	allFocused: { type: "boolean", def: false, id: "allFocused" }, // default: disabled
+	processTabsSecs: { type: "string", def: "1", id: "processTabsSecs" }, // default: every second
 	processActiveTabs: { type: "boolean", def: false, id: "processActiveTabs" }, // default: disabled
 	accessCodeImage: { type: "boolean", def: false, id: "accessCodeImage" }, // default: disabled
 	diagMode: { type: "boolean", def: false, id: "diagMode" }, // default: disabled

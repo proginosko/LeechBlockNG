@@ -2,8 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-const TICK_TIME = 1000; // update every second
-
 const BLOCKABLE_URL = /^(http|file|about|moz-extension)/i;
 const CLOCKABLE_URL = /^(http|file)/i;
 const EXTENSION_URL = browser.runtime.getURL("");
@@ -29,6 +27,8 @@ var gFocusWindowId = 0;
 var gAllFocused = false;
 var gOverrideIcon = false;
 var gSaveSecsCount = 0;
+var gTickerID;
+var gTickerSecs = 1; // update every second by default
 
 // Initialize object to track tab (returns false if already initialized)
 //
@@ -166,6 +166,19 @@ function refreshMenus() {
 	}
 }
 
+// Refresh ticker for updates
+//
+function refreshTicker() {
+	let processTabsSecs = +gOptions["processTabsSecs"];
+
+	// Only restart ticker if interval has changed
+	if (processTabsSecs != gTickerSecs) {
+		gTickerSecs = processTabsSecs;
+		window.clearInterval(gTickerID);
+		gTickerID = window.setInterval(onInterval, gTickerSecs * 1000);
+	}
+}
+
 // Retrieve options from storage
 //
 function retrieveOptions(update) {
@@ -201,6 +214,7 @@ function retrieveOptions(update) {
 
 		createRegExps();
 		refreshMenus();
+		refreshTicker();
 		loadSiteLists();
 		updateIcon();
 
@@ -1644,7 +1658,7 @@ if (browser.windows) {
 	browser.windows.onFocusChanged.addListener(handleWinFocused);
 }
 
-window.setInterval(onInterval, TICK_TIME);
+gTickerID = window.setInterval(onInterval, gTickerSecs * 1000);
 
 // Use alarms to keep background script alive and ticker ticking...
 let now = Date.now();

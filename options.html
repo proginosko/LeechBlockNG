@@ -438,9 +438,6 @@
 								format
 							</p>
 							<p>
-								Save time data every <input id="saveSecs" type="text" size="2" title="Default: 10"> seconds
-							</p>
-							<p>
 								Offset clock by <input id="clockOffset" type="text" size="4" title="Leave blank for no offset"> minutes
 								&nbsp;&nbsp;&nbsp;&nbsp;
 								<span id="clockOffsetTime" style="display: none;"></span>
@@ -448,10 +445,6 @@
 							<p>
 								<input id="allFocused" type="checkbox">
 								<label for="allFocused">Treat browser windows as always focused</label>
-							</p>
-							<p>
-								<input id="processActiveTabs" type="checkbox">
-								<label for="processActiveTabs">Process only active tabs (improves performance when multiple tabs open)</label>
 							</p>
 							<p>
 								<input id="accessCodeImage" type="checkbox">
@@ -464,6 +457,19 @@
 							<p>
 								<input id="diagMode" type="checkbox">
 								<label for="diagMode">Diagnostic mode (outputs to browser console)</label>
+							</p>
+						</fieldset>
+						<fieldset>
+							<legend>Performance</legend>
+							<p>
+								Save time data every <input id="saveSecs" type="text" size="2" title="Default: 10"> second(s)
+							</p>
+							<p>
+								Process tabs every <input id="processTabsSecs" type="text" size="2" title="Default: 1"> second(s)
+							</p>
+							<p>
+								<input id="processActiveTabs" type="checkbox">
+								<label for="processActiveTabs">Process only active tabs (improves performance when multiple tabs open)</label>
 							</p>
 						</fieldset>
 						<fieldset>

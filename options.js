@@ -270,6 +270,13 @@ function saveOptions(event) {
 		$("#alertBadSeconds").dialog("open");
 		return false;
 	}
+	let processTabsSecs = $("#processTabsSecs").val();
+	if (!processTabsSecs || !checkPosIntFormat(processTabsSecs)) {
+		$("#tabs").tabs("option", "active", gNumSets);
+		$("#processTabsSecs").focus();
+		$("#alertBadSeconds").dialog("open");
+		return false;
+	}
 	let clockOffset = $("#clockOffset").val();
 	if (!checkPosNegIntFormat(clockOffset)) {
 		$("#tabs").tabs("option", "active", gNumSets);
