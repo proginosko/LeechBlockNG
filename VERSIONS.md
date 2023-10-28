@@ -1,3 +1,8 @@
+### Version 1.6 (28 Oct 2023)
+* Updated for Manifest V3.
+* Added option to change time interval for processing tabs.
+* Please report any issues on GitHub: https://github.com/proginosko/
+
 ### Version 1.5.8 (17 Sep 2023)
 * Added option to allow/disallow override during lockdown.
 * Bug fixes.
