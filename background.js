@@ -242,24 +242,22 @@ function loadSiteLists() {
 		let sitesURL = gOptions[`sitesURL${set}`];
 		if (sitesURL) {
 			sitesURL = sitesURL.replace(/\$S/, set).replace(/\$T/, time);
-			try {
-				let req = new XMLHttpRequest();
-				req.set = set;
-				req.open("GET", sitesURL, true);
-				req.overrideMimeType("text/plain");
-				req.onload = onLoad;
-				req.send();
-			} catch (error) {
-				warn("Cannot load sites from URL: " + sitesURL);
-			}
+			fetch(sitesURL).then(
+				(response) => {
+					if (response.status == 200) {
+						response.text().then((text) => { onLoad(set, text); });
+					} else {
+						warn("Cannot load sites from URL: " + sitesURL);
+					}
+				},
+				(reason) => {
+					warn("Cannot load sites from URL: " + sitesURL);
+				});
 		}
 	}
 
-	function onLoad(event) {
-		let req = event.target;
-		if (req.readyState == XMLHttpRequest.DONE && req.status == 200) {
-			let set = req.set;
-			let sites = req.responseText;
+	function onLoad(set, sites) {
+		if (set && sites) {
 			sites = sites.replace(/\s+/g, " ").replace(/(^ +)|( +$)|(\w+:\/+)/g, "");
 			sites = sites.split(" ").sort().join(" "); // sort alphabetically
 
