@@ -37,7 +37,7 @@ const PER_SET_OPTIONS = {
 	rollover: { type: "boolean", def: false, id: "rollover" },
 	conjMode: { type: "boolean", def: false, id: "conjMode" },
 	days: { type: "array", def: [false, true, true, true, true, true, false], id: "day" },
-	blockURL: { type: "string", def: DEFAULT_BLOCK_URL, id: "blockURL" },
+	blockURLs: { type: "string", def: DEFAULT_BLOCK_URL, id: "blockURLs" },
 	applyFilter: { type: "boolean", def: false, id: "applyFilter" },
 	filterName: { type: "string", def: "grayscale", id: "filterName" },
 	filterMute: { type: "boolean", def: false, id: "filterMute" },
@@ -325,8 +325,12 @@ function checkPosNumberFormat(value) {
 
 // Check blocking page URL format
 //
-function checkBlockURLFormat(url) {
-	return INTERNAL_BLOCK_URL.test(url) || getParsedURL(url).page;
+function checkBlockURLsFormat(url) {
+	let listOfUrls = url.split("\n");
+	for(let i = 0; i < listOfUrls.length; ++i)
+		if(!INTERNAL_BLOCK_URL.test(listOfUrls[i]) && !getParsedURL(listOfUrls[i]).page)
+			return false;
+	return true;
 }
 
 // Convert times to minute periods
