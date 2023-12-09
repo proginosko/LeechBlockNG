@@ -1,3 +1,6 @@
+### Version 1.6.1 (09 Dec 2023)
+* Under-the-hood improvements.
+
 ### Version 1.6 (28 Oct 2023)
 * Updated for Manifest V3.
 * Added option to change time interval for processing tabs.
