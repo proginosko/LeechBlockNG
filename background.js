@@ -1258,12 +1258,40 @@ function applyOverride(endTime) {
 		return;
 	}
 
-	// Update option
-	gOptions["oret"] = endTime;
-
-	// Save updated option to storage
 	let options = {};
-	options["oret"] = endTime;
+
+	// Set override end time
+	options["oret"] = gOptions["oret"] = endTime;
+
+	if (endTime) {
+		// Get current time in seconds
+		let clockOffset = gOptions["clockOffset"];
+		let now = Math.floor(Date.now() / 1000) + (clockOffset * 60);
+
+		// Update override limit count (if specified)
+		let orln = gOptions["orln"];
+		let orlp = gOptions["orlp"];
+		let orlps = gOptions["orlps"];
+		let orlc = gOptions["orlc"];
+		if (orln && orlp) {
+			let periodStart = getTimePeriodStart(now, orlp);
+			if (orlps != periodStart) {
+				// We've entered a new time period, so start new count
+				orlps = periodStart;
+				orlc = 1;
+			} else {
+				// We haven't entered a new time period, so keep counting
+				orlc++;
+			}
+		} else {
+			orlps = 0;
+			orlc = 0;
+		}
+		options["orlps"] = gOptions["orlps"] = orlps;
+		options["orlc"] = gOptions["orlc"] = orlc;
+	}
+
+	// Save updated options to storage
 	gStorage.set(options).catch(
 		function (error) { warn("Cannot set options: " + error); }
 	);

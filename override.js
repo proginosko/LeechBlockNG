@@ -2,6 +2,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+const LIMIT_PERIOD = {
+	"3600": "this hour",
+	"86400": "today",
+	"604800": "this week"
+};
+
 function log(message) { console.log("[LBNG] " + message); }
 function warn(message) { console.warn("[LBNG] " + message); }
 
@@ -12,6 +18,9 @@ var gAccessRequiredInput;
 var gClockOffset;
 var gOverrideConfirm;
 var gOverrideMins;
+var gOverrideLimit = false;
+var gOverrideLimitPeriod;
+var gOverrideLimitLeft;
 var gOverrideSetNames = [];
 var gClockTimeOpts;
 
@@ -61,6 +70,27 @@ function initializePage() {
 
 		gOverrideConfirm = options["orc"];
 		gOverrideMins = options["orm"];
+
+		// Check override limit (if specified)
+		let orln = options["orln"];
+		let orlp = options["orlp"];
+		let orlps = options["orlps"];
+		let orlc = options["orlc"];
+		if (orln && orlp) {
+			gOverrideLimit = true;
+			gOverrideLimitPeriod = LIMIT_PERIOD[orlp];
+			gOverrideLimitLeft = Math.max(0, orln - orlc);
+			let now = Math.floor(Date.now() / 1000) + (gClockOffset * 60);
+			let periodStart = getTimePeriodStart(now, orlp);
+			if (orlps == periodStart && gOverrideLimitLeft == 0) {
+				$("#alertLimitNum").html(orln);
+				$("#alertLimitReachedPeriod").html(gOverrideLimitPeriod);
+				$("#alertLimitReached").dialog("open");
+				return;
+			} else if (orlps != periodStart) {
+				gOverrideLimitLeft = orln;
+			}
+		}
 
 		// Get list of sets to override
 		let numSets = +options["numSets"];
@@ -250,6 +280,11 @@ function activateOverride() {
 			$("#alertOverrideSets").show();
 			$("#alertOverrideSetList").html("<ul><li>" + gOverrideSetNames.join("</li><li>") + "</li></ul>");
 		}
+		if (gOverrideLimit) {
+			$("#alertOverrideLimit").show();
+			$("#alertLimitLeft").html(gOverrideLimitLeft - 1);
+			$("#alertLimitPeriod").html(gOverrideLimitPeriod);
+		}
 		$("#alertOverrideActivated").dialog("open");
 	} else {
 		// Close page immediately (no confirmation dialog)
@@ -314,6 +349,9 @@ $("div[id^='alert']").dialog({
 	buttons: {
 		OK: function () { $(this).dialog("close"); }
 	}
+});
+$("#alertLimitReached").dialog({
+	close: function (event, ui) { closePage(); }
 });
 $("#alertOverrideActivated").dialog({
 	close: function (event, ui) { closePage(); }
