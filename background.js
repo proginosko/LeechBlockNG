@@ -42,6 +42,7 @@ function initTab(id) {
 			allowedSet: 0,
 			referrer: "",
 			url: "about:blank",
+			incog: false,
 			loaded: false
 		};
 		return true;
@@ -499,6 +500,11 @@ function checkTab(id, isBeforeNav, isRepeat) {
 			// Allow delayed site/page
 			continue;
 		}
+
+		// Check incognito mode
+		let incogMode = gOptions[`incogMode${set}`];
+		let incog = gTabs[id].incog;
+		if ((incogMode == 1 && incog) || (incogMode == 2 && !incog)) continue;
 
 		// Get URL of page (possibly with hash part)
 		let pageURL = parsedURL.page;
@@ -1458,6 +1464,7 @@ function handleMessage(message, sender, sendResponse) {
 			// Register that content script has been loaded
 			gTabs[sender.tab.id].loaded = true;
 			gTabs[sender.tab.id].url = getCleanURL(message.url);
+			gTabs[sender.tab.id].incog = message.incog;
 			break;
 
 		case "lockdown":
