@@ -406,9 +406,9 @@ function processTabs(active) {
 			clockPageTime(tab.id, false, false);
 			clockPageTime(tab.id, true, focus);
 
-			if (tab.url.startsWith("about")) {
+			if (/^(about|view-source)/i.test(tab.url)) {
 				gTabs[tab.id].loaded = true;
-				gTabs[tab.id].url = tab.url;
+				gTabs[tab.id].url = getCleanURL(tab.url);
 			}
 
 			if (gTabs[tab.id].loaded) {
@@ -443,9 +443,6 @@ function checkTab(id, isBeforeNav, isRepeat) {
 	}
 
 	let url = gTabs[id].url;
-
-	// Remove view-source prefix if necessary
-	url = url.replace(/^view-source:/i, "");
 
 	gTabs[id].blockable = BLOCKABLE_URL.test(url);
 	gTabs[id].clockable = CLOCKABLE_URL.test(url);
@@ -1460,7 +1457,7 @@ function handleMessage(message, sender, sendResponse) {
 		case "loaded":
 			// Register that content script has been loaded
 			gTabs[sender.tab.id].loaded = true;
-			gTabs[sender.tab.id].url = message.url;
+			gTabs[sender.tab.id].url = getCleanURL(message.url);
 			break;
 
 		case "lockdown":
@@ -1528,7 +1525,7 @@ function handleTabUpdated(tabId, changeInfo, tab) {
 	let focus = tab.active && (gAllFocused || !gFocusWindowId || tab.windowId == gFocusWindowId);
 
 	if (changeInfo.url) {
-		gTabs[tabId].url = changeInfo.url;
+		gTabs[tabId].url = getCleanURL(changeInfo.url);
 	}
 
 	if (changeInfo.status && changeInfo.status == "complete") {
@@ -1597,7 +1594,7 @@ function handleBeforeNavigate(navDetails) {
 
 	if (navDetails.frameId == 0) {
 		gTabs[tabId].loaded = false
-		gTabs[tabId].url = navDetails.url;
+		gTabs[tabId].url = getCleanURL(navDetails.url);
 
 		// Check tab to see if page should be blocked
 		let blocked = checkTab(tabId, true, false);

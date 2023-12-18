@@ -535,3 +535,17 @@ function getLocalizedURL(url) {
 			? url // no localization for absolute URL
 			: browser.i18n.getMessage("localePath") + url;
 }
+
+// Get clean version of URL (remove source/reader prefix)
+//
+function getCleanURL(url) {
+	if (url) {
+		if (url.startsWith("view-source:")) {
+			url = url.substring(12);
+		}
+		if (url.startsWith("about:reader?url=")) {
+			url = decodeURIComponent(url.substring(17));
+		}
+	}
+	return url;
+}
