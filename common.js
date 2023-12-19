@@ -96,6 +96,7 @@ const GENERAL_OPTIONS = {
 	processTabsSecs: { type: "string", def: "1", id: "processTabsSecs" }, // default: every second
 	processActiveTabs: { type: "boolean", def: false, id: "processActiveTabs" }, // default: disabled
 	accessCodeImage: { type: "boolean", def: false, id: "accessCodeImage" }, // default: disabled
+	allowLBWebsite: { type: "boolean", def: true, id: "allowLBWebsite" }, // default: enabled
 	diagMode: { type: "boolean", def: false, id: "diagMode" }, // default: disabled
 	exportPasswords: { type: "boolean", def: false, id: "exportPasswords" }, // default: disabled
 	autoExportSync: { type: "boolean", def: true, id: "autoExportSync" }, // default: enabled

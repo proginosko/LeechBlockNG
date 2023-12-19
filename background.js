@@ -452,12 +452,12 @@ function checkTab(id, isBeforeNav, isRepeat) {
 	// - about:blank
 	// - non-blockable URLs
 	// - blocking/delaying pages
-	// - LeechBlock website (documentation should always be available)
+	// - LeechBlock website (documentation should be available by default)
 	if (url == "about:blank"
 			|| !gTabs[id].blockable
 			|| url.startsWith(BLOCKED_PAGE_URL)
 			|| url.startsWith(DELAYED_PAGE_URL)
-			|| url.startsWith(LEECHBLOCK_URL)) {
+			|| (url.startsWith(LEECHBLOCK_URL) && gOptions["allowLBWebsite"])) {
 		return false; // not blocked
 	}
 
