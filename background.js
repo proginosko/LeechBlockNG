@@ -515,6 +515,7 @@ function checkTab(id, isBeforeNav, isRepeat) {
 				pageURL = pageURLWithHash;
 			}
 		}
+		let isInternalPage = /^about:(addons|support)/i.test(pageURL);
 
 		// Get regular expressions for matching sites to block/allow
 		let blockRE = gRegExps[set].block;
@@ -523,7 +524,7 @@ function checkTab(id, isBeforeNav, isRepeat) {
 		let keywordRE = gRegExps[set].keyword;
 		if (!blockRE && !referRE) continue; // no block for this set
 
-		if (keywordRE && isBeforeNav) continue; // too soon to check for keywords!
+		if (keywordRE && !isInternalPage && isBeforeNav) continue; // too soon to check for keywords!
 
 		// Get option for treating referrers as allow-conditions
 		let allowRefers = gOptions[`allowRefers${set}`];
@@ -678,7 +679,7 @@ function checkTab(id, isBeforeNav, isRepeat) {
 					}
 				}
 
-				if (keywordRE) {
+				if (keywordRE && !isInternalPage) {
 					// Check for keyword(s) before blocking
 					let message = {
 						type: "keyword",
