@@ -605,7 +605,7 @@ function checkTab(id, isBeforeNav, isRepeat) {
 			let lockdown = (timedata[4] > now);
 
 			// Check override condition
-			let override = (overrideEndTime > now)
+			let override = !isInternalPage && (overrideEndTime > now)
 					&& allowOverride && (allowOverLock || !lockdown);
 
 			// Determine whether this page should now be blocked
