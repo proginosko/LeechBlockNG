@@ -64,6 +64,7 @@
 	"permissions": [
 		"alarms",
 		"downloads",
+		"history",
 		"menus",
 		"storage",
 		"tabs",

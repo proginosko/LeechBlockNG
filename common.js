@@ -51,6 +51,7 @@ const PER_SET_OPTIONS = {
 	delayAutoLoad: { type: "boolean", def: true, id: "delayAutoLoad" },
 	delayCancel: { type: "boolean", def: true, id: "delayCancel" },
 	reloadSecs: { type: "string", def: "", id: "reloadSecs" },
+	addHistory: { type: "boolean", def: false, id: "addHistory" },
 	allowOverride: { type: "boolean", def: false, id: "allowOverride" },
 	allowOverLock: { type: "boolean", def: true, id: "allowOverLock" },
 	prevOpts: { type: "boolean", def: false, id: "prevOpts" },

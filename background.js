@@ -556,6 +556,7 @@ function checkTab(id, isBeforeNav, isRepeat) {
 			let filterMute = gOptions[`filterMute${set}`];
 			let closeTab = gOptions[`closeTab${set}`];
 			let activeBlock = gOptions[`activeBlock${set}`];
+			let addHistory = gOptions[`addHistory${set}`];
 			let allowOverride = gOptions[`allowOverride${set}`];
 			let allowOverLock = gOptions[`allowOverLock${set}`];
 			let showTimer = gOptions[`showTimer${set}`];
@@ -667,6 +668,11 @@ function checkTab(id, isBeforeNav, isRepeat) {
 						);
 					} else {
 						gTabs[id].keyword = keyword;
+
+						if (addHistory && !isInternalPage) {
+							// Add blocked page to browser history
+							browser.history.addUrl({ url: pageURLWithHash });
+						}
 
 						// Get final URL for block page
 						blockURL = getLocalizedURL(blockURL)
