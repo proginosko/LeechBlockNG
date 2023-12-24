@@ -233,7 +233,11 @@ function activateOverride() {
 
 	// Calculate end time for override
 	let endTime = Math.floor(Date.now() / 1000) + (gClockOffset * 60) + (gOverrideMins * 60);
+	changeOverride(endTime);
+}
 
+// Activate override or change endtime [with second-precision]
+function changeOverride(endTime) {
 	// Request override
 	let message = {
 		type: "override",
@@ -251,6 +255,40 @@ function activateOverride() {
 			$("#alertOverrideSetList").html("<ul><li>" + gOverrideSetNames.join("</li><li>") + "</li></ul>");
 		}
 		$("#alertOverrideActivated").dialog("open");
+
+		//Update override time
+		let minDate = Date.now();
+		let fixTime = function(sliderDate) {
+			$("#timeDisplay").text( timeDiffToStr(sliderDate-minDate) + "\n" + sliderDate.toLocaleTimeString() );
+		};
+
+		//keep the remaining time counting from a UI-perspective
+		setInterval(function(){
+			minDate = Date.now();
+			fixTime(new Date($("#slider").slider("value")));
+		}, 60*1000);
+		$("#slider").slider({
+			min: minDate,
+			max: endTime,
+			value: endTime,
+			range: "min",
+			create: function() {
+				let sliderDate = new Date($(this).slider("value"));
+				fixTime(sliderDate);
+			},
+			slide: function( event, ui ) {
+				let sliderDate = new Date(ui.value);
+				fixTime(sliderDate);
+		
+				//Add a Update-Button
+				$("#alertOverrideActivated").dialog("option", "buttons", Object.assign({
+					Update:function() {
+						//$(this).dialog("close");
+						changeOverride($("#slider").slider("value")/1000);
+					}
+				},$("#alertOverrideActivated").dialog("option", "buttons")));
+			}
+		});
 	} else {
 		// Close page immediately (no confirmation dialog)
 		closePage();
@@ -318,6 +356,10 @@ $("div[id^='alert']").dialog({
 $("#alertOverrideActivated").dialog({
 	close: function (event, ui) { closePage(); }
 });
+
+function timeDiffToStr(diff) {
+	return Math.floor(diff/3600000)+":"+(Math.floor(diff/60000)%60).toLocaleString('en-US', {minimumIntegerDigits: 2});
+}
 
 // Initialize access control prompts
 initAccessControlPrompt("promptPassword");
