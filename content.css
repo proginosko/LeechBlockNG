@@ -16,6 +16,7 @@
 	font-size: 12px;
 	font-style: normal !important;
 	font-family: "Lucida Console", Monaco, monospace !important;
+	line-height: normal !important;
 	user-select: none;
 	-moz-user-select: none;
 }
