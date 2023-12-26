@@ -5,7 +5,7 @@
 const DEFAULT_OPTIONS_FILE = "LeechBlockOptions.txt";
 
 const SUB_OPTIONS = {
-	"allowOverride" : "allowOverLock"
+	"allowOverride" : [ "allowOverLock" ]
 };
 
 function log(message) { console.log("[LBNG] " + message); }
@@ -254,6 +254,13 @@ function saveOptions(event) {
 		$("#tabs").tabs("option", "active", gNumSets);
 		$("#overrideMins").focus();
 		$("#alertBadMinutes").dialog("open");
+		return false;
+	}
+	let overrideLimitNum = $("#overrideLimitNum").val();
+	if (!checkPosIntFormat(overrideLimitNum)) {
+		$("#tabs").tabs("option", "active", gNumSets);
+		$("#overrideLimitNum").focus();
+		$("#alertBadOverrideLimitNum").dialog("open");
 		return false;
 	}
 	let warnSecs = $("#warnSecs").val();
@@ -1103,10 +1110,11 @@ function disableImportOptions() {
 //
 function updateSubOptions(set) {
 	for (let name in SUB_OPTIONS) {
-		let subname = SUB_OPTIONS[name];
-		let comp1 = getElement(`${name}${set}`);
-		let comp2 = getElement(`${subname}${set}`);
-		comp2.disabled = comp1.disabled || !comp1.checked;
+		for (let subname of SUB_OPTIONS[name]) {
+			let comp1 = getElement(`${name}${set}`);
+			let comp2 = getElement(`${subname}${set}`);
+			comp2.disabled = comp1.disabled || !comp1.checked;
+		}
 	}
 }
 

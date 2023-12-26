@@ -389,6 +389,15 @@
 								Allow blocking to be suspended for <input id="overrideMins" type="text" size="2" title="Leave blank to specify a duration when the override is activated"> minute(s)
 							</p>
 							<p>
+								Allow no more than <input id="overrideLimitNum" type="text" size="2" title="Leave blank for no limit"> override(s) every
+								<select id="overrideLimitPeriod">
+									<option value=""></option>
+									<option value="3600">hour</option>
+									<option value="86400">day</option>
+									<option value="604800">week</option>
+								</select>
+							</p>
+							<p>
 								<label>Select the requirement for activating the override:</label><br>
 								<div>
 									<select id="overrideAccess">
@@ -582,6 +591,9 @@
 			</div>
 			<div id="alertBadMinutes" title="LeechBlock Options">
 				<p>Please enter the number of minutes in the correct format (as a positive whole number).</p>
+			</div>
+			<div id="alertBadOverrideLimitNum" title="LeechBlock Options">
+				<p>Please enter the number of overrides in the correct format (as a positive whole number).</p>
 			</div>
 			<div id="alertBadBlockURL" title="LeechBlock Options">
 				<p>Please enter the URL for the blocking page in the correct format (as a fully specified URL).</p>

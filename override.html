@@ -40,6 +40,9 @@
 			<div id="alertRetrieveError" title="LeechBlock Override">
 				<p><strong>Error:</strong> Unable to retrieve options from browser storage.</p>
 			</div>
+			<div id="alertLimitReached" title="LeechBlock Override">
+				<p>You have reached your limit of <strong><span id="alertLimitNum"></span></strong> override(s) <span id="alertLimitReachedPeriod"></span>.</p>
+			</div>
 			<div id="alertNoDuration" title="LeechBlock Override">
 				<p>Please enter a non-zero duration for the override.</p>
 			</div>
@@ -47,6 +50,7 @@
 				<p>Override activated. Blocking will be suspended until <strong><span id="alertOverrideEndTime"></span></strong>.</p>
 				<p id="alertOverrideNoSets"><strong>Note:</strong> Override will have no effect because you have not selected<br>"Allow temporary override for these sites" for any block sets.</p>
 				<p id="alertOverrideSets" style="display: none;">Override will be applied to sites in: <span id="alertOverrideSetList"></span></p>
+				<p id="alertOverrideLimit" style="display: none;">You are allowed <strong><span id="alertLimitLeft"></span></strong> more override(s) <span id="alertLimitPeriod"></span>.</p>
 			</div>
 		</div>
 

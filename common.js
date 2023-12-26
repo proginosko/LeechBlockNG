@@ -82,10 +82,15 @@ const GENERAL_OPTIONS = {
 	timerLocation: { type: "string", def: "0", id: "timerLocation" }, // default: top left
 	timerBadge: { type: "boolean", def: true, id: "timerBadge" }, // default: enabled
 	orm: { type: "string", def: "", id: "overrideMins" }, // default: no prespecified override
+	orln: { type: "string", def: "", id: "overrideLimitNum" }, // default: no prespecified limit number
+	orlp: { type: "string", def: "", id: "overrideLimitPeriod" }, // default: no prespecified limit period
 	ora: { type: "string", def: "0", id: "overrideAccess" }, // default: no password or code
 	orcode: { type: "string", def: "", id: "overrideCode" }, // default: blank
 	orp: { type: "string", def: "", id: "overridePassword" }, // default: blank
 	orc: { type: "boolean", def: true, id: "overrideConfirm" }, // default: enabled
+	orlps: { type: "number", def: 0, id: null }, // default: no override limit period start time
+	orlc: { type: "number", def: 0, id: null }, // default: no override limit count
+	oret: { type: "number", def: 0, id: null }, // default: no override end time
 	warnSecs: { type: "string", def: "", id: "warnSecs" }, // default: no warning
 	warnImmediate: { type: "boolean", def: true, id: "warnImmediate" }, // default: warn only for immediate block
 	contextMenu: { type: "boolean", def: true, id: "contextMenu" }, // default: enabled
@@ -408,11 +413,11 @@ function cleanTimePeriods(times) {
 	return cleanTimes.join(",");
 }
 
-// Calculate start of time period from current time and time limit period
+// Calculate start of time period from current time and limit period
 //
 function getTimePeriodStart(now, limitPeriod, limitOffset) {
-	limitPeriod = +limitPeriod; // force value to number
-	limitOffset = +limitOffset; // force value to number
+	limitPeriod = limitPeriod ? +limitPeriod : 3600; // force value to number
+	limitOffset = limitOffset ? +limitOffset : 0; // force value to number
 
 	if (limitPeriod > 0) {
 		let periodStart = now - (now % limitPeriod);
