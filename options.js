@@ -825,14 +825,25 @@ function exportOptions() {
 		}
 	}
 
+	if (gIsAndroid) {
+		lines.unshift("### Select all -> Share -> Drive\n\n");
+		lines.unshift("### Save this file to Google Drive:\n");
+	}
+
 	// Create blob and download it
 	let blob = new Blob(lines, { type: "text/plain", endings: "native" });
 	let url = URL.createObjectURL(blob);
-	let downloadOptions = { url: url, filename: DEFAULT_OPTIONS_FILE };
-	if (!gIsAndroid) {
-		downloadOptions.saveAs = true;
+	if (gIsAndroid) {
+		// Workaround for Android: open blob in new tab
+		browser.tabs.create({ url: url });
+	} else {
+		let downloadOptions = {
+			url: url,
+			filename: DEFAULT_OPTIONS_FILE,
+			saveAs: true
+		};
+		browser.downloads.download(downloadOptions).then(onSuccess, onError);
 	}
-	browser.downloads.download(downloadOptions).then(onSuccess, onError);
 
 	function onSuccess() {
 		$("#alertExportSuccess").dialog("open");
