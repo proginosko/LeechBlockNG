@@ -114,11 +114,8 @@ function checkKeyword(keywordRE) {
 		return null; // nothing to find!
 	}
 
-	// Get all text from document
-	let text = document.body.innerText;
-	if (!text) {
-		return null; // nothing to search!
-	}
+	// Get all text from document (including title)
+	let text = document.title + "\n" + document.body.innerText;
 
 	// Search text for keywords
 	let matches = keywordRE.exec(text);
