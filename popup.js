@@ -2,6 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+const SUPPORT_URL = "https://www.proginosko.com/leechblock/support/";
+
 // Initialize page
 //
 function initializePage() {
@@ -105,6 +107,14 @@ function discardTime() {
 	window.close();
 }
 
+// Open online support page
+//
+function openOnlineSupport() {
+	browser.tabs.create({ url: SUPPORT_URL });
+
+	window.close();
+}
+
 document.querySelector("#options").addEventListener("click", openOptions);
 document.querySelector("#lockdown").addEventListener("click", openLockdown);
 document.querySelector("#override").addEventListener("click", openOverride);
@@ -112,5 +122,6 @@ document.querySelector("#stats").addEventListener("click", openStats);
 document.querySelector("#cancelOverride").addEventListener("click", cancelOverride);
 document.querySelector("#resetRollover").addEventListener("click", resetRollover);
 document.querySelector("#discardTime").addEventListener("click", discardTime);
+document.querySelector("#onlineSupport").addEventListener("click", openOnlineSupport);
 
 document.addEventListener("DOMContentLoaded", initializePage);
