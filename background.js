@@ -43,7 +43,8 @@ function initTab(id) {
 			referrer: "",
 			url: "about:blank",
 			incog: false,
-			loaded: false
+			loaded: false,
+			loadedTime: 0
 		};
 		return true;
 	}
@@ -409,6 +410,7 @@ function processTabs(active) {
 
 			if (/^(about|view-source)/i.test(tab.url)) {
 				gTabs[tab.id].loaded = true;
+				gTabs[tab.id].loadedTime = Date.now();
 				gTabs[tab.id].url = getCleanURL(tab.url);
 			}
 
@@ -505,6 +507,14 @@ function checkTab(id, isBeforeNav, isRepeat) {
 		let incogMode = gOptions[`incogMode${set}`];
 		let incog = gTabs[id].incog;
 		if ((incogMode == 1 && incog) || (incogMode == 2 && !incog)) continue;
+
+		// Check for wait time (if specified)
+		let waitSecs = gOptions[`waitSecs${set}`];
+		let loadedTime = gTabs[id].loadedTime;
+		if (waitSecs && loadedTime) {
+			let loadTime = Math.floor(loadedTime / 1000) + (clockOffset * 60);
+			if ((now - loadTime) < waitSecs) continue; // too soon to check for block!
+		}
 
 		// Get URL of page (possibly with hash part)
 		let pageURL = parsedURL.page;
@@ -1499,6 +1509,7 @@ function handleMessage(message, sender, sendResponse) {
 		case "loaded":
 			// Register that content script has been loaded
 			gTabs[sender.tab.id].loaded = true;
+			gTabs[sender.tab.id].loadedTime = Date.now();
 			gTabs[sender.tab.id].url = getCleanURL(message.url);
 			gTabs[sender.tab.id].incog = message.incog;
 			break;

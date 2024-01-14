@@ -63,6 +63,7 @@ const PER_SET_OPTIONS = {
 	showTimer: { type: "boolean", def: true, id: "showTimer" },
 	allowRefers: { type: "boolean", def: false, id: "allowRefers" },
 	allowKeywords: { type: "boolean", def: false, id: "allowKeywords" },
+	waitSecs: { type: "string", def: "", id: "waitSecs" },
 	sitesURL: { type: "string", def: "", id: "sitesURL" },
 	regexpBlock: { type: "string", def: "", id: "regexpBlock" },
 	regexpAllow: { type: "string", def: "", id: "regexpAllow" },

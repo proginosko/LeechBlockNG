@@ -193,6 +193,7 @@ function saveOptions(event) {
 		let limitOffset = $(`#limitOffset${set}`).val();
 		let delaySecs = $(`#delaySecs${set}`).val();
 		let reloadSecs = $(`#reloadSecs${set}`).val();
+		let waitSecs = $(`#waitSecs${set}`).val();
 		let blockURL = $(`#blockURL${set}`).val();
 
 		// Check field values
@@ -223,6 +224,12 @@ function saveOptions(event) {
 		if (!checkPosIntFormat(reloadSecs)) {
 			$("#tabs").tabs("option", "active", (set - 1));
 			$(`#reloadSecs${set}`).focus();
+			$("#alertBadSeconds").dialog("open");
+			return false;
+		}
+		if (!checkPosIntFormat(waitSecs)) {
+			$("#tabs").tabs("option", "active", (set - 1));
+			$(`#waitSecs${set}`).focus();
 			$("#alertBadSeconds").dialog("open");
 			return false;
 		}
