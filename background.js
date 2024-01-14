@@ -534,6 +534,7 @@ function checkTab(id, isBeforeNav, isRepeat) {
 		// Get options for preventing access to about:addons and about:support
 		let prevAddons = gOptions[`prevAddons${set}`];
 		let prevSupport = gOptions[`prevSupport${set}`];
+		let prevOverride = gOptions[`prevOverride${set}`];
 
 		// Test URL against block/allow regular expressions
 		if (testURL(pageURL, referrer, blockRE, allowRE, referRE, allowRefers)
@@ -606,7 +607,7 @@ function checkTab(id, isBeforeNav, isRepeat) {
 			let lockdown = (timedata[4] > now);
 
 			// Check override condition
-			let override = !isInternalPage && (overrideEndTime > now)
+			let override = (prevOverride || !isInternalPage) && (overrideEndTime > now)
 					&& allowOverride && (allowOverLock || !lockdown);
 
 			// Determine whether this page should now be blocked
