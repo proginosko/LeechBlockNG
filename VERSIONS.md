@@ -1,3 +1,10 @@
+### Version 1.6.3 (21 Jan 2024)
+* Added option to allow override to apply to internal pages (about:addons, etc.).
+* Added option to wait N seconds after page has loaded before checking blocking conditions.
+* Document title now included in keyword search.
+* Fixed export function for Android.
+* UI tweaks.
+
 ### Version 1.6.2 (26 Dec 2023)
 * Added option to limit number of overrides per hour/day/week.
 * Added option to block only private/non-private tabs.
