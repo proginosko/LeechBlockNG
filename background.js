@@ -680,7 +680,7 @@ function checkTab(id, isBeforeNav, isRepeat) {
 					} else {
 						gTabs[id].keyword = keyword;
 
-						if (addHistory && !isInternalPage) {
+						if (!gIsAndroid && addHistory && !isInternalPage) {
 							// Add blocked page to browser history
 							browser.history.addUrl({ url: pageURLWithHash });
 						}
