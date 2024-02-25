@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>LeechBlock Add Sites</title>
+		<link href="/jquery-ui/jquery-ui.min.css" rel="stylesheet">
+		<link href="/options.css" rel="stylesheet">
+		<link href="/icons/leechblock32.ico" rel="icon" type="image/x-icon">
+		<link href="/icons/leechblock32.ico" rel="shortcut icon" type="image/x-icon">
+		<link id="themeLink" rel="stylesheet">
+	</head>
+
+	<body>
+
+		<div id="form-container">
+
+			<form id="form" style="display: none;" action="javascript: null;">
+
+				<fieldset class="ui-widget ui-widget-content">
+					<legend>LeechBlock Add Sites</legend>
+					<p>
+						<label>Enter the domain names of the sites to block (one item per line):</label><br>
+						<div><textarea id="sites" cols="60" rows="10" spellcheck="false" placeholder="somesite.com"></textarea></div>
+					</p>
+					<p>
+						<label>Add these sites to:</label>
+						<select id="blockSet"></select>
+					</p>
+					<p><strong>Note:</strong> Any <a href="https://www.proginosko.com/leechblock/faq/exceptions/" target="_blank">exceptions</a> in the list of sites will be ignored!</p>
+				</fieldset>
+
+				<p style="text-align: center;">
+					<button id="addSites" type="submit">Add Sites</button>
+					<button id="cancel" type="button">Cancel</button>
+				</p>
+
+			</form>
+
+		</div>
+
+		<div id="alerts" style="display: none;">
+			<div id="alertRetrieveError" title="LeechBlock Lockdown">
+				<p><strong>Error:</strong> Unable to retrieve options from browser storage.</p>
+			</div>
+		</div>
+
+		<script src="/jquery-ui/external/jquery/jquery.js"></script>
+		<script src="/jquery-ui/jquery-ui.min.js"></script>
+		<script src="/common.js"></script>
+		<script src="/add-sites.js"></script>
+
+	</body>
+
+</html>
