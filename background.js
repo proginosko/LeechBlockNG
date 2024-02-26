@@ -43,6 +43,7 @@ function initTab(id) {
 			referrer: "",
 			url: "about:blank",
 			incog: false,
+			audible: false,
 			loaded: false,
 			loadedTime: 0
 		};
@@ -402,6 +403,8 @@ function processTabs(active) {
 			initTab(tab.id);
 
 			let focus = tab.active && (gAllFocused || !gFocusWindowId || tab.windowId == gFocusWindowId);
+
+			gTabs[tab.id].audible = tab.audible;
 
 			// Force update of time spent on this page
 			clockPageTime(tab.id, false, false);
@@ -841,13 +844,13 @@ function clockPageTime(id, open, focus) {
 
 	// Update time data if necessary
 	if (secsOpen > 0 || secsFocus > 0) {
-		updateTimeData(gTabs[id].url, gTabs[id].referrer, secsOpen, secsFocus);
+		updateTimeData(gTabs[id].url, gTabs[id].referrer, gTabs[id].audible, secsOpen, secsFocus);
 	}
 }
 
 // Update time data for specified page
 //
-function updateTimeData(url, referrer, secsOpen, secsFocus) {
+function updateTimeData(url, referrer, audible, secsOpen, secsFocus) {
 	//log("updateTimeData: " + url + " " + secsOpen + " " + secsFocus);
 
 	// Get parsed URL for this page
@@ -867,6 +870,10 @@ function updateTimeData(url, referrer, secsOpen, secsFocus) {
 		let allowRE = gRegExps[set].allow;
 		let referRE = gRegExps[set].refer;
 		if (!blockRE && !referRE) continue; // no block for this set
+
+		// Get option for counting time only when tab is playing audio
+		let countAudio = gOptions[`countAudio${set}`];
+		if (countAudio && !audible) continue; // no audio playing
 
 		// Get option for treating referrers as allow-conditions
 		let allowRefers = gOptions[`allowRefers${set}`];

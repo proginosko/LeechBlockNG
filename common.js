@@ -45,6 +45,7 @@ const PER_SET_OPTIONS = {
 	closeTab: { type: "boolean", def: false, id: "closeTab" },
 	activeBlock: { type: "boolean", def: false, id: "activeBlock" },
 	countFocus: { type: "boolean", def: true, id: "countFocus" },
+	countAudio: { type: "boolean", def: false, id: "countAudio" },
 	showKeyword: { type: "boolean", def: true, id: "showKeyword" },
 	delayFirst: { type: "boolean", def: true, id: "delayFirst" },
 	delaySecs: { type: "string", def: "60", id: "delaySecs" },
