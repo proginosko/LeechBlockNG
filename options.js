@@ -128,10 +128,6 @@ function initForm(numSets) {
 	$("#saveOptionsClose").button();
 	$("#saveOptionsClose").click({ closeOptions: true }, saveOptions);
 
-	// Disable first move-left and last move-right buttons
-	getElement("moveSetL1").disabled = true;
-	getElement("moveSetR" + gNumSets).disabled = true;
-
 	if (gIsAndroid) {
 		// Hide sync options (sync storage not supported on Android yet)
 		getElement("syncOpts1").style.display = "none";
@@ -167,6 +163,7 @@ function swapSets(set1, set2) {
 
 	// Swap set options and update form
 	swapSetOptions(set1, set2);
+	updateMoveSetButtons();
 	updateBlockSetName(set1, $(`#setName${set1}`).val());
 	updateBlockSetName(set2, $(`#setName${set2}`).val());
 	$(`#showAdvOpts${set1}`).css("display", "initial");
@@ -583,6 +580,8 @@ function retrieveOptions() {
 				}
 			}
 		}
+
+		updateMoveSetButtons();
 
 		confirmAccess(options);
 	}
@@ -1134,6 +1133,19 @@ function updateSubOptions(set) {
 			let comp2 = getElement(`${subname}${set}`);
 			comp2.disabled = comp1.disabled || !comp1.checked;
 		}
+	}
+}
+
+// Update enabled/disabled state of move set buttons
+//
+function updateMoveSetButtons() {
+	for (let set = 1; set <= gNumSets; set++) {
+		// Move-left button
+		let msl_disabled = (set == 1 || gSetDisabled[set] || gSetDisabled[set - 1]);
+		getElement(`moveSetL${set}`).disabled = msl_disabled;
+		// Move-right button
+		let msr_disabled = (set == gNumSets || gSetDisabled[set] || gSetDisabled[set + 1]);
+		getElement(`moveSetR${set}`).disabled = msr_disabled;
 	}
 }
 
