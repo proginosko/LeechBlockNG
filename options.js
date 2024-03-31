@@ -77,6 +77,8 @@ function initForm(numSets) {
 			swapSets(set, set + 1);
 			$("#tabs").tabs("option", "active", set);
 		});
+		$(`#simpOpts${set}`).click(function (e) { showSimplifiedOptions(true); });
+		$(`#fullOpts${set}`).click(function (e) { showSimplifiedOptions(false); });
 		$(`#setName${set}`).change(function (e) { updateBlockSetName(set, $(`#setName${set}`).val()); });
 		for (let name in SUB_OPTIONS) {
 			$(`#${name}${set}`).change(function (e) { updateSubOptions(set); });
@@ -112,6 +114,8 @@ function initForm(numSets) {
 		});
 		$(`#advOpts${set}`).css("display", "none");
 	}
+	$("#simpOptsGen").click(function (e) { showSimplifiedOptions(true); });
+	$("#fullOptsGen").click(function (e) { showSimplifiedOptions(false); });
 	$("#accessPasswordShow").change(accessPasswordShow);
 	$("#overridePasswordShow").change(overridePasswordShow);
 	$("#theme").change(function (e) { setTheme($("#theme").val()); });
@@ -170,6 +174,23 @@ function swapSets(set1, set2) {
 	$(`#showAdvOpts${set2}`).css("display", "initial");
 	$(`#advOpts${set1}`).css("display", "none");	
 	$(`#advOpts${set2}`).css("display", "none");	
+}
+
+// Show simplified or full options
+//
+function showSimplifiedOptions(simplify) {
+	if (simplify) {
+		// Show simplified options
+		$(".simplifiable").css("display", "none");
+		$("fieldset[id^='advOpts'").css("display", "none");
+		$("button[id^='simpOpts']").hide();
+		$("button[id^='fullOpts']").show();
+	} else {
+		// Show full options
+		$(".simplifiable").css("display", "");
+		$("button[id^='simpOpts']").show();
+		$("button[id^='fullOpts']").hide();
+	}
 }
 
 // Update block set name on tab

@@ -28,8 +28,12 @@
 					</ul>
 					<div id="blockSet1">
 						<p>
-							<button id="moveSetL1" type="button">&larr; Move Set</button>
-							<button id="moveSetR1" type="button" style="float: right;">Move Set &rarr;</button>
+							<div style="display: flex; justify-content: space-between;">
+								<button id="moveSetL1" type="button">&larr; Move Set</button>
+								<button id="simpOpts1" type="button">Show Simplified Options</button>
+								<button id="fullOpts1" type="button" style="display: none;">Show Full Options</button>
+								<button id="moveSetR1" type="button">Move Set &rarr;</button>
+							</div>
 						</p>
 						<fieldset>
 							<legend>What to Block</legend>
@@ -105,7 +109,7 @@
 								<input id="countFocus1" type="checkbox">
 								<label for="countFocus1">Count time spent on these sites only when browser tab is active</label>
 							</p>
-							<p>
+							<p class="simplifiable">
 								<input id="countAudio1" type="checkbox">
 								<label for="countAudio1">Count time spent on these sites only when browser tab is playing audio</label>
 							</p>
@@ -155,7 +159,7 @@
 								</div>
 							</p>
 							<hr>
-							<p>
+							<p class="simplifiable">
 								<label>Block pages in</label>
 								<select id="incogMode1">
 									<option value="0">both non-private and private tabs</option>
@@ -163,7 +167,7 @@
 									<option value="2">only private tabs</option>
 								</select>
 							</p>
-							<p>
+							<p class="simplifiable">
 								<input id="applyFilter1" type="checkbox">
 								<label for="applyFilter1">Apply filter instead of blocking page:</label>
 								<select id="filterName1">
@@ -191,37 +195,37 @@
 								<input id="activeBlock1" type="checkbox">
 								<label for="activeBlock1">Immediately block pages on these sites once blocking conditions are met</label>
 							</p>
-							<p>
+							<p class="simplifiable">
 								<input id="showKeyword1" type="checkbox">
 								<label for="showKeyword1">Show matched keyword on blocking page</label>
 							</p>
-							<p>
+							<p class="simplifiable">
 								<input id="delayFirst1" type="checkbox">
 								<label for="delayFirst1">Block only first accessed page of site when delaying page is used</label>
 							</p>
 							<p>
 								Delay access to sites by <input id="delaySecs1" type="text" size="2"> seconds when delaying page is used
 							</p>
-							<p>
+							<p class="simplifiable">
 								<input id="delayAutoLoad1" type="checkbox">
 								<label for="delayAutoLoad1">Automatically load blocked page when delay countdown reaches zero</label>
 							</p>
-							<p>
+							<p class="simplifiable">
 								<input id="delayCancel1" type="checkbox">
 								<label for="delayCancel1">Cancel delay countdown if delaying page loses focus</label>
 							</p>
-							<p>
+							<p class="simplifiable">
 								Attempt to reload blocked page every <input id="reloadSecs1" type="text" size="2"> seconds (only applies to default page)
 							</p>
-							<p>
+							<p class="simplifiable">
 								<input id="addHistory1" type="checkbox">
 								<label for="addHistory1">Add blocked page to browser history</label>
 							</p>
-							<p>
+							<p class="simplifiable">
 								<input id="allowOverride1" type="checkbox">
 								<label for="allowOverride1">Allow temporary override for these sites</label>
 							</p>
-							<p>
+							<p class="simplifiable">
 								&nbsp;&nbsp;&nbsp;&nbsp;
 								<input id="allowOverLock1" type="checkbox">
 								<label for="allowOverLock1">Allow temporary override during lockdown</label>
@@ -229,7 +233,7 @@
 						</fieldset>
 						<p>
 							<button id="resetOpts1" type="button">Reset Options to Defaults</button>
-							<button id="showAdvOpts1" type="button">Show Advanced Options</button>
+							<button id="showAdvOpts1" type="button" class="simplifiable">Show Advanced Options</button>
 						</p>
 						<fieldset id="advOpts1">
 							<legend>Advanced Options</legend>
@@ -317,6 +321,12 @@
 						</fieldset>
 					</div>
 					<div id="paneGeneral">
+						<p>
+							<div style="text-align: center;">
+								<button id="simpOptsGen" type="button">Show Simplified Options</button>
+								<button id="fullOptsGen" type="button" style="display: none;">Show Full Options</button>
+							</div>
+						</p>
 						<fieldset>
 							<legend>Block Sets</legend>
 							<p>
@@ -384,7 +394,7 @@
 								<strong>Tip:</strong> Double-click on the over-page timer to hide it at any time (e.g., before printing page).
 							</p>
 						</fieldset>
-						<fieldset>
+						<fieldset class="simplifiable">
 							<legend>Warning Message</legend>
 							<p>
 								Display warning message <input id="warnSecs" type="text" size="2" title="Leave blank for no warning"> seconds before site is blocked
@@ -394,7 +404,7 @@
 								<label for="warnImmediate">Only display warning message on pages that will be immediately blocked</label>
 							</p>
 						</fieldset>
-						<fieldset>
+						<fieldset class="simplifiable">
 							<legend>Temporary Override</legend>
 							<p>
 								Allow blocking to be suspended for <input id="overrideMins" type="text" size="2" title="Leave blank to specify a duration when the override is activated"> minute(s)
@@ -452,7 +462,7 @@
 									<option value="spruce">Spruce</option>
 								</select>
 							</p>
-							<p>
+							<p class="simplifiable">
 								<input id="contextMenu" type="checkbox">
 								<label for="contextMenu">Show context menu</label>
 							</p>
@@ -460,7 +470,7 @@
 								<input id="matchSubdomains" type="checkbox">
 								<label for="matchSubdomains">Block all subdomains (not just www)</label>
 							</p>
-							<p>
+							<p class="simplifiable">
 								Display clock times in
 								<select id="clockTimeFormat">
 									<option value="0">default</option>
@@ -469,16 +479,16 @@
 								</select>
 								format
 							</p>
-							<p>
+							<p class="simplifiable">
 								Offset clock by <input id="clockOffset" type="text" size="4" title="Leave blank for no offset"> minutes
 								&nbsp;&nbsp;&nbsp;&nbsp;
 								<span id="clockOffsetTime" style="display: none;"></span>
 							</p>
-							<p>
+							<p class="simplifiable">
 								<input id="allFocused" type="checkbox">
 								<label for="allFocused">Treat browser windows as always focused</label>
 							</p>
-							<p>
+							<p class="simplifiable">
 								<input id="accessCodeImage" type="checkbox">
 								<label for="accessCodeImage">Display access code as image</label>
 							</p>
@@ -486,16 +496,16 @@
 								<input id="syncStorage" type="checkbox">
 								<label for="syncStorage">Use sync storage for options (experimental: use at your own risk!)</label>
 							</p>
-							<p>
+							<p class="simplifiable">
 								<input id="allowLBWebsite" type="checkbox">
 								<label for="allowLBWebsite">Always allow access to LeechBlock website</label>
 							</p>
-							<p>
+							<p class="simplifiable">
 								<input id="diagMode" type="checkbox">
 								<label for="diagMode">Diagnostic mode (outputs to browser console)</label>
 							</p>
 						</fieldset>
-						<fieldset>
+						<fieldset class="simplifiable">
 							<legend>Performance</legend>
 							<p>
 								Save time data every <input id="saveSecs" type="text" size="2" title="Default: 10"> second(s)
