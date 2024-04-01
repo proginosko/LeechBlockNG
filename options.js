@@ -25,6 +25,7 @@ var gSetDisabled;
 var gSetOrdering, gSetReordered;
 var gTabIndex = 0;
 var gNewOpen = true;
+var gSimplified = false;
 var gClockTimeOpts;
 
 // Initialize form (with specified number of block sets)
@@ -191,6 +192,8 @@ function showSimplifiedOptions(simplify) {
 		$("button[id^='simpOpts']").show();
 		$("button[id^='fullOpts']").hide();
 	}
+
+	gSimplified = simplify;
 }
 
 // Update block set name on tab
@@ -333,7 +336,7 @@ function saveOptions(event) {
 		return false;
 	}
 
-	let options = {};
+	let options = { simplified: gSimplified };
 
 	// General options
 	for (let name in GENERAL_OPTIONS) {
@@ -458,6 +461,8 @@ function retrieveOptions() {
 		initForm(options["numSets"]);
 
 		setTheme(options["theme"]);
+
+		showSimplifiedOptions(options["simplified"]);
 
 		// Get clock time format
 		gClockTimeOpts = {};
