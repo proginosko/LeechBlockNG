@@ -1,3 +1,10 @@
+### Version 1.6.4 (31 Mar 2024)
+* Added buttons to show simplified/full options.
+* Added button to add sites to a block set (without going through the options page).
+* Added option to count time only when browser tab is playing audio.
+* Added German localization (thanks to dawin64).
+* Bug fixes and UI tweaks.
+
 ### Version 1.6.3 (21 Jan 2024)
 * Added option to allow override to apply to internal pages (about:addons, etc.).
 * Added option to wait N seconds after page has loaded before checking blocking conditions.
