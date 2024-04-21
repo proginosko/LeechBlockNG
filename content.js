@@ -17,10 +17,8 @@ var gAlert;
 // Notify background script that page has loaded
 //
 function notifyLoaded() {
-	let incog = browser.extension.inIncognitoContext;
-
 	// Register that this script has now loaded
-	browser.runtime.sendMessage({ type: "loaded", url: document.URL, incog: incog });
+	browser.runtime.sendMessage({ type: "loaded", url: document.URL });
 
 	// Send URL of referring page to background script
 	browser.runtime.sendMessage({ type: "referrer", referrer: document.referrer });
