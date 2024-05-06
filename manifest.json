@@ -69,7 +69,8 @@
 		"storage",
 		"tabs",
 		"unlimitedStorage",
-		"webNavigation"
+		"webNavigation",
+		"scripting"
 	],
 
 	"version": "1.6.4"
