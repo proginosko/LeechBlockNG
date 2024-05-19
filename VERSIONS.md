@@ -1,3 +1,6 @@
+### Version 1.6.4.1 (19 May 2024)
+* Bug fix.
+
 ### Version 1.6.4 (31 Mar 2024)
 * Added buttons to show simplified/full options.
 * Added button to add sites to a block set (without going through the options page).
