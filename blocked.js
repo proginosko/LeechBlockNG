@@ -2,10 +2,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+var gBlockedURL;
+
 // Processes info for blocking/delaying page
 //
 function processBlockInfo(info) {
 	if (!info) return;
+
+	gBlockedURL = info.blockedURL;
 
 	// Set theme
 	let link = document.getElementById("themeLink");
@@ -23,7 +27,7 @@ function processBlockInfo(info) {
 	}
 
 	let blockedURLLink = document.getElementById("lbBlockedURLLink");
-	if (info.blockedURL && blockedURLLink) {
+	if (info.blockedURL && blockedURLLink && !info.disableLink) {
 		blockedURLLink.setAttribute("href", info.blockedURL);
 	}
 
@@ -114,9 +118,8 @@ function onCountdownTimer(countdown) {
 // Attempt to reload blocked page
 //
 function reloadBlockedPage() {
-	let blockedURLLink = document.getElementById("lbBlockedURLLink");
-	if (blockedURLLink) {
-		blockedURLLink.click();
+	if (gBlockedURL) {
+		document.location.href = gBlockedURL;
 	}
 }
 
