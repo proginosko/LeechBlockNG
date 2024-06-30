@@ -1,3 +1,7 @@
+# Version 1.6.5 (18 Jun 2024)
+* Added "fade (100%)" filter option.
+* Added option to disable link on blocking/delaying page.
+
 ### Version 1.6.4.1 (19 May 2024)
 * Bug fix.
 
