@@ -59,6 +59,7 @@ const PER_SET_OPTIONS = {
 	prevGenOpts: { type: "boolean", def: false, id: "prevGenOpts" },
 	prevAddons: { type: "boolean", def: false, id: "prevAddons" },
 	prevSupport: { type: "boolean", def: false, id: "prevSupport" },
+	prevDebugging: { type: "boolean", def: false, id: "prevDebugging" },
 	prevOverride: { type: "boolean", def: false, id: "prevOverride" },
 	disable: { type: "boolean", def: false, id: "disable" },
 	showTimer: { type: "boolean", def: true, id: "showTimer" },
