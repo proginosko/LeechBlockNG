@@ -51,6 +51,16 @@ function processBlockInfo(info) {
 		}
 	}
 
+	let customMsgDiv = document.getElementById("lbCustomMsgDiv");
+	let customMsg = document.getElementById("lbCustomMsg");
+	if (customMsgDiv && customMsg) {
+		if (info.customMsg) {
+			customMsg.innerText = info.customMsg;
+		} else {
+			customMsgDiv.style.display = "none";
+		}
+	}
+
 	let unblockTime = document.getElementById("lbUnblockTime");
 	if (info.unblockTime && unblockTime) {
 		unblockTime.innerText = info.unblockTime;

@@ -38,6 +38,7 @@ const PER_SET_OPTIONS = {
 	conjMode: { type: "boolean", def: false, id: "conjMode" },
 	days: { type: "array", def: [false, true, true, true, true, true, false], id: "day" },
 	blockURL: { type: "string", def: DEFAULT_BLOCK_URL, id: "blockURL" },
+	customMsg: { type: "string", def: "", id: "customMsg" },
 	incogMode: { type: "string", def: "0", id: "incogMode" },
 	applyFilter: { type: "boolean", def: false, id: "applyFilter" },
 	filterName: { type: "string", def: "grayscale", id: "filterName" },
