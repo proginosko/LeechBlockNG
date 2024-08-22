@@ -69,6 +69,7 @@ const PER_SET_OPTIONS = {
 	regexpBlock: { type: "string", def: "", id: "regexpBlock" },
 	regexpAllow: { type: "string", def: "", id: "regexpAllow" },
 	ignoreHash: { type: "boolean", def: true, id: "ignoreHash" },
+	youtubeResume: { type: "boolean", def: false, id: "youtubeResume" },
 };
 
 const GENERAL_OPTIONS = {
