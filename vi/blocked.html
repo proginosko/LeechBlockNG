@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<html id="lbBlockingPage" lang="vi">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=0.75, shrink-to-fit=no"
+        />
+        <title>Trang bị chặn</title>
+        <link
+            rel="shortcut icon"
+            href="/icons/leechblock32.ico"
+            type="image/x-icon"
+        />
+        <link rel="icon" href="/icons/leechblock32.ico" type="image/x-icon" />
+        <link rel="stylesheet" href="/fonts.css" type="text/css" />
+        <link rel="stylesheet" href="/style.css" type="text/css" />
+        <link id="themeLink" rel="stylesheet" />
+    </head>
+
+    <body>
+        <!-- logo -->
+        <div>
+            <img
+                src="/images/leechblock_logo.svg"
+                class="logo"
+                alt="Logo LeechBlock"
+                title="LeechBlock"
+            />
+        </div>
+
+        <!-- warning message -->
+        <div>
+            <h1>
+                Trang bạn đang cố truy cập đã bị chặn bởi
+                <a href="https://www.proginosko.com/leechblock/">LeechBlock</a>.
+            </h1>
+        </div>
+
+        <!-- blocked site info -->
+        <div>
+            <a id="lbBlockedURLLink" target="_self"
+                ><span id="lbBlockedURL"></span
+            ></a>
+            (<span id="lbBlockedSet">Bộ chặn</span>)
+            <p id="lbKeywordMatched">
+                Từ khóa khớp:
+                <strong><span id="lbKeywordMatch"></span></strong>
+            </p>
+            <p>
+                Trang sẽ được mở chặn vào:
+                <strong><span id="lbUnblockTime">cuối thời gian</span></strong>
+            </p>
+        </div>
+
+        <!-- support info -->
+        <div class="support">
+            LeechBlock luôn miễn phí sử dụng, nhưng nếu nó đã cải thiện cuộc
+            sống của bạn,<br />
+            xin vui lòng xem xét ủng hộ sự phát triển tiếp tục của nó bằng
+            cách<br />
+            <a href="https://www.paypal.me/JamesNAnderson">đóng góp</a>
+            hoặc
+            <a href="https://addons.mozilla.org/firefox/addon/leechblock-ng/"
+                >viết đánh giá</a
+            >.
+        </div>
+
+        <script src="/blocked.js"></script>
+    </body>
+</html>
