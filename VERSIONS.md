@@ -1,6 +1,3 @@
-# Version 1.6.6 (17 Jul 2024)
-* Added option to block about:debugging, so that local storage attributes can't be inspected to reveal the options password
-
 # Version 1.6.5 (18 Jun 2024)
 * Added "fade (100%)" filter option.
 * Added option to disable link on blocking/delaying page.
