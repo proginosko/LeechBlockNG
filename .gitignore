@@ -4,3 +4,4 @@
 *.xpi
 
 jquery-ui/**
+manifest.json

@@ -528,7 +528,7 @@ function checkTab(id, isBeforeNav, isRepeat) {
 				pageURL = pageURLWithHash;
 			}
 		}
-		let isInternalPage = /^about:(addons|support)/i.test(pageURL);
+		let isInternalPage = /^about:(addons|support|debugging)/i.test(pageURL);
 
 		// Get regular expressions for matching sites to block/allow
 		let blockRE = gRegExps[set].block;
@@ -547,12 +547,14 @@ function checkTab(id, isBeforeNav, isRepeat) {
 		// Get options for preventing access to about:addons and about:support
 		let prevAddons = gOptions[`prevAddons${set}`];
 		let prevSupport = gOptions[`prevSupport${set}`];
+		let prevDebugging = gOptions[`prevDebugging${set}`];
 		let prevOverride = gOptions[`prevOverride${set}`];
 
 		// Test URL against block/allow regular expressions
 		if (testURL(pageURL, referrer, blockRE, allowRE, referRE, allowRefers)
 				|| (prevAddons && /^about:addons/i.test(pageURL))
-				|| (prevSupport && /^about:support/i.test(pageURL))) {
+				|| (prevSupport && /^about:support/i.test(pageURL))
+				|| (prevDebugging && /^about:debugging/i.test(pageURL))) {
 			// Get options for this set
 			let timedata = gOptions[`timedata${set}`];
 			let times = gOptions[`times${set}`];
