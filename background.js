@@ -1056,6 +1056,9 @@ function createBlockInfo(id, url) {
 	// Get keyword match (if applicable)
 	let keywordMatch = gOptions[`showKeyword${blockedSet}`] ? gTabs[id].keyword : null;
 
+	// Get custom message
+	let customMsg = gOptions[`customMsg${blockedSet}`];
+
 	// Get unblock time for block set
 	let unblockTime = getUnblockTime(blockedSet);
 	if (unblockTime != null) {
@@ -1094,6 +1097,7 @@ function createBlockInfo(id, url) {
 		blockedURL: blockedURL,
 		disableLink: disableLink,
 		keywordMatch: keywordMatch,
+		customMsg: customMsg,
 		unblockTime: unblockTime,
 		delaySecs: delaySecs,
 		delayCancel: delayCancel,
