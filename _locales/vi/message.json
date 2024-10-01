@@ -22,9 +22,9 @@
 
     "statisticsMenuItem": { "message": "Thống kê" },
 
-    "addSiteMenuItem": { "message": "Thêm trang" },
+    "addSiteMenuItem": { "message": "Thêm địa chỉ web" },
 
-    "addSiteToBlockSetMenuItem": { "message": "Thêm trang vào Bộ chặn" },
+    "addSiteToBlockSetMenuItem": { "message": "Thêm địa chỉ web vào Bộ chặn" },
 
     "addPageMenuItem": { "message": "Thêm trang" },
 
