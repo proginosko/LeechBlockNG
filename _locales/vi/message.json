@@ -1,0 +1,32 @@
+{
+    "extensionName": {
+        "message": "LeechBlock NG",
+        "description": "Tên của tiện ích mở rộng."
+    },
+
+    "extensionDescription": {
+        "message": "LeechBlock là một công cụ năng suất đơn giản được thiết kế để chặn những trang web làm bạn mất thời gian và có thể làm hỏng ngày làm việc của bạn.",
+        "description": "Mô tả của tiện ích mở rộng."
+    },
+
+    "localePath": {
+        "message": "/vi/",
+        "description": "Đường dẫn đến các tệp đã được bản địa hóa."
+    },
+
+    "optionsMenuItem": { "message": "Tùy chọn" },
+
+    "lockdownMenuItem": { "message": "Khóa trang" },
+
+    "overrideMenuItem": { "message": "Ghi đè" },
+
+    "statisticsMenuItem": { "message": "Thống kê" },
+
+    "addSiteMenuItem": { "message": "Thêm địa chỉ web" },
+
+    "addSiteToBlockSetMenuItem": { "message": "Thêm địa chỉ web vào Bộ chặn" },
+
+    "addPageMenuItem": { "message": "Thêm trang" },
+
+    "addPageToBlockSetMenuItem": { "message": "Thêm trang vào Bộ chặn" }
+}
