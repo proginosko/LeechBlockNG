@@ -214,6 +214,7 @@ function saveOptions(event) {
 		let limitMins = $(`#limitMins${set}`).val();
 		let limitOffset = $(`#limitOffset${set}`).val();
 		let delaySecs = $(`#delaySecs${set}`).val();
+		let delayAllowMins = $(`#delayAllowMins${set}`).val();
 		let reloadSecs = $(`#reloadSecs${set}`).val();
 		let waitSecs = $(`#waitSecs${set}`).val();
 		let blockURL = $(`#blockURL${set}`).val();
@@ -241,6 +242,12 @@ function saveOptions(event) {
 			$("#tabs").tabs("option", "active", (set - 1));
 			$(`#delaySecs${set}`).focus();
 			$("#alertBadSeconds").dialog("open");
+			return false;
+		}
+		if (!checkPosIntFormat(delayAllowMins)) {
+			$("#tabs").tabs("option", "active", (set - 1));
+			$(`#delayAllowMins${set}`).focus();
+			$("#alertBadMinutes").dialog("open");
 			return false;
 		}
 		if (!checkPosIntFormat(reloadSecs)) {

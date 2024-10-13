@@ -40,6 +40,7 @@ function initTab(id) {
 			allowedHost: null,
 			allowedPath: null,
 			allowedSet: 0,
+			allowedEndTime: 0,
 			referrer: "",
 			url: "about:blank",
 			incog: false,
@@ -469,23 +470,25 @@ function checkTab(id, isBeforeNav, isRepeat) {
 	// Get parsed URL for this page
 	let parsedURL = getParsedURL(url);
 
-	// Check for allowed host/path
+	// Get current time in seconds
+	let clockOffset = gOptions["clockOffset"];
+	let now = Math.floor(Date.now() / 1000) + (clockOffset * 60);
+
+	// Check for allowed host/path (or end of allowed time)
 	let allowHost = isSameHost(gTabs[id].allowedHost, parsedURL.host);
 	let allowPath = !gTabs[id].allowedPath || (gTabs[id].allowedPath == parsedURL.path);
-	let allowSet = gTabs[id].allowedSet;
-	if (!allowHost || !allowPath) {
+	let allowedSet = gTabs[id].allowedSet;
+	let allowedEndTime = gTabs[id].allowedEndTime;
+	if (!allowHost || !allowPath || (allowedEndTime && now > allowedEndTime)) {
 		// Allowing delayed site/page no longer applies
 		gTabs[id].allowedHost = null;
 		gTabs[id].allowedPath = null;
 		gTabs[id].allowedSet = 0;
+		gTabs[id].allowedEndTime = 0;
 	}
 
 	// Get referrer URL for this page
 	let referrer = gTabs[id].referrer;
-
-	// Get current time in seconds
-	let clockOffset = gOptions["clockOffset"];
-	let now = Math.floor(Date.now() / 1000) + (clockOffset * 60);
 
 	// Get current time/date
 	let timedate = new Date(now * 1000);
@@ -501,8 +504,14 @@ function checkTab(id, isBeforeNav, isRepeat) {
 		// Do nothing if set is disabled
 		if (gOptions[`disable${set}`]) continue;
 
-		if (allowHost && allowPath && allowSet == set) {
+		if (allowHost && allowPath && allowedSet == set) {
 			// Allow delayed site/page
+			let secsLeft = allowedEndTime - now;
+			if (secsLeft > 0) {
+				gTabs[id].secsLeft = secsLeft;
+				gTabs[id].secsLeftSet = set;
+				gTabs[id].showTimer = gOptions[`showTimer${set}`];
+			}
 			continue;
 		}
 
@@ -1405,9 +1414,20 @@ function openDelayedPage(id, url, set, autoLoad) {
 	let parsedURL = getParsedURL(url);
 
 	// Set parameters for allowing host
+	let delayFirst = gOptions[`delayFirst${set}`];
+	let delayAllowMins = gOptions[`delayAllowMins${set}`];
 	gTabs[id].allowedHost = parsedURL.host;
-	gTabs[id].allowedPath = gOptions[`delayFirst${set}`] ? null : parsedURL.path;
+	gTabs[id].allowedPath = delayFirst ? null : parsedURL.path;
 	gTabs[id].allowedSet = set;
+	if (delayAllowMins) {
+		// Calculate end time for allowing access
+		let clockOffset = gOptions["clockOffset"];
+		let now = Math.floor(Date.now() / 1000) + (clockOffset * 60);
+		gTabs[id].allowedEndTime = now + (delayAllowMins * 60);
+	} else {
+		// No end time for allowing access
+		gTabs[id].allowedEndTime = 0;
+	}
 
 	if (autoLoad) {
 		// Redirect page
@@ -1628,6 +1648,7 @@ function handleTabCreated(tab) {
 		gTabs[tab.id].allowedHost = gTabs[tab.openerTabId].allowedHost;
 		gTabs[tab.id].allowedPath = gTabs[tab.openerTabId].allowedPath;
 		gTabs[tab.id].allowedSet = gTabs[tab.openerTabId].allowedSet;
+		gTabs[tab.id].allowedEndTime = gTabs[tab.openerTabId].allowedEndTime;
 	}
 }
 
