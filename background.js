@@ -24,6 +24,8 @@ var gRegExps = [];
 var gActiveTabId = 0;
 var gPrevActiveTabId = 0;
 var gFocusWindowId = 0;
+var gClockOffset = 0;
+var gIgnoreJumpSecs = 0;
 var gAllFocused = false;
 var gOverrideIcon = false;
 var gSaveSecsCount = 0;
@@ -214,6 +216,8 @@ function retrieveOptions(update) {
 
 		gNumSets = +gOptions["numSets"];
 
+		gClockOffset = +gOptions["clockOffset"];
+		gIgnoreJumpSecs = +gOptions["ignoreJumpSecs"];
 		gAllFocused = gOptions["allFocused"];
 
 		createRegExps();
@@ -326,8 +330,7 @@ function restartTimeData(set) {
 	}
 
 	// Get current time in seconds
-	let clockOffset = gOptions["clockOffset"];
-	let now = Math.floor(Date.now() / 1000) + (clockOffset * 60);
+	let now = Math.floor(Date.now() / 1000) + (gClockOffset * 60);
 
 	if (!set) {
 		for (set = 1; set <= gNumSets; set++) {
@@ -471,8 +474,7 @@ function checkTab(id, isBeforeNav, isRepeat) {
 	let parsedURL = getParsedURL(url);
 
 	// Get current time in seconds
-	let clockOffset = gOptions["clockOffset"];
-	let now = Math.floor(Date.now() / 1000) + (clockOffset * 60);
+	let now = Math.floor(Date.now() / 1000) + (gClockOffset * 60);
 
 	// Check for allowed host/path (or end of allowed time)
 	let allowHost = isSameHost(gTabs[id].allowedHost, parsedURL.host);
@@ -524,7 +526,7 @@ function checkTab(id, isBeforeNav, isRepeat) {
 		let waitSecs = gOptions[`waitSecs${set}`];
 		let loadedTime = gTabs[id].loadedTime;
 		if (waitSecs && loadedTime) {
-			let loadTime = Math.floor(loadedTime / 1000) + (clockOffset * 60);
+			let loadTime = Math.floor(loadedTime / 1000) + (gClockOffset * 60);
 			if ((now - loadTime) < waitSecs) continue; // too soon to check for block!
 		}
 
@@ -870,14 +872,10 @@ function updateTimeData(url, referrer, audible, secsOpen, secsFocus) {
 	let pageURL = parsedURL.page;
 
 	// Get current time in seconds
-	let clockOffset = gOptions["clockOffset"];
-	let now = Math.floor(Date.now() / 1000) + (clockOffset * 60);
+	let now = Math.floor(Date.now() / 1000) + (gClockOffset * 60);
 
 	// Get current time/date
 	let timedate = new Date(now * 1000);
-
-	// Get threshold for time jumps (if specified)
-	let ignoreJumpSecs = gOptions["ignoreJumpSecs"];
 
 	for (let set = 1; set <= gNumSets; set++) {
 		// Get regular expressions for matching sites to block/allow
@@ -927,7 +925,7 @@ function updateTimeData(url, referrer, audible, secsOpen, secsFocus) {
 			// Get number of seconds spent on page (focused or open)
 			let secsSpent = countFocus ? secsFocus : secsOpen;
 
-			if (ignoreJumpSecs && secsSpent > ignoreJumpSecs) continue;
+			if (gIgnoreJumpSecs && secsSpent > gIgnoreJumpSecs) continue;
 
 			// Update data for total time spent
 			timedata[1] = +timedata[1] + secsSpent;
@@ -1025,8 +1023,7 @@ function updateIcon() {
 	}
 
 	// Get current time in seconds
-	let clockOffset = gOptions["clockOffset"];
-	let now = Math.floor(Date.now() / 1000) + (clockOffset * 60);
+	let now = Math.floor(Date.now() / 1000) + (gClockOffset * 60);
 
 	// Get override end time
 	let overrideEndTime = gOptions["oret"];
@@ -1074,8 +1071,7 @@ function createBlockInfo(id, url) {
 	let unblockTime = getUnblockTime(blockedSet);
 	if (unblockTime != null) {
 		// Get current date of the month
-		let clockOffset = gOptions["clockOffset"];
-		let date = new Date(Date.now() + (clockOffset * 60000)).getDate();
+		let date = new Date(Date.now() + (gClockOffset * 60000)).getDate();
 
 		// Get clock time format
 		let clockTimeOpts = {};
@@ -1125,8 +1121,7 @@ function getUnblockTime(set) {
 	}
 
 	// Get current time in seconds
-	let clockOffset = gOptions["clockOffset"];
-	let now = Math.floor(Date.now() / 1000) + (clockOffset * 60);
+	let now = Math.floor(Date.now() / 1000) + (gClockOffset * 60);
 
 	// Get current time/date
 	let timedate = new Date(now * 1000);
@@ -1313,8 +1308,7 @@ function applyOverride(endTime) {
 
 	if (endTime) {
 		// Get current time in seconds
-		let clockOffset = gOptions["clockOffset"];
-		let now = Math.floor(Date.now() / 1000) + (clockOffset * 60);
+		let now = Math.floor(Date.now() / 1000) + (gClockOffset * 60);
 
 		// Update override limit count (if specified)
 		let orln = gOptions["orln"];
@@ -1426,8 +1420,7 @@ function openDelayedPage(id, url, set, autoLoad) {
 	gTabs[id].allowedSet = set;
 	if (delayAllowMins) {
 		// Calculate end time for allowing access
-		let clockOffset = gOptions["clockOffset"];
-		let now = Math.floor(Date.now() / 1000) + (clockOffset * 60);
+		let now = Math.floor(Date.now() / 1000) + (gClockOffset * 60);
 		gTabs[id].allowedEndTime = now + (delayAllowMins * 60);
 	} else {
 		// No end time for allowing access
