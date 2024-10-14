@@ -876,6 +876,9 @@ function updateTimeData(url, referrer, audible, secsOpen, secsFocus) {
 	// Get current time/date
 	let timedate = new Date(now * 1000);
 
+	// Get threshold for time jumps (if specified)
+	let ignoreJumpSecs = gOptions["ignoreJumpSecs"];
+
 	for (let set = 1; set <= gNumSets; set++) {
 		// Get regular expressions for matching sites to block/allow
 		let blockRE = gRegExps[set].block;
@@ -923,6 +926,8 @@ function updateTimeData(url, referrer, audible, secsOpen, secsFocus) {
 
 			// Get number of seconds spent on page (focused or open)
 			let secsSpent = countFocus ? secsFocus : secsOpen;
+
+			if (ignoreJumpSecs && secsSpent > ignoreJumpSecs) continue;
 
 			// Update data for total time spent
 			timedata[1] = +timedata[1] + secsSpent;

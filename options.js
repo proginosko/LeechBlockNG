@@ -327,6 +327,13 @@ function saveOptions(event) {
 		$("#alertBadClockOffset").dialog("open");
 		return false;
 	}
+	let ignoreJumpSecs = $("#ignoreJumpSecs").val();
+	if (!checkPosIntFormat(ignoreJumpSecs)) {
+		$("#tabs").tabs("option", "active", gNumSets);
+		$("#ignoreJumpSecs").focus();
+		$("#alertBadSeconds").dialog("open");
+		return false;
+	}
 
 	// Prevent removal of block sets with disabled options
 	if (numSets < gNumSetsMin) {
