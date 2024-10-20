@@ -27,13 +27,11 @@
 						<li id="tabAbout"><a href="#paneAbout">About</a></li>
 					</ul>
 					<div id="blockSet1">
-						<p>
-							<div style="display: flex; justify-content: space-between;">
-								<button id="moveSetL1" type="button">&larr; Move Set</button>
-								<button id="simpOpts1" type="button">Show Simplified Options</button>
-								<button id="fullOpts1" type="button" style="display: none;">Show Full Options</button>
-								<button id="moveSetR1" type="button">Move Set &rarr;</button>
-							</div>
+						<p style="display: flex; justify-content: space-between;">
+							<button id="moveSetL1" type="button">&larr; Move Set</button>
+							<button id="simpOpts1" type="button">Show Simplified Options</button>
+							<button id="fullOpts1" type="button" style="display: none;">Show Full Options</button>
+							<button id="moveSetR1" type="button">Move Set &rarr;</button>
 						</p>
 						<fieldset>
 							<legend>What to Block</legend>
@@ -42,12 +40,16 @@
 							</p>
 							<hr>
 							<p>
-								<label>Enter a custom name for this block set (optional):</label><br>
-								<div><input id="setName1" type="text" size="60"></div>
+								<label>Enter a custom name for this block set (optional):</label>
 							</p>
 							<p>
-								<label>Enter the domain names of the sites to block (one item per line):</label><br>
-								<div><textarea id="sites1" cols="60" rows="10" spellcheck="false" placeholder="somesite.com"></textarea></div>
+								<input id="setName1" type="text" size="60">
+							</p>
+							<p>
+								<label>Enter the domain names of the sites to block (one item per line):</label>
+							</p>
+							<p>
+								<textarea id="sites1" cols="60" rows="10" spellcheck="false" placeholder="somesite.com"></textarea>
 							</p>
 							<p>
 								<strong>Note:</strong> Do <u>not</u> include URL protocol prefixes such as <code>http://</code> or <code>file://</code>.
@@ -68,45 +70,45 @@
 							<hr>
 							<p>
 								<label>Enter the time periods within which to block these sites (optional):</label>
-								<div>
-									<input id="times1" type="text" size="60" placeholder="Example: 0900-1230,1330-1700" title="Leave blank for no time periods">
-									<button id="allDay1" type="button">All Day</button>
-								</div>
+							</p>
+							<p>
+								<input id="times1" type="text" size="60" placeholder="Example: 0900-1230,1330-1700" title="Leave blank for no time periods">
+								<button id="allDay1" type="button">All Day</button>
 							</p>
 							<p>
 								<label>Enter a time limit after which to block these sites (optional):</label>
-								<div>
-									<input id="limitMins1" type="text" size="4" title="Leave blank for no time limit">
-									minutes in every
-									<select id="limitPeriod1">
-										<option value=""></option>
-										<option value="300">5 minutes</option>
-										<option value="600">10 minutes</option>
-										<option value="900">15 minutes</option>
-										<option value="1200">20 minutes</option>
-										<option value="1800">half-hour (30 minutes)</option>
-										<option value="3600">hour (60 minutes)</option>
-										<option value="5400">1.5 hours (90 minutes)</option>
-										<option value="7200">2 hours</option>
-										<option value="10800">3 hours</option>
-										<option value="14400">4 hours</option>
-										<option value="21600">6 hours</option>
-										<option value="28800">8 hours</option>
-										<option value="43200">half-day (12 hours)</option>
-										<option value="86400">day (24 hours)</option>
-										<option value="172800">2 days</option>
-										<option value="259200">3 days</option>
-										<option value="345600">4 days</option>
-										<option value="604800">week (7 days)</option>
-										<option value="1209600">2 weeks (14 days)</option>
-										<option value="2592000">1 month (30 days)</option>
-										<option value="5184000">2 months (60 days)</option>
-										<option value="7776000">3 months (90 days)</option>
-									</select>
-									&nbsp;&nbsp;&nbsp;&nbsp;
-									<input id="rollover1" type="checkbox">
-									<label for="rollover1">Roll over unused time</label>
-								</div>
+							</p>
+							<p>
+								<input id="limitMins1" type="text" size="4" title="Leave blank for no time limit">
+								minutes in every
+								<select id="limitPeriod1">
+									<option value="">&nbsp;</option>
+									<option value="300">5 minutes</option>
+									<option value="600">10 minutes</option>
+									<option value="900">15 minutes</option>
+									<option value="1200">20 minutes</option>
+									<option value="1800">half-hour (30 minutes)</option>
+									<option value="3600">hour (60 minutes)</option>
+									<option value="5400">1.5 hours (90 minutes)</option>
+									<option value="7200">2 hours</option>
+									<option value="10800">3 hours</option>
+									<option value="14400">4 hours</option>
+									<option value="21600">6 hours</option>
+									<option value="28800">8 hours</option>
+									<option value="43200">half-day (12 hours)</option>
+									<option value="86400">day (24 hours)</option>
+									<option value="172800">2 days</option>
+									<option value="259200">3 days</option>
+									<option value="345600">4 days</option>
+									<option value="604800">week (7 days)</option>
+									<option value="1209600">2 weeks (14 days)</option>
+									<option value="2592000">1 month (30 days)</option>
+									<option value="5184000">2 months (60 days)</option>
+									<option value="7776000">3 months (90 days)</option>
+								</select>
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<input id="rollover1" type="checkbox">
+								<label for="rollover1">Roll over unused time</label>
 							</p>
 							<p>
 								<input id="countFocus1" type="checkbox">
@@ -126,21 +128,21 @@
 							</p>
 							<p>
 								<label>Select the days on which to block these sites:</label>
-								<div id="days1">
-									<input id="day01" type="checkbox"><label for="day01">Sun</label>
-									&nbsp;
-									<input id="day11" type="checkbox"><label for="day11">Mon</label>
-									&nbsp;
-									<input id="day21" type="checkbox"><label for="day21">Tue</label>
-									&nbsp;
-									<input id="day31" type="checkbox"><label for="day31">Wed</label>
-									&nbsp;
-									<input id="day41" type="checkbox"><label for="day41">Thu</label>
-									&nbsp;
-									<input id="day51" type="checkbox"><label for="day51">Fri</label>
-									&nbsp;
-									<input id="day61" type="checkbox"><label for="day61">Sat</label>
-								</div>
+							</p>
+							<p id="days1">
+								<input id="day01" type="checkbox"><label for="day01">Sun</label>
+								&nbsp;
+								<input id="day11" type="checkbox"><label for="day11">Mon</label>
+								&nbsp;
+								<input id="day21" type="checkbox"><label for="day21">Tue</label>
+								&nbsp;
+								<input id="day31" type="checkbox"><label for="day31">Wed</label>
+								&nbsp;
+								<input id="day41" type="checkbox"><label for="day41">Thu</label>
+								&nbsp;
+								<input id="day51" type="checkbox"><label for="day51">Fri</label>
+								&nbsp;
+								<input id="day61" type="checkbox"><label for="day61">Sat</label>
 							</p>
 						</fieldset>
 						<fieldset>
@@ -151,19 +153,21 @@
 							<hr>
 							<p>
 								<label>Enter the fully specified URL of the page to show instead of these blocked sites:</label>
-								<div><input id="blockURL1" type="text" size="60" placeholder="http://somesite.com/somepage.html" title="Use $U to pass URL of blocked page"></div>
 							</p>
 							<p>
-								<div>
-									<label>Predefined URLs:</label>
-									<button id="defaultPage1" type="button">Default Page</button>
-									<button id="delayingPage1" type="button">Delaying Page</button>
-									<button id="blankPage1" type="button">Blank Page</button>
-								</div>
+								<input id="blockURL1" type="text" size="60" placeholder="http://somesite.com/somepage.html" title="Use $U to pass URL of blocked page">
 							</p>
 							<p>
-								<label>Enter a custom message for the blocking/delaying page (optional):</label><br>
-								<div><textarea id="customMsg1" cols="60" rows="4" placeholder="Example: Get back to work!"></textarea></div>
+								<label>Predefined URLs:</label>
+								<button id="defaultPage1" type="button">Default Page</button>
+								<button id="delayingPage1" type="button">Delaying Page</button>
+								<button id="blankPage1" type="button">Blank Page</button>
+							</p>
+							<p>
+								<label>Enter a custom message for the blocking/delaying page (optional):</label>
+							</p>
+							<p>
+								<textarea id="customMsg1" cols="60" rows="4" placeholder="Example: Get back to work!"></textarea>
 							</p>
 							<hr>
 							<p class="simplifiable">
@@ -304,26 +308,28 @@
 							<hr>
 							<p>
 								<label>Load list of sites from URL:</label>
-								<div><input id="sitesURL1" type="text" size="60" title="Use $S to pass block set number and $T to pass UTC timestamp in milliseconds">
-								&nbsp;&nbsp;<a href="https://www.proginosko.com/leechblock/faq/load-from-url/" target="_blank">What does this do?</a></div>
+							</p>
+							<p>
+								<input id="sitesURL1" type="text" size="60" title="Use $S to pass block set number and $T to pass UTC timestamp in milliseconds">
+								&nbsp;&nbsp;<a href="https://www.proginosko.com/leechblock/faq/load-from-url/" target="_blank">What does this do?</a>
 							</p>
 							<p>
 								<label>Use <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank">regular expression</a>
 								to match URLs to <strong>block</strong> (overrides list of sites):</label>
-								<div>
-									<input id="regexpBlock1" type="text" size="60">
-									<button id="clearRegExpBlock1" type="button">Clear</button>
-									<button id="genRegExpBlock1" type="button">Generate From Site List</button>
-								</div>
+							</p>
+							<p>
+								<input id="regexpBlock1" type="text" size="60">
+								<button id="clearRegExpBlock1" type="button">Clear</button>
+								<button id="genRegExpBlock1" type="button">Generate From Site List</button>
 							</p>
 							<p>
 								<label>Use <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank">regular expression</a>
 								to match URLs to <strong>allow</strong> (overrides exceptions in list of sites):</label>
-								<div>
-									<input id="regexpAllow1" type="text" size="60">
-									<button id="clearRegExpAllow1" type="button">Clear</button>
-									<button id="genRegExpAllow1" type="button">Generate From Site List</button>
-								</div>
+							</p>
+							<p>
+								<input id="regexpAllow1" type="text" size="60">
+								<button id="clearRegExpAllow1" type="button">Clear</button>
+								<button id="genRegExpAllow1" type="button">Generate From Site List</button>
 							</p>
 							<p>
 								<input id="ignoreHash1" type="checkbox">
@@ -331,16 +337,14 @@
 							</p>
 							<hr>
 							<p>
-								<button id="cancelLockdown1" type="button" disabled="true">Cancel Active Lockdown</button>
+								<button id="cancelLockdown1" type="button" disabled="disabled">Cancel Active Lockdown</button>
 							</p>
 						</fieldset>
 					</div>
 					<div id="paneGeneral">
-						<p>
-							<div style="text-align: center;">
-								<button id="simpOptsGen" type="button">Show Simplified Options</button>
-								<button id="fullOptsGen" type="button" style="display: none;">Show Full Options</button>
-							</div>
+						<p style="text-align: center;">
+							<button id="simpOptsGen" type="button">Show Simplified Options</button>
+							<button id="fullOptsGen" type="button" style="display: none;">Show Full Options</button>
 						</p>
 						<fieldset>
 							<legend>Block Sets</legend>
@@ -352,16 +356,16 @@
 						<fieldset>
 							<legend>Access Control</legend>
 							<p>
-								<label>Select the requirement for access to options:</label><br>
-								<div>
-									<select id="optionsAccess">
-										<option value="0">Don't require the user to enter any password or access code</option>
-										<option value="1">Require the user to enter a password</option>
-										<option value="2">Require the user to enter a random 32-character access code</option>
-										<option value="3">Require the user to enter a random 64-character access code</option>
-										<option value="4">Require the user to enter a random 128-character access code</option>
-									</select>
-								</div>
+								<label>Select the requirement for access to options:</label>
+							</p>
+							<p>
+								<select id="optionsAccess">
+									<option value="0">Don't require the user to enter any password or access code</option>
+									<option value="1">Require the user to enter a password</option>
+									<option value="2">Require the user to enter a random 32-character access code</option>
+									<option value="3">Require the user to enter a random 64-character access code</option>
+									<option value="4">Require the user to enter a random 128-character access code</option>
+								</select>
 							</p>
 							<p>
 								<label>Password:</label>
@@ -375,8 +379,10 @@
 								<label for="hidePassword">Hide password characters when entered at prompt</label>
 							</p>
 							<p>
-								<label>Prevent all access to options during these time periods:</label><br>
-								<div><input id="accessPreventTimes" type="text" size="60" placeholder="Example: 0900-1230,1330-1700"></div>
+								<label>Prevent all access to options during these time periods:</label>
+							</p>
+							<p>
+								<input id="accessPreventTimes" type="text" size="60" placeholder="Example: 0900-1230,1330-1700">
 							</p>
 						</fieldset>
 						<fieldset>
@@ -427,25 +433,25 @@
 							<p>
 								Allow no more than <input id="overrideLimitNum" type="text" size="2" title="Leave blank for no limit"> override(s) every
 								<select id="overrideLimitPeriod">
-									<option value=""></option>
+									<option value="">&nbsp;</option>
 									<option value="3600">hour</option>
 									<option value="86400">day</option>
 									<option value="604800">week</option>
 								</select>
 							</p>
 							<p>
-								<label>Select the requirement for activating the override:</label><br>
-								<div>
-									<select id="overrideAccess">
-										<option value="0">Don't require the user to enter any password or access code</option>
-										<option value="1">Require the user to enter the access control password (see above)</option>
-										<option value="2">Require the user to enter a random 32-character access code</option>
-										<option value="3">Require the user to enter a random 64-character access code</option>
-										<option value="4">Require the user to enter a random 128-character access code</option>
-										<option value="8">Require the user to enter a predefined access code (see below)</option>
-										<option value="9">Require the user to enter a separate override password (see below)</option>
-									</select>
-								</div>
+								<label>Select the requirement for activating the override:</label>
+							</p>
+							<p>
+								<select id="overrideAccess">
+									<option value="0">Don't require the user to enter any password or access code</option>
+									<option value="1">Require the user to enter the access control password (see above)</option>
+									<option value="2">Require the user to enter a random 32-character access code</option>
+									<option value="3">Require the user to enter a random 64-character access code</option>
+									<option value="4">Require the user to enter a random 128-character access code</option>
+									<option value="8">Require the user to enter a predefined access code (see below)</option>
+									<option value="9">Require the user to enter a separate override password (see below)</option>
+								</select>
 							</p>
 							<p>
 								<label>Predefined access code:</label>
@@ -593,7 +599,7 @@
 						<a href="https://www.proginosko.com/leechblock/version-history/" target="_blank">https://www.proginosko.com/leechblock/version-history/</a></p>
 						<p><strong>Donations:</strong>
 						<a href="https://www.paypal.me/JamesNAnderson" target="_blank">https://www.paypal.me/JamesNAnderson</a></p>
-						<p><button id="openDiagnostics" type="button">Open Diagnostics Page</button><p>
+						<p><button id="openDiagnostics" type="button">Open Diagnostics Page</button></p>
 					</div>
 				</div>
 
