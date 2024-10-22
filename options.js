@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 const DEFAULT_OPTIONS_FILE = "LeechBlockOptions.txt";
+const DEFAULT_JSON_FILE = "LeechBlockOptions.json";
 
 const SUB_OPTIONS = {
 	"applyFilter" : [ "filterName", "filterMute" ],
@@ -125,6 +126,7 @@ function initForm(numSets) {
 	$("#clockOffsetTime").click(showClockOffsetTime);
 	$("#exportOptions").click(exportOptions);
 	$("#importOptions").click(importOptions);
+	$("#exportOptionsJSON").click(exportOptionsJSON);
 	$("#exportOptionsSync").click(exportOptionsSync);
 	$("#importOptionsSync").click(importOptionsSync);
 	$("#openDiagnostics").click(openDiagnostics);
@@ -137,6 +139,8 @@ function initForm(numSets) {
 		// Hide sync options (sync storage not supported on Android yet)
 		getElement("syncOpts1").style.display = "none";
 		getElement("syncOpts2").style.display = "none";
+		// Disable export to JSON button
+		getElement("exportOptionsJSON").disabled = true;
 	}
 
 	// Set active tab
@@ -854,7 +858,7 @@ function applyImportOptions(options) {
 	}
 }
 
-// Export options to file
+// Export options to text file
 //
 function exportOptions() {
 	let exportPasswords = getElement("exportPasswords").checked;
@@ -902,7 +906,7 @@ function exportOptions() {
 	}
 }
 
-// Import options from file
+// Import options from text file
 //
 function importOptions() {
 	let file = getElement("importFile").files[0];
@@ -962,6 +966,36 @@ function importOptions() {
 
 		$("#tabs").tabs("option", "active", gNumSets);
 		$("#alertImportSuccess").dialog("open");
+	}
+}
+
+// Export options to JSON file
+//
+function exportOptionsJSON() {
+	let exportPasswords = getElement("exportPasswords").checked;
+
+	let options = compileExportOptions(exportPasswords);
+
+	// Convert options to JSON string
+	let json = JSON.stringify(options);
+
+	// Create blob and download it
+	let blob = new Blob([json], { type: "text/plain", endings: "native" });
+	let url = URL.createObjectURL(blob);
+	let downloadOptions = {
+		url: url,
+		filename: DEFAULT_JSON_FILE,
+		saveAs: true
+	};
+	browser.downloads.download(downloadOptions).then(onSuccess, onError);
+
+	function onSuccess() {
+		$("#alertExportSuccess").dialog("open");
+	}
+
+	function onError(error) {
+		warn("Cannot download options: " + error);
+		$("#alertExportError").dialog("open");
 	}
 }
 
