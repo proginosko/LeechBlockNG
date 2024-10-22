@@ -1,3 +1,12 @@
+# Version 1.6.6 (21 Oct 2024)
+* Added Vietnamese localization (thanks to anhkhoakz).
+* Added option to enter custom message on blocking/delaying page.
+* Added option to block about:debugging (Firefox).
+* Added option to allow access for limited time after delaying page.
+* Added option to ignore jumps in time spent (e.g., when computer goes to sleep).
+* Added export to JSON file.
+* Added options for 30/60/90-day time limit periods.
+
 # Version 1.6.5 (18 Jun 2024)
 * Added "fade (100%)" filter option.
 * Added option to disable link on blocking/delaying page.
