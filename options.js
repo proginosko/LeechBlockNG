@@ -980,7 +980,7 @@ function exportOptionsJSON() {
 	let json = JSON.stringify(options);
 
 	// Create blob and download it
-	let blob = new Blob([json], { type: "text/plain", endings: "native" });
+	let blob = new Blob([json], { type: "application/json", endings: "native" });
 	let url = URL.createObjectURL(blob);
 	let downloadOptions = {
 		url: url,
