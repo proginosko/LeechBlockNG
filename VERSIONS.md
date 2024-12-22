@@ -1,3 +1,7 @@
+# Version 1.6.7 (22 Dec 2024)
+* Added support for keyboard shortcuts.
+* Bug fixes and under-the-hood improvements.
+
 # Version 1.6.6 (21 Oct 2024)
 * Added Vietnamese localization (thanks to anhkhoakz).
 * Added option to enter custom message on blocking/delaying page.
