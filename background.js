@@ -1554,6 +1554,46 @@ function handleMenuClick(info, tab) {
 	}
 }
 
+function handleCommand(command) {
+	//log("handleCommand: " + command);
+
+	switch(command) {
+	
+		case "lb-options":
+			browser.runtime.openOptionsPage();
+			break;
+
+		case "lb-statistics":
+			openExtensionPage("stats.html");
+			break;
+		
+		case "lb-lockdown":
+			openExtensionPage("lockdown.html");
+			break;
+		
+		case "lb-override":
+			openExtensionPage("override.html");
+			break;
+		
+		case "lb-cancel-override":
+			applyOverride(0);
+			break;
+
+		case "lb-add-sites":
+			openExtensionPage("add-sites.html");
+			break;
+
+		case "lb-reset-rollover":
+			resetRolloverTime();
+			break;
+
+		case "lb-discard-time":
+			discardRemainingTime();
+			break;
+
+	}
+}
+
 function handleMessage(message, sender, sendResponse) {
 	if (!sender) {
 		warn("No sender!");
@@ -1780,6 +1820,8 @@ browser.action.setPopup({ popup: localePath + "popup.html" });
 if (browser.menus) {
 	browser.menus.onClicked.addListener(handleMenuClick);
 }
+
+browser.commands.onCommand.addListener(handleCommand);
 
 browser.runtime.onMessage.addListener(handleMessage);
 

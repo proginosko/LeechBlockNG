@@ -24,6 +24,33 @@
 		}
 	},
 
+	"commands": {
+		"lb-options": {
+			"description": "Open the options page"
+		},
+		"lb-statistics": {
+			"description": "Open the statistics page"
+		},
+		"lb-lockdown": {
+			"description": "Activate lockdown"
+		},
+		"lb-override": {
+			"description": "Activate override"
+		},
+		"lb-cancel-override": {
+			"description": "Cancel override"
+		},
+		"lb-add-sites": {
+			"description": "Add sites to block set"
+		},
+		"lb-reset-rollover": {
+			"description": "Reset rollover time"
+		},
+		"lb-discard-time": {
+			"description": "Discard remaining time"
+		}
+	},
+
 	"content_scripts": [
 		{
 			"matches": ["<all_urls>"],
