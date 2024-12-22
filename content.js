@@ -141,9 +141,9 @@ function applyFilter(name) {
 		"sepia": "sepia(100%)"
 	};
 	if (name && filters[name]) {
-		document.body.style.filter = filters[name];
+		document.documentElement.style.filter = filters[name];
 	} else {
-		document.body.style.filter = "none";
+		document.documentElement.style.filter = "none";
 	}
 }
 
