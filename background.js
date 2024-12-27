@@ -858,14 +858,19 @@ function clockPageTime(id, open, focus) {
 
 	// Update time data if necessary
 	if (secsOpen > 0 || secsFocus > 0) {
-		updateTimeData(gTabs[id].url, gTabs[id].referrer, gTabs[id].audible, secsOpen, secsFocus);
+		updateTimeData(id, secsOpen, secsFocus);
 	}
 }
 
 // Update time data for specified page
 //
-function updateTimeData(url, referrer, audible, secsOpen, secsFocus) {
-	//log("updateTimeData: " + url + " " + secsOpen + " " + secsFocus);
+function updateTimeData(id, secsOpen, secsFocus) {
+	//log("updateTimeData: " + id + " " + secsOpen + " " + secsFocus);
+
+	let referrer = gTabs[id].referrer;
+	let url = gTabs[id].url;
+	let incog = gTabs[id].incog;
+	let audible = gTabs[id].audible;
 
 	// Get parsed URL for this page
 	let parsedURL = getParsedURL(url);
@@ -883,6 +888,10 @@ function updateTimeData(url, referrer, audible, secsOpen, secsFocus) {
 		let allowRE = gRegExps[set].allow;
 		let referRE = gRegExps[set].refer;
 		if (!blockRE && !referRE) continue; // no block for this set
+
+		// Check incognito mode
+		let incogMode = gOptions[`incogMode${set}`];
+		if ((incogMode == 1 && incog) || (incogMode == 2 && !incog)) continue;
 
 		// Get option for counting time only when tab is playing audio
 		let countAudio = gOptions[`countAudio${set}`];
