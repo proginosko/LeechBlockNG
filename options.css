@@ -4,8 +4,23 @@ html {
 	overflow-y: scroll;
 }
 
+@media (prefers-color-scheme: light) {
+
+	body {
+		background: #fff;
+	}
+
+}
+
+@media (prefers-color-scheme: dark) {
+
+	body {
+		background: #222;
+	}
+
+}
+
 body {
-	background: #fff;
 	color: #000;
 	font-size: 14px;
 }

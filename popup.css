@@ -1,7 +1,22 @@
 /* LeechBlock popup style */
 
+@media (prefers-color-scheme: light) {
+
+	body {
+		background-color: #fff;
+	}
+
+}
+
+@media (prefers-color-scheme: dark) {
+
+	body {
+		background-color: #222;
+	}
+
+}
+
 body {
-	background-color: #fff;
 	color: #000;
 	font-size: 14px;
 	text-align: center;

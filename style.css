@@ -1,7 +1,22 @@
 /* LeechBlock blocking/delaying page style */
 
+@media (prefers-color-scheme: light) {
+
+	body {
+		background: #fff;
+	}
+
+}
+
+@media (prefers-color-scheme: dark) {
+
+	body {
+		background: #222;
+	}
+
+}
+
 body {
-	background: #fff;
 	color: #2e3436;
 	font: normal 16px "Open Sans", Arial, sans-serif;
 	text-align: center;
