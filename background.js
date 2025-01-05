@@ -918,8 +918,6 @@ function updateTimeData(id, secsOpen, secsFocus) {
 			// Avoid overcounting time for non-focused tabs
 			if (!countFocus && gSetCounted[set]) {
 				continue;
-			} else {
-				gSetCounted[set] = true;
 			}
 
 			// Reset time data if currently invalid
@@ -929,7 +927,17 @@ function updateTimeData(id, secsOpen, secsFocus) {
 				timedata.push(0);
 			}
 
-			updateRolloverTime(timedata, limitMins, limitPeriod, periodStart);
+			// Need a temp variable her since JS passes arrays by reference
+			let tmpTimedata = [now, 0, 0, 0, 0, 0, 0, 0];
+			if (Array.isArray(timedata))
+			{
+				for(let index = 0; index < timedata.length && index < 8;index++)
+				{
+					tmpTimedata[index] = timedata[index]
+				}
+			}
+
+			updateRolloverTime(tmpTimedata, limitMins, limitPeriod, periodStart);
 
 			// Get number of seconds spent on page (focused or open)
 			let secsSpent = countFocus ? secsFocus : secsOpen;
@@ -937,7 +945,7 @@ function updateTimeData(id, secsOpen, secsFocus) {
 			if (gIgnoreJumpSecs && secsSpent > gIgnoreJumpSecs) continue;
 
 			// Update data for total time spent
-			timedata[1] = +timedata[1] + secsSpent;
+			tmpTimedata[1] = +tmpTimedata[1] + secsSpent;
 
 			// Determine whether we should count time spent on page in
 			// specified time period (we should only count time on selected
@@ -958,23 +966,49 @@ function updateTimeData(id, secsOpen, secsFocus) {
 			}
 
 			// Update data for time spent in specified time period
-			if (countTimeSpentInPeriod && periodStart > 0 && timedata[2] >= 0) {
-				if (timedata[2] != periodStart) {
+			if (countTimeSpentInPeriod && periodStart > 0 && tmpTimedata[2] >= 0) {
+				if (tmpTimedata[2] != periodStart) {
 					// We've entered a new time period, so start new count
-					timedata[2] = periodStart;
-					timedata[3] = secsSpent;
+					tmpTimedata[2] = periodStart;
+					tmpTimedata[3] = secsSpent;
 				} else {
 					// We haven't entered a new time period, so keep counting
-					timedata[3] = +timedata[3] + secsSpent;
+					tmpTimedata[3] = +tmpTimedata[3] + secsSpent;
 				}
 				
 				// Update rollover time for next period
-				timedata[6] = Math.max(0, (limitMins * 60) - timedata[3]);
-				timedata[7] = periodStart + (+limitPeriod);
+				tmpTimedata[6] = Math.max(0, (limitMins * 60) - tmpTimedata[3]);
+				tmpTimedata[7] = periodStart + (+limitPeriod);
 			}
 
-			// Update time data for this set
-			gOptions[`timedata${set}`] = timedata;
+			let keywordRE = gRegExps[set].keyword;
+			let isInternalPage = /^about:(addons|support|debugging)/i.test(url);
+			let allowKeywords = gOptions[`allowKeywords${set}`];
+
+			if (keywordRE && !isInternalPage) {
+				// Check for keyword(s) before updating time
+				let message = {
+					type: "keyword",
+					keywordRE: keywordRE
+				};
+				browser.tabs.sendMessage(id, message).then(
+					function (keyword) {
+						if(gSetCounted[set])
+							return;
+						if ((!allowKeywords && typeof keyword == "string")
+								|| (allowKeywords && keyword == null)) {
+							// Update time data for this set
+							gOptions[`timedata${set}`] = tmpTimedata;
+							gSetCounted[set] = true;
+						}
+					},
+					function (error) {}
+				);
+			} else {
+				// Update time data for this set
+				gOptions[`timedata${set}`] = tmpTimedata;
+				gSetCounted[set] = true;
+			}
 		}
 	}
 }
