@@ -1714,6 +1714,9 @@ function handleTabUpdated(tabId, changeInfo, tab) {
 
 	let focus = tab.active && (gAllFocused || !gFocusWindowId || tab.windowId == gFocusWindowId);
 
+	gTabs[tab.id].incog = tab.incognito;
+	gTabs[tab.id].audible = tab.audible;
+
 	if (changeInfo.url) {
 		gTabs[tabId].url = getCleanURL(changeInfo.url);
 	}
