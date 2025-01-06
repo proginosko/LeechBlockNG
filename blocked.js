@@ -12,9 +12,15 @@ function processBlockInfo(info) {
 	gBlockedURL = info.blockedURL;
 
 	// Set theme
-	let link = document.getElementById("themeLink");
-	if (link) {
-		link.href = "/themes/" + (info.theme ? `${info.theme}.css` : "default.css");
+	let themeLink = document.getElementById("themeLink");
+	if (themeLink) {
+		themeLink.href = "/themes/" + (info.theme ? `${info.theme}.css` : "default.css");
+	}
+
+	// Set custom style
+	let customStyle = document.getElementById("customStyle");
+	if (customStyle) {
+		customStyle.innerText = info.customStyle;
 	}
 
 	let blockedURL = document.getElementById("lbBlockedURL");

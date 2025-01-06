@@ -12,36 +12,37 @@
 		<link rel="stylesheet" href="/fonts.css" type="text/css">
 		<link rel="stylesheet" href="/style.css" type="text/css">
 		<link id="themeLink" rel="stylesheet">
+		<style id="customStyle"></style>
 	</head>
 
 	<body>
 
 		<!-- logo -->
-		<div>
-			<img src="/images/leechblock_logo.svg" class="logo" alt="LeechBlock logo" title="LeechBlock">
+		<div id="lbLogoDiv">
+			<a href="https://www.proginosko.com/leechblock/"><img id="lbLogoImg" src="/images/leechblock_logo.svg" class="logo" alt="LeechBlock logo" title="LeechBlock"></a>
 		</div>
 
 		<!-- warning message -->
-		<div>
+		<div id="lbWarningMsgDiv">
 			<h1>The page you're trying to access has been blocked by <a href="https://www.proginosko.com/leechblock/">LeechBlock</a>.</h1>
 		</div>
 
 		<!-- blocked site info -->
-		<div>
+		<div id="lbBlockedDiv">
 			<a id="lbBlockedURLLink" target="_self"><span id="lbBlockedURL"></span></a>
 			(<span id="lbBlockedSet">Block Set</span>)
-			<p id="lbKeywordMatched">Keyword matched: <strong><span id="lbKeywordMatch"></span></strong></p>
-			<p>The page will be unblocked at: <strong><span id="lbUnblockTime">the end of time</span></strong></p>
+			<p id="lbKeywordMatched">Keyword matched: <span id="lbKeywordMatch" class="keyword"></span></p>
+			<p id="lbUnblockText">The page will be unblocked at: <span id="lbUnblockTime" class="time">the end of time</span></p>
 		</div>
 
 		<!-- custom message (optional) -->
 		<div id="lbCustomMsgDiv">
 			<p>A message from yourself:</p>
-			<strong><blockquote id="lbCustomMsg"></blockquote></strong>
+			<blockquote id="lbCustomMsg"></blockquote>
 		</div>
 
 		<!-- support info -->
-		<div class="support">
+		<div id="lbSupportDiv" class="support">
 			LeechBlock will always be free to use, but if it has improved your life,<br>
 			please consider supporting its continued development by<br>
 			<a href="https://www.paypal.me/JamesNAnderson">making a contribution</a> or

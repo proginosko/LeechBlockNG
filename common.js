@@ -80,6 +80,7 @@ const GENERAL_OPTIONS = {
 	numSets: { type: "string", def: "6", id: "numSets" }, // default: 6 block sets
 	sync: { type: "boolean", def: false, id: "syncStorage" }, // default: use local storage
 	theme: { type: "string", def: "", id: "theme" }, // default: light theme
+	customStyle: { type: "string", def: "", id: "customStyle" }, // default: no custom style
 	oa: { type: "string", def: "0", id: "optionsAccess" }, // default: no password or code
 	password: { type: "string", def: "", id: "accessPassword" }, // default: blank
 	hpp: { type: "boolean", def: true, id: "hidePassword" }, // default: hidden

@@ -40,6 +40,26 @@ a:hover {
     text-decoration: underline;
 }
 
+blockquote {
+	font-weight: bold;
+}
+
+.logo {
+	width: 408px;
+}
+
+.keyword {
+	font-weight: bold;
+}
+
+.time {
+	font-weight: bold;
+}
+
+.delay {
+	font-weight: bold;
+}
+
 .support {
 	color: #777;
 	font-size: 14px;
@@ -49,8 +69,4 @@ a:hover {
 .support a {
 	color: #777;
 	text-decoration: underline;
-}
-
-.logo {
-	width: 408px;
 }

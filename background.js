@@ -1053,13 +1053,16 @@ function createBlockInfo(id, url) {
 	// Get theme
 	let theme = gOptions["theme"];
 
+	// Get custom style
+	let customStyle = gOptions["customStyle"];
+
 	// Get parsed URL
 	let parsedURL = getParsedURL(url);
 	let pageURL = parsedURL.page;
 
 	if (parsedURL.args == null || parsedURL.args.length < 2) {
 		warn("Cannot create block info: not enough arguments in URL.");
-		return { theme: theme };
+		return { theme: theme, customStyle: customStyle };
 	}
 
 	// Get block set and URL (including hash part) of blocked page
@@ -1111,6 +1114,7 @@ function createBlockInfo(id, url) {
 
 	return {
 		theme: theme,
+		customStyle: customStyle,
 		blockedSet: blockedSet,
 		blockedSetName: blockedSetName,
 		blockedURL: blockedURL,
