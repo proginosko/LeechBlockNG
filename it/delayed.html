@@ -12,30 +12,37 @@
 		<link rel="stylesheet" href="/fonts.css" type="text/css">
 		<link rel="stylesheet" href="/style.css" type="text/css">
 		<link id="themeLink" rel="stylesheet">
+		<style id="customStyle"></style>
 	</head>
 
 	<body>
 
 		<!-- logo -->
-		<div>
-			<img src="/images/leechblock_logo.svg" class="logo" alt="LeechBlock logo" title="LeechBlock">
+		<div id="lbLogoDiv">
+			<a href="https://www.proginosko.com/leechblock/"><img id="lbLogoImg" src="/images/leechblock_logo.svg" class="logo" alt="LeechBlock logo" title="LeechBlock"></a>
 		</div>
 
 		<!-- warning message -->
-		<div>
+		<div id="lbWarningMsgDiv">
 			<h1>La pagina a cui stai tentando di accedere è stata temporaneamente bloccata da <a href="https://www.proginosko.com/leechblock/">LeechBlock</a>.</h1>
 		</div>
 
 		<!-- blocked site info -->
-		<div>
+		<div id="lbBlockedDiv">
 			<a id="lbBlockedURLLink" target="_self"><span id="lbBlockedURL"></span></a>
 			(<span id="lbBlockedSet">Lista blocco</span>)
-			<p id="lbKeywordMatched">Parole chiave corrispondenti: <strong><span id="lbKeywordMatch"></span></strong></p>
-			<p id="lbCountdownText">La pagina verrà sbloccata tra <strong><span id="lbDelaySeconds">0</span></strong> secondi.</p>
+			<p id="lbKeywordMatched">Parole chiave corrispondenti: <span id="lbKeywordMatch" class="keyword"></span></p>
+			<p id="lbCountdownText">La pagina verrà sbloccata tra <span id="lbDelaySeconds" class="delay">0</span> secondi.</p>
+		</div>
+
+		<!-- custom message (optional) -->
+		<div id="lbCustomMsgDiv">
+			<p>Un messaggio da te stesso:</p>
+			<blockquote id="lbCustomMsg"></blockquote>
 		</div>
 
 		<!-- support info -->
-		<div class="support">
+		<div id="lbSupportDiv" class="support">
 			LeechBlock sarà sempre gratuito, ma se ha migliorato la tua vita,<br>
 			per piacere, considera di supportare lo sviluppo continuo<br>
 			<a href="https://www.paypal.me/JamesNAnderson">con una donazione</a> o

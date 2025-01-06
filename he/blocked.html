@@ -12,6 +12,7 @@
 		<link rel="stylesheet" href="/fonts.css" type="text/css">
 		<link rel="stylesheet" href="/style.css" type="text/css">
 		<link id="themeLink" rel="stylesheet">
+		<style id="customStyle"></style>
 		<style type="text/css">
 			.BlockMessageLink {
 				letter-spacing: -1.5pt;
@@ -43,25 +44,30 @@
 	<body>
 
 		<!-- logo -->
-		<div>
-			<img src="/images/leechblock_logo.svg" class="logo" alt="הלוגו של LeechBlock" title="LeechBlock">
+		<div id="lbLogoDiv">
+			<a href="https://www.proginosko.com/leechblock/"><img id="lbLogoImg" src="/images/leechblock_logo.svg" class="logo" alt="LeechBlock logo" title="LeechBlock"></a>
 		</div>
 
 		<!-- warning message -->
-		<div>
+		<div id="lbWarningMsgDiv">
 			<span class="BlockMessageText">העמוד שניסית לגשת אליו נחסם על ידי </span><a class="BlockMessageLink" href="https://www.proginosko.com/leechblock/">LeechBlock</a>
 		</div>
 
 		<!-- blocked site info -->
-		<div>
+		<div id="lbBlockedDiv">
 			<a id="lbBlockedURLLink" target="_self"><span id="lbBlockedURL" dir="ltr"></span></a>
 			(<span id="lbBlockedSet">קבוצת חסימה</span>)
-			<p id="lbKeywordMatched">המילה/ים שנחסמה/ו: <strong><span id="lbKeywordMatch"></span></strong></p>
-			<p>העמוד יישאר נעול עד: <strong><span id="lbUnblockTime">סוף הזמן שהוגדר</span></strong></p>
+			<p id="lbKeywordMatched">המילה/ים שנחסמה/ו: <span id="lbKeywordMatch" class="keyword"></span></p>
+			<p id="lbUnblockText">העמוד יישאר נעול עד: <span id="lbUnblockTime" class="time">סוף הזמן שהוגדר</span></p>
+		</div>
+
+		<!-- custom message (optional) -->
+		<div id="lbCustomMsgDiv">
+			<blockquote id="lbCustomMsg"></blockquote>
 		</div>
 
 		<!-- support info -->
-		<div class="support">
+		<div id="lbSupportDiv" class="support">
 			השימוש ב־LeechBlock חופשי וכך יישאר. אבל אם התוסף עזר לך לשפר את חייך,<br>
 			נא לשקול <a href="https://www.paypal.me/JamesNAnderson">לתרום למפתח</a> או <a href="https://addons.mozilla.org/firefox/addon/leechblock-ng/">לדרג את התוסף</a>.<br>
 		</div>

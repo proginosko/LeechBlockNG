@@ -18,21 +18,17 @@
         <link rel="stylesheet" href="/fonts.css" type="text/css" />
         <link rel="stylesheet" href="/style.css" type="text/css" />
         <link id="themeLink" rel="stylesheet" />
+        <style id="customStyle"></style>
     </head>
 
     <body>
         <!-- logo -->
-        <div>
-            <img
-                src="/images/leechblock_logo.svg"
-                class="logo"
-                alt="Logo LeechBlock"
-                title="LeechBlock"
-            />
+        <div id="lbLogoDiv">
+            <a href="https://www.proginosko.com/leechblock/"><img id="lbLogoImg" src="/images/leechblock_logo.svg" class="logo" alt="Logo LeechBlock" title="LeechBlock"></a>
         </div>
 
         <!-- thông báo cảnh báo -->
-        <div>
+        <div id="lbWarningMsgDiv">
             <h1>
                 Trang bạn đang cố truy cập đã bị chặn tạm thời bởi
                 <a href="https://www.proginosko.com/leechblock/">LeechBlock</a>.
@@ -40,23 +36,29 @@
         </div>
 
         <!-- thông tin trang bị chặn -->
-        <div>
+        <div id="lbBlockedDiv">
             <a id="lbBlockedURLLink" target="_self"
                 ><span id="lbBlockedURL"></span
             ></a>
             (<span id="lbBlockedSet">Bộ chặn</span>)
             <p id="lbKeywordMatched">
                 Từ khóa khớp:
-                <strong><span id="lbKeywordMatch"></span></strong>
+                <span id="lbKeywordMatch" class="keyword"></span>
             </p>
             <p id="lbCountdownText">
                 Trang sẽ được mở chặn trong
-                <strong><span id="lbDelaySeconds">0</span></strong> giây.
+                <span id="lbDelaySeconds" class="delay">0</span> giây.
             </p>
         </div>
 
+        <!-- custom message (optional) -->
+        <div id="lbCustomMsgDiv">
+            <p>Một thông điệp từ chính bạn:</p>
+            <blockquote id="lbCustomMsg"></blockquote>
+        </div>
+
         <!-- thông tin hỗ trợ -->
-        <div class="support">
+        <div id="lbSupportDiv" class="support">
             LeechBlock luôn miễn phí sử dụng, nhưng nếu nó đã cải thiện cuộc
             sống của bạn,<br />
             xin vui lòng xem xét ủng hộ sự phát triển tiếp tục của nó bằng
