@@ -1,3 +1,7 @@
+# Version 1.6.8 (09 Jan 2024)
+* Added option for custom style (CSS) for blocking/delaying page.
+* Bug fixes.
+
 # Version 1.6.7 (22 Dec 2024)
 * Added support for keyboard shortcuts.
 * Bug fixes and under-the-hood improvements.
