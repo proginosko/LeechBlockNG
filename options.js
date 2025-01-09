@@ -119,7 +119,6 @@ function initForm(numSets) {
 	$("#simpOptsGen").click(function (e) { showSimplifiedOptions(true); });
 	$("#fullOptsGen").click(function (e) { showSimplifiedOptions(false); });
 	$("#accessPasswordShow").change(accessPasswordShow);
-	$("#overridePasswordShow").change(overridePasswordShow);
 	$("#theme").change(function (e) { setTheme($("#theme").val()); });
 	$("#clockOffset").click(showClockOffsetTime);
 	$("#clockOffset").keyup(showClockOffsetTime);
@@ -728,14 +727,6 @@ function accessPasswordShow() {
 	input.type = checkbox.checked ? "text" : "password";
 }
 
-// Show/hide override password
-//
-function overridePasswordShow() {
-	let input = getElement("overridePassword");
-	let checkbox = getElement("overridePasswordShow");
-	input.type = checkbox.checked ? "text" : "password";
-}
-
 // Show adjusted time based on clock offset
 //
 function showClockOffsetTime() {
@@ -1177,8 +1168,9 @@ function disableGeneralOptions() {
 
 	// Disable other items
 	let items = [
-		"accessPasswordShow", "overridePasswordShow",
+		"accessPasswordShow",
 		"exportOptions", "importOptions", "importFile",
+		"exportOptionsJSON",
 		"exportOptionsSync", "importOptionsSync"
 	];
 	for (let item of items) {
