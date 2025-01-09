@@ -1837,7 +1837,9 @@ if (browser.menus) {
 	browser.menus.onClicked.addListener(handleMenuClick);
 }
 
-browser.commands.onCommand.addListener(handleCommand);
+if (browser.commands) {
+	browser.commands.onCommand.addListener(handleCommand);
+}
 
 browser.runtime.onMessage.addListener(handleMessage);
 
