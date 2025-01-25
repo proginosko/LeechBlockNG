@@ -178,6 +178,17 @@ function handleMessage(message, sender, sendResponse) {
 
 }
 
+function onFocus(event) {
+	browser.runtime.sendMessage({ type: "focus", focus: true });
+}
+
+function onBlur(event) {
+	browser.runtime.sendMessage({ type: "focus", focus: false });
+}
+
 browser.runtime.onMessage.addListener(handleMessage);
 
 notifyLoaded();
+
+window.addEventListener("focus", onFocus);
+window.addEventListener("blur", onBlur);

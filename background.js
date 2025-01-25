@@ -47,6 +47,7 @@ function initTab(id) {
 			url: "about:blank",
 			incog: false,
 			audible: false,
+			focused: false,
 			loaded: false,
 			loadedTime: 0
 		};
@@ -406,7 +407,8 @@ function processTabs(active) {
 		for (let tab of tabs) {
 			initTab(tab.id);
 
-			let focus = tab.active && (gAllFocused || !gFocusWindowId || tab.windowId == gFocusWindowId);
+			let focus = tab.active && (gAllFocused || !gFocusWindowId || tab.windowId == gFocusWindowId)
+					&& (!gIsAndroid || gTabs[tab.id].focused);
 
 			gTabs[tab.id].incog = tab.incognito;
 			gTabs[tab.id].audible = tab.audible;
@@ -1646,6 +1648,11 @@ function handleMessage(message, sender, sendResponse) {
 			discardRemainingTime();
 			break;
 
+		case "focus":
+			// Tab focus event received
+			gTabs[sender.tab.id].focused = message.focus;
+			break;
+
 		case "loaded":
 			// Register that content script has been loaded
 			gTabs[sender.tab.id].loaded = true;
@@ -1716,7 +1723,8 @@ function handleTabUpdated(tabId, changeInfo, tab) {
 		return;
 	}
 
-	let focus = tab.active && (gAllFocused || !gFocusWindowId || tab.windowId == gFocusWindowId);
+	let focus = tab.active && (gAllFocused || !gFocusWindowId || tab.windowId == gFocusWindowId)
+			&& (!gIsAndroid || gTabs[tab.id].focused);
 
 	gTabs[tab.id].incog = tab.incognito;
 	gTabs[tab.id].audible = tab.audible;
@@ -1745,6 +1753,8 @@ function handleTabActivated(activeInfo) {
 	gPrevActiveTabId = activeInfo.previousTabId;
 
 	initTab(tabId);
+
+	gTabs[tabId].focused = true;
 
 	if (!gGotOptions) {
 		return;
