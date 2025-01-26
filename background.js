@@ -1517,11 +1517,20 @@ function addSitesToSet(siteList, set) {
 	// Get sites for this set
 	let sites = gOptions[`sites${set}`];
 
-	// Add sites if not exceptions and not already included
+	// Get keyword info
+	let keywordRE = gOptions[`keywordRE${set}`];
+	let allowKeywords = gOptions[`allowKeywords${set}`];
+
+	// Add sites to list
 	let patterns = sites.split(/\s+/);
 	for (let site of siteList.split(/\s+/)) {
-		if (site.charAt(0) != "+" && patterns.indexOf(site) < 0) {
-			patterns.push(site);
+		let firstChar = site.charAt(0);
+		// Add item only if not exception and not already in list
+		if (firstChar != "+" && patterns.indexOf(site) < 0) {
+			// Add keywords only if keywords already there (and not as allow-condition)
+			if (firstChar != "~" || (keywordRE && !allowKeywords)) {
+				patterns.push(site);
+			}
 		}
 	}
 
