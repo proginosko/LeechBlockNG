@@ -1,4 +1,8 @@
-# Version 1.6.8 (09 Jan 2024)
+# Version 1.6.8.2 (25 Jan 2025)
+* Fixed issue with counting time on active tab (Android).
+* Closed some escape hatches.
+
+# Version 1.6.8 (09 Jan 2025)
 * Added option for custom style (CSS) for blocking/delaying page.
 * Bug fixes.
 
