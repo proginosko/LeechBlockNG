@@ -1,5 +1,6 @@
-# Version 1.6.8.2 (25 Jan 2025)
+# Version 1.6.8.2 (26 Jan 2025)
 * Fixed issue with counting time on active tab (Android).
+* Fixed issue with export/import of multiline strings.
 * Closed some escape hatches.
 
 # Version 1.6.8 (09 Jan 2025)
