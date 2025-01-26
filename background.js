@@ -27,6 +27,7 @@ var gFocusWindowId = 0;
 var gClockOffset = 0;
 var gIgnoreJumpSecs = 0;
 var gAllFocused = false;
+var gUseDocFocus = true;
 var gOverrideIcon = false;
 var gSaveSecsCount = 0;
 var gTickerID;
@@ -220,6 +221,7 @@ function retrieveOptions(update) {
 		gClockOffset = +gOptions["clockOffset"];
 		gIgnoreJumpSecs = +gOptions["ignoreJumpSecs"];
 		gAllFocused = gOptions["allFocused"];
+		gUseDocFocus = gOptions["useDocFocus"];
 
 		createRegExps();
 		refreshMenus();
@@ -408,7 +410,7 @@ function processTabs(active) {
 			initTab(tab.id);
 
 			let focus = tab.active && (gAllFocused || !gFocusWindowId || tab.windowId == gFocusWindowId)
-					&& (!gIsAndroid || gTabs[tab.id].focused);
+					&& (!gIsAndroid || !gUseDocFocus || gTabs[tab.id].focused);
 
 			gTabs[tab.id].incog = tab.incognito;
 			gTabs[tab.id].audible = tab.audible;
@@ -1724,7 +1726,7 @@ function handleTabUpdated(tabId, changeInfo, tab) {
 	}
 
 	let focus = tab.active && (gAllFocused || !gFocusWindowId || tab.windowId == gFocusWindowId)
-			&& (!gIsAndroid || gTabs[tab.id].focused);
+			&& (!gIsAndroid || !gUseDocFocus || gTabs[tab.id].focused);
 
 	gTabs[tab.id].incog = tab.incognito;
 	gTabs[tab.id].audible = tab.audible;

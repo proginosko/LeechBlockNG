@@ -109,6 +109,7 @@ const GENERAL_OPTIONS = {
 	clockOffset: { type: "string", def: "", id: "clockOffset" }, // default: no offset
 	ignoreJumpSecs: { type: "string", def: "", id: "ignoreJumpSecs" }, // default: do not ignore time jumps
 	allFocused: { type: "boolean", def: false, id: "allFocused" }, // default: disabled
+	useDocFocus: { type: "boolean", def: true, id: "useDocFocus" }, // default: enabled
 	processTabsSecs: { type: "string", def: "1", id: "processTabsSecs" }, // default: every second
 	processActiveTabs: { type: "boolean", def: false, id: "processActiveTabs" }, // default: disabled
 	accessCodeImage: { type: "boolean", def: false, id: "accessCodeImage" }, // default: disabled
