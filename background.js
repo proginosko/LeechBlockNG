@@ -592,6 +592,7 @@ function checkTab(id, isBeforeNav, isRepeat) {
 			let allowOverLock = gOptions[`allowOverLock${set}`];
 			let showTimer = gOptions[`showTimer${set}`];
 			let allowKeywords = gOptions[`allowKeywords${set}`];
+			let youtubeResume = gOptions[`youtubeResume${set}`];
 
 			updateRolloverTime(timedata, limitMins, limitPeriod, periodStart);
 
@@ -700,19 +701,46 @@ function checkTab(id, isBeforeNav, isRepeat) {
 					} else {
 						gTabs[id].keyword = keyword;
 
-						if (!gIsAndroid && addHistory && !isInternalPage) {
-							// Add blocked page to browser history
-							browser.history.addUrl({ url: pageURLWithHash });
+						function finalizeBlockPageRedirection() {
+							if (!gIsAndroid && addHistory && !isInternalPage) {
+								// Add blocked page to browser history
+								browser.history.addUrl({ url: pageURLWithHash });
+							}
+	
+							// Get final URL for block page
+							blockURL = getLocalizedURL(blockURL)
+									.replace(/\$K/g, keyword ? keyword : "")
+									.replace(/\$S/g, set)
+									.replace(/\$U/g, pageURLWithHash);
+	
+							// Redirect page
+							browser.tabs.update(id, { url: blockURL });
 						}
 
-						// Get final URL for block page
-						blockURL = getLocalizedURL(blockURL)
-								.replace(/\$K/g, keyword ? keyword : "")
-								.replace(/\$S/g, set)
-								.replace(/\$U/g, pageURLWithHash);
-
-						// Redirect page
-						browser.tabs.update(id, { url: blockURL });
+						const youtubeRegex = /^http(s)?:\/\/www\.youtube\.com\/watch\?v=.*$/;
+						if (youtubeRegex.test(pageURLWithHash) && youtubeResume) {
+							browser.scripting.executeScript({
+								target: { tabId: id },
+								func: () => {
+									// Get the video stream from youtube and return the current time
+									const videoElement = document.querySelector('.video-stream');
+									return videoElement ? Math.trunc(videoElement.currentTime) : 'Video element not found on the page.';
+								}
+							}).then((results) => {
+								const currentTime = results[0].result;
+								if (typeof currentTime === 'number') {
+									// Modify the URL to add or modify the "t" parameter with the time
+									const parsedUrl = new URL(pageURLWithHash);
+									const searchParams = new URLSearchParams(parsedUrl.search);
+									searchParams.set('t', currentTime);
+									parsedUrl.search = searchParams.toString();
+									pageURLWithHash = parsedUrl.toString();
+								}
+								finalizeBlockPageRedirection();
+							});
+						} else {
+							finalizeBlockPageRedirection();
+						}
 					}
 				}
 
