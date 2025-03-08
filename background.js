@@ -391,7 +391,7 @@ function updateFocusedWindowId() {
 }
 
 // Process tabs: update time spent and check for blocks
-// 
+//
 function processTabs(active) {
 	//log("processTabs: " + active);
 
@@ -428,7 +428,7 @@ function processTabs(active) {
 			if (gTabs[tab.id].loaded) {
 				// Check tab to see if page should be blocked
 				let blocked = checkTab(tab.id, false, true);
-	
+
 				if (!blocked && tab.active) {
 					updateTimer(tab.id);
 				}
@@ -971,7 +971,7 @@ function updateTimeData(id, secsOpen, secsFocus) {
 					// We haven't entered a new time period, so keep counting
 					timedata[3] = +timedata[3] + secsSpent;
 				}
-				
+
 				// Update rollover time for next period
 				timedata[6] = Math.max(0, (limitMins * 60) - timedata[3]);
 				timedata[7] = periodStart + (+limitPeriod);
@@ -1176,7 +1176,7 @@ function getUnblockTime(set) {
 		// Return end time for lockdown
 		return new Date(timedata[4] * 1000);
 	}
-	
+
 	// Get number of minutes elapsed since midnight
 	let mins = timedate.getHours() * 60 + timedate.getMinutes();
 
@@ -1273,7 +1273,7 @@ function getUnblockTime(set) {
 							0, mp.end);
 				}
 			}
-			
+
 			// Return end time for current time limit period
 			return new Date(timedata[2] * 1000 + limitPeriod * 1000);
 		}
@@ -1502,7 +1502,7 @@ function addSiteToSet(url, set, includePath) {
 		gStorage.set(options).catch(
 			function (error) { warn("Cannot set options: " + error); }
 		);
-	}	
+	}
 }
 
 // Add list of sites to block set
@@ -1584,7 +1584,7 @@ function handleCommand(command) {
 	//log("handleCommand: " + command);
 
 	switch(command) {
-	
+
 		case "lb-options":
 			browser.runtime.openOptionsPage();
 			break;
@@ -1592,15 +1592,15 @@ function handleCommand(command) {
 		case "lb-statistics":
 			openExtensionPage("stats.html");
 			break;
-		
+
 		case "lb-lockdown":
 			openExtensionPage("lockdown.html");
 			break;
-		
+
 		case "lb-override":
 			openExtensionPage("override.html");
 			break;
-		
+
 		case "lb-cancel-override":
 			applyOverride(0);
 			break;

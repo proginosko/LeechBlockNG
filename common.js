@@ -212,7 +212,7 @@ function getParsedURL(url) {
 			path: query ? (path + query) : path,
 			query: query,
 			args: query ? query.substring(1).split(/[;&]/) : null,
-			hash: fragment ? fragment.substring(1) : null 
+			hash: fragment ? fragment.substring(1) : null
 		};
 	} else {
 		warn("Cannot parse URL: " + url);
@@ -382,7 +382,7 @@ function cleanTimePeriods(times) {
 	for (let mp of minPeriods) {
 		mp.start = Math.min(mp.start, 1440);
 		mp.end = Math.min(mp.end, 1440);
-	}		
+	}
 
 	// Step 2: Remove any periods without +ve duration
 	for (let i = 0; i < minPeriods.length; i++) {
