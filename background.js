@@ -1796,6 +1796,10 @@ function handleTabRemoved(tabId, removeInfo) {
 	if (gTabs[tabId] && gTabs[tabId].url.startsWith(EXTENSION_URL)) {
 		browser.tabs.update(gPrevActiveTabId, { active: true });
 	}
+
+	if (gTabs[tabId]) {
+		delete gTabs[tabId];
+	}
 }
 
 function handleBeforeNavigate(navDetails) {
