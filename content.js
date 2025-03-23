@@ -186,9 +186,22 @@ function onBlur(event) {
 	browser.runtime.sendMessage({ type: "focus", focus: false });
 }
 
+function onUnload(event) {
+  if (gTimer && gTimer.parentNode) {
+    gTimer.parentNode.removeChild(gTimer);
+    gTimer = null;
+  }
+
+  if (gAlert && gAlert.parentNode) {
+    gAlert.parentNode.removeChild(gAlert);
+    gAlert = null;
+  }
+}
+
 browser.runtime.onMessage.addListener(handleMessage);
 
 notifyLoaded();
 
 window.addEventListener("focus", onFocus);
 window.addEventListener("blur", onBlur);
+window.addEventListener("unload", onUnload);
