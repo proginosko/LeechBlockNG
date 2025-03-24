@@ -88,10 +88,13 @@
 		"open_in_tab": true
 	},
 
+	"optional_permissions": [
+		"history"
+	],
+	
 	"permissions": [
 		"alarms",
 		"downloads",
-		"history",
 		"menus",
 		"storage",
 		"tabs",

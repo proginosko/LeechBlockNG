@@ -406,10 +406,9 @@ function saveOptions(event) {
 			}
 		}
 
-		// Request permission to load sites from URL
-		if (options[`sitesURL${set}`]) {
-			let permissions = { origins: ["<all_urls>"] };
-			browser.permissions.request(permissions);
+		if (!browser.history && options[`addHistory${set}`]) {
+			// Request permission to access browser history
+			browser.permissions.request({ permissions: ["history"] });
 		}
 	}
 
