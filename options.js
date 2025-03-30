@@ -141,8 +141,6 @@ function initForm(numSets) {
 		// Hide sync options (sync storage not supported on Android yet)
 		getElement("syncOpts1").style.display = "none";
 		getElement("syncOpts2").style.display = "none";
-		// Disable export to JSON button
-		getElement("exportOptionsJSON").disabled = true;
 	}
 
 	// Set active tab
@@ -854,6 +852,16 @@ function applyImportOptions(options) {
 	}
 }
 
+// Download blob file
+//
+function downloadBlobFile(blob, filename) {
+	let a = document.createElement("a");
+	a.href = URL.createObjectURL(blob);
+	a.setAttribute("download", filename);
+	a.setAttribute("type", blob.type);
+	a.dispatchEvent(new MouseEvent("click"));
+}
+
 // Export options to text file
 //
 function exportOptions() {
@@ -872,34 +880,11 @@ function exportOptions() {
 		}
 	}
 
-	if (gIsAndroid) {
-		lines.unshift("### Select all -> Share -> Drive\n\n");
-		lines.unshift("### Save this file to Google Drive:\n");
-	}
-
 	// Create blob and download it
 	let blob = new Blob(lines, { type: "text/plain", endings: "native" });
-	let url = URL.createObjectURL(blob);
-	if (gIsAndroid) {
-		// Workaround for Android: open blob in new tab
-		browser.tabs.create({ url: url });
-	} else {
-		let downloadOptions = {
-			url: url,
-			filename: DEFAULT_OPTIONS_FILE,
-			saveAs: true
-		};
-		browser.downloads.download(downloadOptions).then(onSuccess, onError);
-	}
+	downloadBlobFile(blob, DEFAULT_OPTIONS_FILE);
 
-	function onSuccess() {
-		$("#alertExportSuccess").dialog("open");
-	}
-
-	function onError(error) {
-		warn("Cannot download options: " + error);
-		$("#alertExportError").dialog("open");
-	}
+	$("#alertExportSuccess").dialog("open");
 }
 
 // Import options from text file
@@ -977,22 +962,9 @@ function exportOptionsJSON() {
 
 	// Create blob and download it
 	let blob = new Blob([json], { type: "application/json", endings: "native" });
-	let url = URL.createObjectURL(blob);
-	let downloadOptions = {
-		url: url,
-		filename: DEFAULT_JSON_FILE,
-		saveAs: true
-	};
-	browser.downloads.download(downloadOptions).then(onSuccess, onError);
+	downloadBlobFile(blob, DEFAULT_JSON_FILE);
 
-	function onSuccess() {
-		$("#alertExportSuccess").dialog("open");
-	}
-
-	function onError(error) {
-		warn("Cannot download options: " + error);
-		$("#alertExportError").dialog("open");
-	}
+	$("#alertExportSuccess").dialog("open");
 }
 
 // Export options to sync storage
