@@ -372,6 +372,7 @@ function saveOptions(event) {
 	}
 
 	// Per-set options
+	let needHistoryPerm = false;
 	for (let set = 1; set <= gNumSets; set++) {
 		for (let name in PER_SET_OPTIONS) {
 			let type = PER_SET_OPTIONS[name].type;
@@ -406,10 +407,12 @@ function saveOptions(event) {
 			}
 		}
 
-		if (!browser.history && options[`addHistory${set}`]) {
-			// Request permission to access browser history
-			browser.permissions.request({ permissions: ["history"] });
-		}
+		needHistoryPerm ||= options[`addHistory${set}`];
+	}
+
+	if (!browser.history && needHistoryPerm) {
+		// Request permission to access browser history
+		browser.permissions.request({ permissions: ["history"] });
 	}
 
 	let complete = event.data.closeOptions ? closeOptions : retrieveOptions;
