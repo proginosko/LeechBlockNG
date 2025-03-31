@@ -614,6 +614,10 @@ function retrieveOptions() {
 
 			// Update enabled/disabled state of sub-options
 			updateSubOptions(set);
+
+			if (gIsAndroid) {
+				disableNonAndroidOptions(set);
+			}
 		}
 
 		// General options
@@ -838,6 +842,10 @@ function applyImportOptions(options) {
 
 		// Update enabled/disabled state of sub-options
 		updateSubOptions(set);
+
+		if (gIsAndroid) {
+			disableNonAndroidOptions(set);
+		}
 	}
 
 	// General options
@@ -1205,6 +1213,14 @@ function updateSubOptions(set) {
 			comp2.disabled = comp1.disabled || !comp1.checked;
 		}
 	}
+}
+
+// Disable options unavailable on Android
+//
+function disableNonAndroidOptions(set) {
+	let addHistory = getElement(`addHistory${set}`);
+	addHistory.checked = false;
+	addHistory.disabled = true;
 }
 
 // Update enabled/disabled state of move set buttons
