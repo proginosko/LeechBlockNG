@@ -94,7 +94,6 @@
 	
 	"permissions": [
 		"alarms",
-		"downloads",
 		"menus",
 		"storage",
 		"tabs",
