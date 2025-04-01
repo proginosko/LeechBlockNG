@@ -587,6 +587,7 @@ function checkTab(id, isBeforeNav, isRepeat) {
 			let filterMute = gOptions[`filterMute${set}`];
 			let closeTab = gOptions[`closeTab${set}`];
 			let activeBlock = gOptions[`activeBlock${set}`];
+			let titleOnly = gOptions[`titleOnly${set}`];
 			let addHistory = gOptions[`addHistory${set}`];
 			let allowOverride = gOptions[`allowOverride${set}`];
 			let allowOverLock = gOptions[`allowOverLock${set}`];
@@ -720,7 +721,8 @@ function checkTab(id, isBeforeNav, isRepeat) {
 					// Check for keyword(s) before blocking
 					let message = {
 						type: "keyword",
-						keywordRE: keywordRE
+						keywordRE: keywordRE,
+						titleOnly: titleOnly
 					};
 					browser.tabs.sendMessage(id, message).then(
 						function (keyword) {

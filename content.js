@@ -107,13 +107,16 @@ function hideAlert() {
 
 // Check page for keyword(s)
 //
-function checkKeyword(keywordRE) {
+function checkKeyword(keywordRE, titleOnly) {
 	if (!keywordRE) {
 		return null; // nothing to find!
 	}
 
 	// Get all text from document (including title)
-	let text = document.title + "\n" + document.body.innerText;
+	let text = document.title;
+	if (!titleOnly) {
+		text += "\n" + document.body.innerText;
+	}
 
 	// Search text for keywords
 	let matches = keywordRE.exec(text);
@@ -162,7 +165,7 @@ function handleMessage(message, sender, sendResponse) {
 			break;
 
 		case "keyword":
-			let keyword = checkKeyword(message.keywordRE);
+			let keyword = checkKeyword(message.keywordRE, message.titleOnly);
 			sendResponse(keyword);
 			break;
 

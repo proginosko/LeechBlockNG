@@ -48,6 +48,7 @@ const PER_SET_OPTIONS = {
 	countFocus: { type: "boolean", def: true, id: "countFocus" },
 	countAudio: { type: "boolean", def: false, id: "countAudio" },
 	showKeyword: { type: "boolean", def: true, id: "showKeyword" },
+	titleOnly: { type: "boolean", def: false, id: "titleOnly" },
 	delayFirst: { type: "boolean", def: true, id: "delayFirst" },
 	delaySecs: { type: "string", def: "60", id: "delaySecs" },
 	delayAllowMins: { type: "string", def: "", id: "delayAllowMins" },
