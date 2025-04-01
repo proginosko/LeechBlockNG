@@ -1,3 +1,7 @@
+# Version 1.6.9 (31 Mar 2025)
+* Added option to check for keywords only in page title.
+* Reduced required permissions (downloads no longer needed; history optional).
+
 # Version 1.6.8.2 (26 Jan 2025)
 * Fixed issue with counting time on active tab (Android).
 * Fixed issue with export/import of multiline strings.
