@@ -387,6 +387,7 @@ function saveOptions(event) {
 				options[`allowRE${set}`] = regexps.allow;
 				options[`referRE${set}`] = regexps.refer;
 				options[`keywordRE${set}`] = regexps.keyword;
+				options[`llmCase${set}`] = regexps.llm;
 			} else if (name == "times") {
 				let times = cleanTimePeriods(getElement(`${id}${set}`).value);
 				options[`${name}${set}`] = times;

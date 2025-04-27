@@ -74,18 +74,85 @@ function createRegExps() {
 
 		let keywordRE = gOptions[`keywordRE${set}`];
 		gRegExps[set].keyword = keywordRE ? new RegExp(keywordRE, "iu") : null;
+
+		let llmCase = gOptions[`llmCase${set}`];
+		gRegExps[set].llm = llmCase || null;
+	}
+}
+
+// Function to query OpenAI with the provided prompt and URL
+async function queryLLM(apiKey, prompt, currentUrl) {
+	const key = `${prompt}-${currentUrl}`;
+	const existing = await browser.storage.local.get(key);
+	if (existing[key] !== undefined) {
+		console.log("CACHED", "For", prompt, currentUrl, "LLM RETURNED", existing[key]);
+		return existing[key];
+	}
+	// Append contextual information and instruct the model
+	const finalPrompt = `Does the URL \`${currentUrl}\` match the description \`${prompt}\`?`;
+	const messages = [
+		{ role: 'system', content: 'You are a strict but intelligent website blocking agent. Provide output only as `true` or `false` without any additional text.' },
+		{ role: 'user', content: finalPrompt }
+	];
+
+	// Prepare request payload
+	const requestBody = {
+		model: 'gpt-4.1-nano',
+		messages: messages,
+		temperature: 0
+	};
+
+	try {
+		const response = await fetch('https://api.openai.com/v1/chat/completions', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${apiKey}`
+			},
+			body: JSON.stringify(requestBody)
+		});
+
+		if (!response.ok) {
+			throw new Error(`OpenAI API error: ${response.statusText}`);
+		}
+
+		const data = await response.json();
+		// Pull out the response text, trim and normalize it
+		const resultText = data.choices?.[0]?.message?.content.trim().toLowerCase();
+		console.log("For", prompt, currentUrl, "LLM RETURNED", resultText);
+
+		if(resultText === 'true' || resultText === 'false') {
+			const result = resultText === 'true';
+			// Store the result in local storage for future use
+			await browser.storage.local.set({ [key]: result });
+			return result;
+		}
+		throw new Error('Unexpected response format from API');
+	} catch (error) {
+		// Once I know my code works, I can remove this, but I want to see all errors for now.
+		throw error;
+		console.error('Error querying OpenAI:', error);
+		// Depending on design, you might choose to block by default on error
+		return false;
 	}
 }
 
 // Test URL against block/allow regular expressions
 //
-function testURL(url, referrer, blockRE, allowRE, referRE, allowRefers) {
+async function testURL(url, referrer, blockRE, allowRE, referRE, allowRefers, llmCase) {
 	let block = blockRE && blockRE.test(url);
 	let allow = allowRE && allowRE.test(url);
 	let refer = referRE && referRE.test(referrer);
-	return allowRefers
-		? block && !(allow || refer)	// refer as allow-condition
-		: (block || refer) && !allow;	// refer as block-condition
+	if ((allowRefers && refer) || allow) {
+		return false; // Explicitly allowed
+	}
+	if ((!allowRefers && refer) || block) {
+		return true; // Explicitly blocked
+	}
+	if (llmCase) {
+		return await queryLLM(gOptions["openAIKey"], llmCase, url);
+	}
+	return false; // Not explicitly blocked or allowed = not blocked
 }
 
 // Refresh menus
@@ -280,6 +347,7 @@ function loadSiteLists() {
 			gOptions[`allowRE${set}`] = regexps.allow;
 			gOptions[`referRE${set}`] = regexps.refer;
 			gOptions[`keywordRE${set}`] = regexps.keyword;
+			gOptions[`llmCase${set}`] = regexps.llm.replace(" ", "_");
 
 			createRegExps();
 
@@ -427,11 +495,11 @@ function processTabs(active) {
 
 			if (gTabs[tab.id].loaded) {
 				// Check tab to see if page should be blocked
-				let blocked = checkTab(tab.id, false, true);
-
-				if (!blocked && tab.active) {
-					updateTimer(tab.id);
-				}
+				checkTab(tab.id, false, true).then(blocked => {
+					if (!blocked && tab.active) {
+						updateTimer(tab.id);
+					}
+				})
 			} else if (CLOCKABLE_URL.test(tab.url)) {
 				// Ping tab to see if content script has loaded
 				let message = { type: "ping" };
@@ -447,7 +515,7 @@ function processTabs(active) {
 
 // Check the URL of a tab and applies block if necessary (returns true if blocked)
 //
-function checkTab(id, isBeforeNav, isRepeat) {
+async function checkTab(id, isBeforeNav, isRepeat) {
 	//log("checkTab: " + id + " " + isBeforeNav + " " + isRepeat);
 
 	function isSameHost(host1, host2) {
@@ -550,7 +618,9 @@ function checkTab(id, isBeforeNav, isRepeat) {
 		let allowRE = gRegExps[set].allow;
 		let referRE = gRegExps[set].refer;
 		let keywordRE = gRegExps[set].keyword;
-		if (!blockRE && !referRE) continue; // no block for this set
+		let llmCase = gRegExps[set].llm;
+		log(llmCase);
+		if (!blockRE && !referRE && !llmCase) continue; // no block for this set
 
 		if (keywordRE && !isInternalPage && isBeforeNav) continue; // too soon to check for keywords!
 
@@ -564,9 +634,10 @@ function checkTab(id, isBeforeNav, isRepeat) {
 		let prevSupport = gOptions[`prevSupport${set}`];
 		let prevDebugging = gOptions[`prevDebugging${set}`];
 		let prevOverride = gOptions[`prevOverride${set}`];
+		if (pageURL.includes(EXTENSION_URL)) continue;
 
 		// Test URL against block/allow regular expressions
-		if (testURL(pageURL, referrer, blockRE, allowRE, referRE, allowRefers)
+		if (await testURL(pageURL, referrer, blockRE, allowRE, referRE, allowRefers, llmCase)
 				|| (prevAddons && /^about:addons/i.test(pageURL))
 				|| (prevSupport && /^about:support/i.test(pageURL))
 				|| (prevDebugging && /^about:debugging/i.test(pageURL))) {
@@ -870,7 +941,7 @@ function clockPageTime(id, open, focus) {
 
 // Update time data for specified page
 //
-function updateTimeData(id, secsOpen, secsFocus) {
+async function updateTimeData(id, secsOpen, secsFocus) {
 	//log("updateTimeData: " + id + " " + secsOpen + " " + secsFocus);
 
 	let referrer = gTabs[id].referrer;
@@ -893,6 +964,7 @@ function updateTimeData(id, secsOpen, secsFocus) {
 		let blockRE = gRegExps[set].block;
 		let allowRE = gRegExps[set].allow;
 		let referRE = gRegExps[set].refer;
+		let llmCase = gRegExps[set].llm;
 		if (!blockRE && !referRE) continue; // no block for this set
 
 		// Check incognito mode
@@ -907,7 +979,7 @@ function updateTimeData(id, secsOpen, secsFocus) {
 		let allowRefers = gOptions[`allowRefers${set}`];
 
 		// Test URL against block/allow regular expressions
-		if (testURL(pageURL, referrer, blockRE, allowRE, referRE, allowRefers)) {
+		if (await testURL(pageURL, referrer, blockRE, allowRE, referRE, allowRefers, llmCase)) {
 			// Get options for this set
 			let timedata = gOptions[`timedata${set}`];
 			let countFocus = gOptions[`countFocus${set}`];
@@ -1548,6 +1620,7 @@ function addSitesToSet(siteList, set) {
 	gOptions[`allowRE${set}`] = regexps.allow;
 	gOptions[`referRE${set}`] = regexps.refer;
 	gOptions[`keywordRE${set}`] = regexps.keyword;
+	gOptions[`llmCase${set}`] = regexps.llm;
 
 	createRegExps();
 
@@ -1558,6 +1631,7 @@ function addSitesToSet(siteList, set) {
 	options[`allowRE${set}`] = regexps.allow;
 	options[`referRE${set}`] = regexps.refer;
 	options[`keywordRE${set}`] = regexps.keyword;
+	options[`llmCase${set}`] = regexps.llm;
 	gStorage.set(options).catch(
 		function (error) { warn("Cannot set options: " + error); }
 	);
@@ -1750,11 +1824,11 @@ function handleTabUpdated(tabId, changeInfo, tab) {
 		clockPageTime(tab.id, true, focus);
 
 		// Check tab to see if page should be blocked
-		let blocked = checkTab(tab.id, false, false);
-
-		if (!blocked && tab.active) {
-			updateTimer(tab.id);
-		}
+		checkTab(tab.id, false, false).then(blocked => {
+			if (!blocked && tab.active) {
+				updateTimer(tab.id);
+			}
+		});
 	}
 }
 
@@ -1821,7 +1895,7 @@ function handleBeforeNavigate(navDetails) {
 		gTabs[tabId].url = getCleanURL(navDetails.url);
 
 		// Check tab to see if page should be blocked
-		let blocked = checkTab(tabId, true, false);
+		checkTab(tabId, true, false);
 	}
 }
 
