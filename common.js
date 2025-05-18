@@ -122,6 +122,8 @@ const GENERAL_OPTIONS = {
 	lockdownMins: { type: "string", def: "", id: null }, // default: blank
 };
 
+// Create list of object properties (useful for debugging)
+//
 function listObjectProperties(obj, name) {
 	let list = "";
 	for (let prop of Object.keys(obj).sort()) {
@@ -568,4 +570,14 @@ function getCleanURL(url) {
 		}
 	}
 	return url;
+}
+
+// Create 32-bit integer hash code from string
+//
+function hashCode32(str) {
+	let hash = 0;
+	for (let i = 0; i < str.length; i++) {
+		hash = ((hash << 5) - hash + str.charCodeAt(i)) | 0;
+	}
+	return hash;
 }

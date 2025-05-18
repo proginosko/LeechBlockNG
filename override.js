@@ -14,7 +14,7 @@ function warn(message) { console.warn("[LBNG] " + message); }
 function getElement(id) { return document.getElementById(id); }
 
 var gAccessConfirmed = false;
-var gAccessRequiredInput;
+var gAccessHashCode;
 var gClockOffset;
 var gOverrideConfirm;
 var gOverrideMins;
@@ -137,7 +137,7 @@ function confirmAccess(options) {
 	let hpp = options["hpp"];
 
 	if (ora == 1 && password) {
-		gAccessRequiredInput = password;
+		gAccessHashCode = hashCode32(password);
 		if (hpp) {
 			$("#promptPasswordInput").attr("type", "password");
 		} else {
@@ -147,13 +147,13 @@ function confirmAccess(options) {
 		$("#promptPassword").dialog("open");
 		$("#promptPasswordInput").focus();
 	} else if (ora == 8 && code) {
-		gAccessRequiredInput = code;
+		gAccessHashCode = hashCode32(code);
 		numLines = displayAccessCode(code, options["accessCodeImage"]);
 		resizePromptInputHeight(numLines);
 		$("#promptAccessCode").dialog("open");
 		$("#promptAccessCodeInput").focus();
 	} else if (ora == 9 && orp) {
-		gAccessRequiredInput = orp;
+		gAccessHashCode = hashCode32(orp);
 		$("#promptPasswordInput").attr("type", "password");
 		$("#promptPasswordInput").val("");
 		$("#promptPassword").dialog("open");
@@ -166,7 +166,7 @@ function confirmAccess(options) {
 		if (ora > 3) {
 			code += createAccessCode(64);
 		}
-		gAccessRequiredInput = code;
+		gAccessHashCode = hashCode32(code);
 		numLines = displayAccessCode(code, options["accessCodeImage"]);
 		resizePromptInputHeight(numLines);
 		$("#promptAccessCodeInput").val("");
@@ -299,7 +299,7 @@ function initAccessControlPrompt(prompt) {
 	let dialogButtons = {
 		OK: function () {
 			let input = $(`#${prompt}Input`);
-			if (input.val() == gAccessRequiredInput) {
+			if (hashCode32(input.val()) == gAccessHashCode) {
 				gAccessConfirmed = true;
 				if (gOverrideMins) {
 					// Slight delay to allow focus to pass to new dialog

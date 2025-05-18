@@ -22,7 +22,7 @@ function unescape(str) { return str.replace(/\\n/g, "\n"); }
 
 var gIsAndroid = false;
 var gAccessConfirmed = false;
-var gAccessRequiredInput;
+var gAccessHashCode;
 var gFormHTML;
 var gNumSets, gNumSetsMin;
 var gSetDisabled;
@@ -656,7 +656,7 @@ function confirmAccess(options) {
 	let hpp = options["hpp"];
 
 	if (oa == 1 && password) {
-		gAccessRequiredInput = password;
+		gAccessHashCode = hashCode32(password);
 		if (hpp) {
 			$("#promptPasswordInput").attr("type", "password");
 		} else {
@@ -673,7 +673,7 @@ function confirmAccess(options) {
 		if (oa > 3) {
 			code += createAccessCode(64);
 		}
-		gAccessRequiredInput = code;
+		gAccessHashCode = hashCode32(code);
 		displayAccessCode(code, options["accessCodeImage"]);
 		$("#promptAccessCodeInput").val("");
 		$("#promptAccessCode").dialog("open");
@@ -1215,7 +1215,7 @@ function initAccessControlPrompt(prompt) {
 	let dialogButtons = {
 		OK: function () {
 			let input = $(`#${prompt}Input`);
-			if (input.val() == gAccessRequiredInput) {
+			if (hashCode32(input.val()) == gAccessHashCode) {
 				gAccessConfirmed = true;
 				$("#form").show({ effect: "fade" });
 				$(`#${prompt}`).dialog("close");
