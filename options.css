@@ -53,6 +53,10 @@ body {
 	background: #ddd;
 }
 
+.ui-widget button:active:enabled {
+	background: #ccc;
+}
+
 .ui-widget button:disabled {
 	background: #eee;
 	color: #666;

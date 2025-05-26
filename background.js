@@ -7,6 +7,7 @@ const CLOCKABLE_URL = /^(http|file)/i;
 const EXTENSION_URL = browser.runtime.getURL("");
 const BLOCKED_PAGE_URL = browser.runtime.getURL(BLOCKED_PAGE);
 const DELAYED_PAGE_URL = browser.runtime.getURL(DELAYED_PAGE);
+const PASSWORD_PAGE_URL = browser.runtime.getURL(PASSWORD_PAGE);
 
 function log(message) { console.log("[LBNG] " + message); }
 function warn(message) { console.warn("[LBNG] " + message); }
@@ -464,12 +465,13 @@ function checkTab(id, isBeforeNav, isRepeat) {
 	// Quick exit for the following cases:
 	// - about:blank
 	// - non-blockable URLs
-	// - blocking/delaying pages
+	// - blocking pages
 	// - LeechBlock website (documentation should be available by default)
 	if (url == "about:blank"
 			|| !gTabs[id].blockable
 			|| url.startsWith(BLOCKED_PAGE_URL)
 			|| url.startsWith(DELAYED_PAGE_URL)
+			|| url.startsWith(PASSWORD_PAGE_URL)
 			|| (url.startsWith(LEECHBLOCK_URL) && gOptions["allowLBWebsite"])) {
 		return false; // not blocked
 	}
@@ -1053,7 +1055,7 @@ function updateIcon() {
 	}
 }
 
-// Create info for blocking/delaying page
+// Create info for blocking page
 //
 function createBlockInfo(id, url) {
 	// Get theme
@@ -1084,6 +1086,15 @@ function createBlockInfo(id, url) {
 
 	// Get keyword match (if applicable)
 	let keywordMatch = gOptions[`showKeyword${blockedSet}`] ? gTabs[id].keyword : null;
+
+	// Get password
+	let passwordRequire = gOptions[`passwordRequire${blockedSet}`];
+	let password = gOptions[`passwordSetSpec${blockedSet}`]; // set-specific password
+	if (passwordRequire == 1) {
+		password = gOptions["orp"]; // override password
+	} else if (passwordRequire == 2) {
+		password = gOptions["password"]; // access control password
+	}
 
 	// Get custom message
 	let customMsg = gOptions[`customMsg${blockedSet}`];
@@ -1126,6 +1137,7 @@ function createBlockInfo(id, url) {
 		blockedURL: blockedURL,
 		disableLink: disableLink,
 		keywordMatch: keywordMatch,
+		password: password,
 		customMsg: customMsg,
 		unblockTime: unblockTime,
 		delaySecs: delaySecs,
@@ -1423,10 +1435,10 @@ function openExtensionPage(url) {
 	}
 }
 
-// Open page blocked by delaying page
+// Allow page blocked by delaying/password page
 //
-function openDelayedPage(id, url, set, autoLoad) {
-	//log("openDelayedPage: " + id + " " + url);
+function allowBlockedPage(id, url, set, autoLoad) {
+	//log("allowBlockedPage: " + id + " " + url + " " + set);
 
 	if (!gGotOptions || set < 1 || set > gNumSets) {
 		return;
@@ -1638,7 +1650,7 @@ function handleMessage(message, sender, sendResponse) {
 			break;
 
 		case "blocked":
-			// Block info requested by blocking/delaying page
+			// Block info requested by blocking page
 			let info = createBlockInfo(sender.tab.id, sender.url);
 			sendResponse(info);
 			break;
@@ -1650,10 +1662,10 @@ function handleMessage(message, sender, sendResponse) {
 
 		case "delayed":
 			// Delaying page countdown completed
-			let url = message.blockedURL;
-			let set = message.blockedSet;
-			let autoLoad = gOptions[`delayAutoLoad${set}`];
-			openDelayedPage(sender.tab.id, url, set, autoLoad);
+			allowBlockedPage(sender.tab.id,
+					message.blockedURL,
+					message.blockedSet,
+					gOptions[`delayAutoLoad${set}`]);
 			break;
 
 		case "discard-time":
@@ -1692,6 +1704,14 @@ function handleMessage(message, sender, sendResponse) {
 		case "override":
 			// Override requested
 			applyOverride(message.endTime);
+			break;
+
+		case "password":
+			// Password successfully entered
+			allowBlockedPage(sender.tab.id,
+					message.blockedURL,
+					message.blockedSet,
+					true);
 			break;
 
 		case "referrer":

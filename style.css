@@ -44,6 +44,26 @@ blockquote {
 	font-weight: bold;
 }
 
+input, button {
+	color: #333;
+	font: normal 16px "Open Sans", Arial, sans-serif;
+	padding: 2px 8px;
+	border: 1px solid #888;
+	border-radius: 6px;
+}
+
+button {
+	background: #eee;
+}
+
+button:hover:enabled {
+	background: #ddd;
+}
+
+button:active:enabled {
+	background: #ccc;
+}
+
 .logo {
 	width: 408px;
 }

@@ -91,6 +91,7 @@ function initForm(numSets) {
 		$(`#allDay${set}`).click(function (e) { $(`#times${set}`).val(ALL_DAY_TIMES); });
 		$(`#defaultPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DEFAULT_BLOCK_URL); });
 		$(`#delayingPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DELAYED_BLOCK_URL); });
+		$(`#passwordPage${set}`).click(function (e) { $(`#blockURL${set}`).val(PASSWORD_BLOCK_URL); });
 		$(`#blankPage${set}`).click(function (e) { $(`#blockURL${set}`).val("about:blank"); });
 		$(`#resetOpts${set}`).click(function (e) {
 			resetSetOptions(set);

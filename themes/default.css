@@ -37,6 +37,10 @@ body {
 	background: #333;
 }
 
+.ui-widget button:active:enabled {
+	background: #222;
+}
+
 .ui-widget button:disabled {
 	background: #333;
 	color: #666;

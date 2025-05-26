@@ -161,10 +161,25 @@
 								<label>Predefined URLs:</label>
 								<button id="defaultPage1" type="button">Default Page</button>
 								<button id="delayingPage1" type="button">Delaying Page</button>
+								<button id="passwordPage1" type="button">Password Page</button>
 								<button id="blankPage1" type="button">Blank Page</button>
 							</p>
 							<p>
-								<label>Enter a custom message for the blocking/delaying page (optional):</label>
+								<label>Select the requirement for the password page:</label>
+							</p>
+							<p>
+								<select id="passwordRequire1">
+									<option value="0">Require the user to enter a set-specific password (see below)</option>
+									<option value="1">Require the user to enter the override password</option>
+									<option value="2">Require the user to enter the access control password</option>
+								</select>
+							</p>
+							<p>
+								<label>Set-specific password:</label>
+								<input id="passwordSetSpec1" type="password" size="40">
+							</p>
+							<p>
+								<label>Enter a custom message for the blocking page (optional):</label>
 							</p>
 							<p>
 								<textarea id="customMsg1" cols="60" rows="4" placeholder="Example: Get back to work!"></textarea>
@@ -217,13 +232,13 @@
 							</p>
 							<p class="simplifiable">
 								<input id="delayFirst1" type="checkbox">
-								<label for="delayFirst1">Block only first accessed page of site when delaying page is used</label>
+								<label for="delayFirst1">Block only first accessed page of site when delaying/password page is used</label>
+							</p>
+							<p class="simplifiable">
+								Allow access to sites for only <input id="delayAllowMins1" type="text" size="2" title="Leave blank to allow indefinitely"> minutes after delaying/password page is used
 							</p>
 							<p>
 								Delay access to sites by <input id="delaySecs1" type="text" size="2"> seconds when delaying page is used
-							</p>
-							<p class="simplifiable">
-								Allow access to sites for only <input id="delayAllowMins1" type="text" size="2" title="Leave blank to allow indefinitely"> minutes after delaying page is used
 							</p>
 							<p class="simplifiable">
 								<input id="delayAutoLoad1" type="checkbox">
@@ -485,7 +500,7 @@
 								</select>
 							</p>
 							<p class="simplifiable">
-								<label>Custom style (CSS) for blocking/delaying page:</label>
+								<label>Custom style (CSS) for blocking/delaying/password page:</label>
 							</p>
 							<p class="simplifiable">
 								<textarea id="customStyle" cols="60" rows="4"></textarea>
@@ -503,7 +518,7 @@
 							</p>
 							<p class="simplifiable">
 								<input id="disableLink" type="checkbox">
-								<label for="disableLink">Disable hyperlink to blocked page on blocking/delaying page</label>
+								<label for="disableLink">Disable hyperlink to blocked page on blocking/delaying/password page</label>
 							</p>
 							<p class="simplifiable">
 								Display clock times in

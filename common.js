@@ -6,8 +6,10 @@ const MAX_SETS = 30;
 const ALL_DAY_TIMES = "0000-2400";
 const BLOCKED_PAGE = "blocked.html";
 const DELAYED_PAGE = "delayed.html";
+const PASSWORD_PAGE = "password.html";
 const DEFAULT_BLOCK_URL = "blocked.html?$S&$U";
 const DELAYED_BLOCK_URL = "delayed.html?$S&$U";
+const PASSWORD_BLOCK_URL = "password.html?$S&$U";
 const DEFAULT_ICON = { 16: "icons/leechblock16.png", 32: "icons/leechblock32.png" };
 const OVERRIDE_ICON = { 16: "icons/leechblock16o.png", 32: "icons/leechblock32o.png" };
 
@@ -15,7 +17,7 @@ const PARSE_URL = /^((([\w-]+):\/*(\w+(?::\w+)?@)?([\w-\.]+)(?::(\d*))?)([^\?#]*
 
 const ABSOLUTE_URL = /^[\w-]+:/;
 
-const INTERNAL_BLOCK_URL = /^(\w+\/)?(blocked|delayed)\.html\?\$S&\$U$/;
+const INTERNAL_BLOCK_URL = /^(\w+\/)?(blocked|delayed|password)\.html\?\$S&\$U$/;
 
 const LEECHBLOCK_URL = "https://www.proginosko.com/leechblock/";
 
@@ -38,6 +40,8 @@ const PER_SET_OPTIONS = {
 	conjMode: { type: "boolean", def: false, id: "conjMode" },
 	days: { type: "array", def: [false, true, true, true, true, true, false], id: "day" },
 	blockURL: { type: "string", def: DEFAULT_BLOCK_URL, id: "blockURL" },
+	passwordRequire: { type: "string", def: "0", id: "passwordRequire" },
+	passwordSetSpec: { type: "string", def: "", id: "passwordSetSpec" },
 	customMsg: { type: "string", def: "", id: "customMsg" },
 	incogMode: { type: "string", def: "0", id: "incogMode" },
 	applyFilter: { type: "boolean", def: false, id: "applyFilter" },

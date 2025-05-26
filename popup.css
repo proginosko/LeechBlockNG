@@ -41,6 +41,10 @@ button:hover:enabled {
 	background: #ddd;
 }
 
+button:active:enabled {
+	background: #ccc;
+}
+
 .logo {
 	width: 204px;
 }
