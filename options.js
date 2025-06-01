@@ -89,10 +89,23 @@ function initForm(numSets) {
 			$(`#${name}${set}`).change(function (e) { updateSubOptions(set); });
 		}
 		$(`#allDay${set}`).click(function (e) { $(`#times${set}`).val(ALL_DAY_TIMES); });
-		$(`#defaultPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DEFAULT_BLOCK_URL); });
-		$(`#delayingPage${set}`).click(function (e) { $(`#blockURL${set}`).val(DELAYED_BLOCK_URL); });
-		$(`#passwordPage${set}`).click(function (e) { $(`#blockURL${set}`).val(PASSWORD_BLOCK_URL); });
-		$(`#blankPage${set}`).click(function (e) { $(`#blockURL${set}`).val("about:blank"); });
+		$(`#blockURL${set}`).change(function (e) { updatePasswordPageOptions(set); });
+		$(`#defaultPage${set}`).click(function (e) {
+			$(`#blockURL${set}`).val(DEFAULT_BLOCK_URL);
+			updatePasswordPageOptions(set);
+		});
+		$(`#delayingPage${set}`).click(function (e) {
+			$(`#blockURL${set}`).val(DELAYED_BLOCK_URL);
+			updatePasswordPageOptions(set);
+		});
+		$(`#passwordPage${set}`).click(function (e) {
+			$(`#blockURL${set}`).val(PASSWORD_BLOCK_URL);
+			updatePasswordPageOptions(set);
+		});
+		$(`#blankPage${set}`).click(function (e) {
+			$(`#blockURL${set}`).val("about:blank");
+			updatePasswordPageOptions(set);
+		});
 		$(`#resetOpts${set}`).click(function (e) {
 			resetSetOptions(set);
 			$("#alertResetOptions").dialog("open");
@@ -205,6 +218,13 @@ function showSimplifiedOptions(simplify) {
 //
 function updateBlockSetName(set, name) {
 	getElement(`blockSetName${set}`).innerText = name ? name : `Block Set ${set}`;
+}
+
+// Update show/hide password page options
+//
+function updatePasswordPageOptions(set) {
+	let show = $(`#blockURL${set}`).val() == PASSWORD_BLOCK_URL;
+	$(`#passwordPageOpts${set}`).css("display", show ? "" : "none");
 }
 
 // Save options to local storage (returns true if success)
@@ -611,6 +631,9 @@ function retrieveOptions() {
 			// Apply custom set name to tab (if specified)
 			updateBlockSetName(set, options[`setName${set}`]);
 
+			// Update show/hide password page options
+			updatePasswordPageOptions(set);
+
 			// Update enabled/disabled state of sub-options
 			updateSubOptions(set);
 
@@ -838,6 +861,9 @@ function applyImportOptions(options) {
 
 		// Apply custom set name to tab (if specified)
 		updateBlockSetName(set, options[`setName${set}`]);
+
+		// Update show/hide password page options
+		updatePasswordPageOptions(set);
 
 		// Update enabled/disabled state of sub-options
 		updateSubOptions(set);
@@ -1106,6 +1132,9 @@ function resetSetOptions(set) {
 
 	// Update enabled/disabled state of sub-options
 	updateSubOptions(set);
+
+	// Update show/hide password page options
+	updatePasswordPageOptions(set);
 }
 
 // Disable (or re-enable) options for block set
