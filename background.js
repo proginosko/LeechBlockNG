@@ -1665,7 +1665,7 @@ function handleMessage(message, sender, sendResponse) {
 			allowBlockedPage(sender.tab.id,
 					message.blockedURL,
 					message.blockedSet,
-					gOptions[`delayAutoLoad${set}`]);
+					gOptions[`delayAutoLoad${message.blockedSet}`]);
 			break;
 
 		case "discard-time":
