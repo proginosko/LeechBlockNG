@@ -80,6 +80,10 @@ button:active:enabled {
 	font-weight: bold;
 }
 
+.error {
+	background: #f00;
+}
+
 .support {
 	color: #777;
 	font-size: 14px;

@@ -163,10 +163,10 @@ function onSubmitPassword() {
 		};
 		browser.runtime.sendMessage(message);
 	} else {
-		// Clear input field and flash red
+		// Clear input field and flash background
 		passwordInput.value = "";
-		passwordInput.style.background = "#ff0000";
-		window.setTimeout(() => { passwordInput.style.background = ""; }, 400);
+		passwordInput.classList.add("error");
+		window.setTimeout(() => { passwordInput.classList.remove("error"); }, 400);
 	}
 }
 
