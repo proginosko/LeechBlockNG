@@ -23,7 +23,7 @@ function processBlockInfo(info) {
 
 	gBlockedURL = info.blockedURL;
 	gBlockedSet = info.blockedSet;
-	gHashCode = hashCode32(info.password);
+	gHashCode = info.password ? hashCode32(info.password) : 0;
 
 	// Set theme
 	let themeLink = document.getElementById("themeLink");
@@ -66,6 +66,7 @@ function processBlockInfo(info) {
 	if (keywordMatched && keywordMatch) {
 		if (info.keywordMatch) {
 			keywordMatch.innerText = info.keywordMatch;
+			keywordMatched.style.display = "";
 		} else {
 			keywordMatched.style.display = "none";
 		}
@@ -83,6 +84,7 @@ function processBlockInfo(info) {
 	if (customMsgDiv && customMsg) {
 		if (info.customMsg) {
 			customMsg.innerText = info.customMsg;
+			customMsgDiv.style.display = "";
 		} else {
 			customMsgDiv.style.display = "none";
 		}
