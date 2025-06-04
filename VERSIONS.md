@@ -1,3 +1,7 @@
+# Version 1.7 (04 Jun 2025)
+* Added blocking page with password access.
+* Added support for custom blocking/delaying pages.
+
 # Version 1.6.9 (31 Mar 2025)
 * Added option to check for keywords only in page title.
 * Reduced required permissions (downloads no longer needed; history optional).
