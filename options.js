@@ -2,8 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-const DEFAULT_OPTIONS_FILE = "LeechBlockOptions.txt";
-const DEFAULT_JSON_FILE = "LeechBlockOptions.json";
+const DEFAULT_OPTIONS_FILE = "LeechBlockOptions-#.txt";
+const DEFAULT_JSON_FILE = "LeechBlockOptions-#.json";
 
 const SUB_OPTIONS = {
 	"applyFilter" : [ "filterName", "filterMute" ],
@@ -917,7 +917,8 @@ function exportOptions() {
 
 	// Create blob and download it
 	let blob = new Blob(lines, { type: "text/plain", endings: "native" });
-	downloadBlobFile(blob, DEFAULT_OPTIONS_FILE);
+	let filename = DEFAULT_OPTIONS_FILE.replace("#", getTimestampSuffix());
+	downloadBlobFile(blob, filename);
 
 	$("#alertExportSuccess").dialog("open");
 }
@@ -997,7 +998,8 @@ function exportOptionsJSON() {
 
 	// Create blob and download it
 	let blob = new Blob([json], { type: "application/json", endings: "native" });
-	downloadBlobFile(blob, DEFAULT_JSON_FILE);
+	let filename = DEFAULT_JSON_FILE.replace("#", getTimestampSuffix());
+	downloadBlobFile(blob, filename);
 
 	$("#alertExportSuccess").dialog("open");
 }

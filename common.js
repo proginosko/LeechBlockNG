@@ -585,3 +585,9 @@ function hashCode32(str) {
 	}
 	return hash;
 }
+
+// Create timestamp suffix for export file
+//
+function getTimestampSuffix() {
+	return new Date().toISOString().substring(0, 19).replaceAll(":", "-");
+}
