@@ -44,6 +44,7 @@ const PER_SET_OPTIONS = {
 	passwordSetSpec: { type: "string", def: "", id: "passwordSetSpec" },
 	customMsg: { type: "string", def: "", id: "customMsg" },
 	incogMode: { type: "string", def: "0", id: "incogMode" },
+	onlyActive: { type: "boolean", def: false, id: "onlyActive" },
 	applyFilter: { type: "boolean", def: false, id: "applyFilter" },
 	filterName: { type: "string", def: "grayscale", id: "filterName" },
 	filterMute: { type: "boolean", def: false, id: "filterMute" },
