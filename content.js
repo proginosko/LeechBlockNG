@@ -40,9 +40,9 @@ function updateTimer(text, size, location) {
 			gTimer.addEventListener("dblclick", function (e) { this.style.display = "none"; });
 		}
 
-		if (!document.body.contains(gTimer)) {
-			// Insert timer at end of document body
-			document.body.appendChild(gTimer);
+		if (!document.documentElement.contains(gTimer)) {
+			// Insert timer at end of document
+			document.documentElement.appendChild(gTimer);
 		}
 
 		// Set text
@@ -75,7 +75,7 @@ function showAlert(text) {
 		// Create container
 		gAlert = document.createElement("div");
 		gAlert.setAttribute("class", "leechblock-alert-container");
-		document.body.appendChild(gAlert);
+		document.documentElement.appendChild(gAlert);
 
 		// Create message box
 		alertBox = document.createElement("div");
