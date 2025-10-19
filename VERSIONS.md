@@ -1,3 +1,10 @@
+# Version 1.7.1 (28 Sep 2025)
+* Added option to block pages only in active tabs.
+* Added option to block about:profiles (Firefox).
+* Added timestamp suffix to export filename.
+* Fixed issue with unicode characters in URL.
+* Bug fixes.
+
 # Version 1.7 (04 Jun 2025)
 * Added blocking page with password access.
 * Added support for custom blocking/delaying pages.
