@@ -114,7 +114,7 @@ function checkKeyword(keywordRE, titleOnly) {
 
 	// Get all text from document (including title)
 	let text = document.title;
-	if (!titleOnly) {
+	if (!titleOnly && document.body) {
 		text += "\n" + document.body.innerText;
 	}
 
