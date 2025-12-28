@@ -888,7 +888,6 @@ function updateTimeData(id, secsOpen, secsFocus) {
 
 	// Get parsed URL for this page
 	let parsedURL = getParsedURL(url);
-	let pageURL = parsedURL.page;
 
 	// Get current time in seconds
 	let now = Math.floor(Date.now() / 1000) + (gClockOffset * 60);
@@ -913,6 +912,14 @@ function updateTimeData(id, secsOpen, secsFocus) {
 
 		// Get option for treating referrers as allow-conditions
 		let allowRefers = gOptions[`allowRefers${set}`];
+
+		// Get URL of page (possibly with hash part)
+		let pageURL = parsedURL.page;
+		if (parsedURL.hash != null) {
+			if (/^!/.test(parsedURL.hash) || !gOptions[`ignoreHash${set}`]) {
+				pageURL += "#" + parsedURL.hash;
+			}
+		}
 
 		// Test URL against block/allow regular expressions
 		if (testURL(pageURL, referrer, blockRE, allowRE, referRE, allowRefers)) {
