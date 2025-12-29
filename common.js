@@ -243,8 +243,14 @@ function getParsedURL(url) {
 // Clean list of sites
 //
 function cleanSites(sites) {
-	sites = sites.replace(/\s+/g, " ").replace(/(^ +)|( +$)/g, ""); // remove extra whitespace
-	sites = sites.split(" ").sort().join(" "); // sort alphabetically
+	// Remove leading/trailing whitespace
+	sites = sites.replace(/(^\s+)|(\s+$)/g, "");
+
+	// Remove URL protocols and sort alphabetically
+	sites = sites.split(/\s+/);
+	sites.forEach((item, i, array) => { array[i] = item.replace(/^([+>]?)[a-z-]+:\/+/, "$1"); });
+	sites = sites.sort().join(" ");
+
 	return sites;
 }
 
