@@ -1356,6 +1356,8 @@ function applyOverride(set, endTime, countLimit) {
 		return;
 	}
 
+	let options = {};
+
 	// Apply override only if it doesn't reduce any current override
 	if (endTime > gOptions[`timedata${set}`][8]) {
 		gOptions[`timedata${set}`][8] = endTime;
@@ -1384,13 +1386,14 @@ function applyOverride(set, endTime, countLimit) {
 			orlps = 0;
 			orlc = 0;
 		}
-		let options = {};
 		options["orlps"] = gOptions["orlps"] = orlps;
 		options["orlc"] = gOptions["orlc"] = orlc;
-		gStorage.set(options).catch(
-			function (error) { warn("Cannot set options: " + error); }
-		);
 	}
+
+	// Save updated options to storage
+	gStorage.set(options).catch(
+		function (error) { warn("Cannot set options: " + error); }
+	);
 
 	saveTimeData();
 	updateIcon();
