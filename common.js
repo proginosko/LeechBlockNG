@@ -106,8 +106,8 @@ const GENERAL_OPTIONS = {
 	orlps: { type: "number", def: 0, id: null }, // default: no override limit period start time
 	orlc: { type: "number", def: 0, id: null }, // default: no override limit count
 	oret: { type: "number", def: 0, id: null }, // default: no override end time
-	overrideHours: { type: "string", def: "", id: null }, // default: blank (for UI state persistence)
-	overrideMins: { type: "string", def: "", id: null }, // default: blank (for UI state persistence)
+	orHours: { type: "string", def: "", id: null }, // default: blank (for UI state persistence)
+	orMins: { type: "string", def: "", id: null }, // default: blank (for UI state persistence)
 	warnSecs: { type: "string", def: "", id: "warnSecs" }, // default: no warning
 	warnImmediate: { type: "boolean", def: true, id: "warnImmediate" }, // default: warn only for immediate block
 	contextMenu: { type: "boolean", def: true, id: "contextMenu" }, // default: enabled

@@ -134,14 +134,14 @@ function initializePage() {
 		initForm(eligibleSets);
 
 		// Restore previous hours/mins from storage
-		let overrideHours = options["overrideHours"];
-		if (overrideHours > 0) {
-			getElement("hours").value = overrideHours;
+		let orHours = options["orHours"];
+		if (orHours > 0) {
+			getElement("hours").value = orHours;
 		}
 
-		let overrideMins = options["overrideMins"];
-		if (overrideMins > 0) {
-			getElement("mins").value = overrideMins;
+		let orMins = options["orMins"];
+		if (orMins > 0) {
+			getElement("mins").value = orMins;
 		}
 
 		// Restore previously selected sets from storage
@@ -359,8 +359,8 @@ function activateOverride() {
 
 	// Save options for next time
 	let options = {};
-	options["overrideHours"] = hours;
-	options["overrideMins"] = mins;
+	options["orHours"] = hours;
+	options["orMins"] = mins;
 	for (let set of gEligibleSets) {
 		options[`override${set}`] = getElement(`blockSet${set}`).checked;
 	}
