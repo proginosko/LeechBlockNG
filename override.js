@@ -13,6 +13,9 @@ function warn(message) { console.warn("[LBNG] " + message); }
 
 function getElement(id) { return document.getElementById(id); }
 
+var gStorage = browser.storage.local;
+
+var gFormHTML;
 var gAccessConfirmed = false;
 var gAccessHashCode;
 var gClockOffset;
@@ -21,13 +24,36 @@ var gOverrideMins;
 var gOverrideLimit = false;
 var gOverrideLimitPeriod;
 var gOverrideLimitLeft;
-var gOverrideSetNames = [];
+var gEligibleSets = [];
 var gClockTimeOpts;
 
-// Initialize form
+// Initialize form (with specified eligible block sets)
 //
-function initForm() {
-	//log("initForm");
+function initForm(eligibleSets) {
+	//log("initForm: " + eligibleSets);
+
+	// Reset form to original HTML
+	$("#form").html(gFormHTML);
+
+	gEligibleSets = eligibleSets;
+
+	// Clear the blockSets container and add checkboxes only for eligible sets
+	$("#blockSets").empty();
+
+	// Get HTML template for first checkbox
+	let blockSetHTML = `<p>
+		<input id="blockSet1" type="checkbox">
+		<label id="blockSetLabel1" for="blockSet1">Sites specified in Block Set 1</label>
+	</p>`;
+
+	// Create checkboxes only for eligible sets
+	for (let i = 0; i < eligibleSets.length; i++) {
+		let set = eligibleSets[i];
+		let setHTML = blockSetHTML
+				.replace(/(Block Set) 1/g, `$1 ${set}`)
+				.replace(/(id|for)="(\w+)1"/g, `$1="$2${set}"`);
+		$("#blockSets").append(setHTML);
+	}
 
 	// Set up JQuery UI widgets
 	$("#activate").button();
@@ -44,18 +70,15 @@ function initializePage() {
 	browser.storage.local.get("sync").then(onGotSync, onError);
 
 	function onGotSync(options) {
-		if (options["sync"]) {
-			browser.storage.sync.get().then(onGot, onError);
-		} else {
-			browser.storage.local.get().then(onGot, onError);
-		}
+		gStorage = options["sync"]
+				? browser.storage.sync
+				: browser.storage.local;
+
+		gStorage.get().then(onGot, onError);
 	}
 
 	function onGot(options) {
 		cleanOptions(options);
-
-		// Initialize form
-		initForm();
 
 		setTheme(options["theme"]);
 
@@ -92,16 +115,46 @@ function initializePage() {
 			}
 		}
 
-		// Get list of sets to override
+		// Get list of eligible sets (those with allowOverride enabled)
 		let numSets = +options["numSets"];
+		let eligibleSets = [];
 		for (let set = 1; set <= numSets; set++) {
 			if (options[`allowOverride${set}`]) {
-				let setName = options[`setName${set}`];
-				if (setName) {
-					gOverrideSetNames.push(`Block Set ${set} (${setName})`);
-				} else {
-					gOverrideSetNames.push(`Block Set ${set}`);
-				}
+				eligibleSets.push(set);
+			}
+		}
+
+		// Check if any sets are eligible
+		if (eligibleSets.length == 0) {
+			$("#alertNoEligibleSets").dialog("open");
+			return;
+		}
+
+		// Initialize form with eligible sets
+		initForm(eligibleSets);
+
+		// Restore previous hours/mins from storage
+		let overrideHours = options["overrideHours"];
+		if (overrideHours > 0) {
+			getElement("hours").value = overrideHours;
+		}
+
+		let overrideMins = options["overrideMins"];
+		if (overrideMins > 0) {
+			getElement("mins").value = overrideMins;
+		}
+
+		// Restore previously selected sets from storage
+		for (let set of eligibleSets) {
+			let override = options[`override${set}`];
+			if (override) {
+				getElement(`blockSet${set}`).checked = override;
+			}
+
+			// Append custom set name to check box label (if specified)
+			let setName = options[`setName${set}`];
+			if (setName) {
+				getElement(`blockSetLabel${set}`).innerText += ` (${setName})`;
 			}
 		}
 
@@ -121,10 +174,10 @@ function closePage() {
 	browser.runtime.sendMessage({ type: "close" });
 }
 
-// Set focus to minutes input field
+// Set focus to hours input field
 //
-function focusMins() {
-	$("#mins").focus();
+function focusHours() {
+	$("#hours").focus();
 }
 
 // Confirm access to override
@@ -174,11 +227,13 @@ function confirmAccess(options) {
 		$("#promptAccessCodeInput").focus();
 	} else if (gOverrideMins) {
 		// Override duration already specified in General options
-		activateOverride();
+		// But still need to show form for set selection
+		$("#form").show();
+		setTimeout(focusHours, 100);
 	} else {
 		// Override duration not specified in General options
 		$("#form").show();
-		setTimeout(focusMins, 100);
+		setTimeout(focusHours, 100);
 	}
 }
 
@@ -250,36 +305,74 @@ function resizePromptInputHeight(numLines) {
 // Activate override
 //
 function activateOverride() {
-	// Get duration from form if not already specified
-	if (!gOverrideMins) {
-		gOverrideMins = $("#mins").val();
-		if (!gOverrideMins || !checkPosIntFormat(gOverrideMins)) {
-			gOverrideMins = "";
-			$("#mins").val("");
-			$("#alertNoDuration").dialog("open");
-			return;
-		}
+	//log("activateOverride");
+
+	// Get duration from form
+	let hours = getElement("hours").value;
+	let mins = getElement("mins").value;
+	let duration;
+
+	if (gOverrideMins) {
+		// Override duration specified in General options
+		duration = gOverrideMins * 60;
+	} else {
+		// Calculate duration from hours + mins
+		duration = hours * 3600 + mins * 60;
+	}
+
+	if (!duration || duration < 0) {
+		$("#alertNoDuration").dialog("open");
+		return;
 	}
 
 	// Calculate end time for override
-	let endTime = Math.floor(Date.now() / 1000) + (gClockOffset * 60) + (gOverrideMins * 60);
+	let endTime = Math.floor(Date.now() / 1000) + (gClockOffset * 60) + duration;
 
-	// Request override
-	let message = {
-		type: "override",
-		endTime: endTime
-	};
-	browser.runtime.sendMessage(message);
+	// Request override for each selected set
+	let noneSelected = true;
+	let selectedSetNames = [];
+	let firstSet = true;
+	for (let set of gEligibleSets) {
+		let selected = getElement(`blockSet${set}`).checked;
+		if (selected) {
+			noneSelected = false;
+			let message = {
+				type: "override",
+				endTime: endTime,
+				set: set,
+				countLimit: firstSet  // Only count limit on first set
+			};
+			// Request override for this set
+			browser.runtime.sendMessage(message);
+			firstSet = false;
+
+			// Build list of selected set names for confirmation
+			let label = getElement(`blockSetLabel${set}`).innerText;
+			selectedSetNames.push(label);
+		}
+	}
+
+	if (noneSelected) {
+		$("#alertNoSets").dialog("open");
+		return;
+	}
+
+	// Save options for next time
+	let options = {};
+	options["overrideHours"] = hours;
+	options["overrideMins"] = mins;
+	for (let set of gEligibleSets) {
+		options[`override${set}`] = getElement(`blockSet${set}`).checked;
+	}
+	gStorage.set(options).catch(
+		function (error) { warn("Cannot set options: " + error); }
+	);
 
 	if (gOverrideConfirm) {
 		// Show confirmation dialog
-		endTime = new Date(endTime * 1000);
-		$("#alertOverrideEndTime").html(endTime.toLocaleTimeString(undefined, gClockTimeOpts));
-		if (gOverrideSetNames.length > 0) {
-			$("#alertOverrideNoSets").hide();
-			$("#alertOverrideSets").show();
-			$("#alertOverrideSetList").html("<ul><li>" + gOverrideSetNames.join("</li><li>") + "</li></ul>");
-		}
+		let endTimeDate = new Date(endTime * 1000);
+		$("#alertOverrideEndTime").html(endTimeDate.toLocaleTimeString(undefined, gClockTimeOpts));
+		$("#alertOverrideSetList").html("<ul><li>" + selectedSetNames.join("</li><li>") + "</li></ul>");
 		if (gOverrideLimit) {
 			$("#alertOverrideLimit").show();
 			$("#alertLimitLeft").html(gOverrideLimitLeft - 1);
@@ -301,13 +394,8 @@ function initAccessControlPrompt(prompt) {
 			let input = $(`#${prompt}Input`);
 			if (hashCode32(input.val()) == gAccessHashCode) {
 				gAccessConfirmed = true;
-				if (gOverrideMins) {
-					// Slight delay to allow focus to pass to new dialog
-					setTimeout(activateOverride, 100);
-				} else {
-					$("#form").show();
-					setTimeout(focusMins, 100);
-				}
+				$("#form").show();
+				setTimeout(focusHours, 100);
 				$(`#${prompt}`).dialog("close");
 			} else {
 				input.val("");
@@ -341,6 +429,9 @@ function initAccessControlPrompt(prompt) {
 
 /*** STARTUP CODE BEGINS HERE ***/
 
+// Save original HTML of form
+gFormHTML = $("#form").html();
+
 // Initialize alert dialogs
 $("div[id^='alert']").dialog({
 	autoOpen: false,
@@ -351,6 +442,9 @@ $("div[id^='alert']").dialog({
 	}
 });
 $("#alertLimitReached").dialog({
+	close: function (event, ui) { closePage(); }
+});
+$("#alertNoEligibleSets").dialog({
 	close: function (event, ui) { closePage(); }
 });
 $("#alertOverrideActivated").dialog({

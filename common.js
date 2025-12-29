@@ -106,6 +106,8 @@ const GENERAL_OPTIONS = {
 	orlps: { type: "number", def: 0, id: null }, // default: no override limit period start time
 	orlc: { type: "number", def: 0, id: null }, // default: no override limit count
 	oret: { type: "number", def: 0, id: null }, // default: no override end time
+	overrideHours: { type: "string", def: "", id: null }, // default: blank (for UI state persistence)
+	overrideMins: { type: "string", def: "", id: null }, // default: blank (for UI state persistence)
 	warnSecs: { type: "string", def: "", id: "warnSecs" }, // default: no warning
 	warnImmediate: { type: "boolean", def: true, id: "warnImmediate" }, // default: warn only for immediate block
 	contextMenu: { type: "boolean", def: true, id: "contextMenu" }, // default: enabled
@@ -181,6 +183,7 @@ function cleanOptions(options) {
 // timedata[5] = rollover time for current period (secs)
 // timedata[6] = rollover time for next period (secs)
 // timedata[7] = start time for next rollover period (secs since epoch)
+// timedata[8] = end time for override (secs since epoch)
 //
 function cleanTimeData(options) {
 	let numSets = +options["numSets"];
@@ -189,8 +192,8 @@ function cleanTimeData(options) {
 	for (let set = 1; set <= numSets; set++) {
 		let timedata = options[`timedata${set}`];
 		if (!Array.isArray(timedata)) {
-			timedata = [now, 0, 0, 0, 0, 0, 0, 0];
-		} else while (timedata.length < 8) {
+			timedata = [now, 0, 0, 0, 0, 0, 0, 0, 0];
+		} else while (timedata.length < 9) {
 			timedata.push(0);
 		}
 		options[`timedata${set}`] = timedata;
