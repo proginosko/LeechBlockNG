@@ -23,7 +23,48 @@
 				<fieldset class="ui-widget ui-widget-content">
 					<legend>LeechBlock Override</legend>
 					<p>
-						Allow blocking to be suspended for <input id="mins" type="text" size="2"> minute(s)
+						<label>Enter the duration of the override:</label><br>
+						<div>
+							<input id="hours" type="text" size="6" list="hours-list">
+							<datalist id="hours-list">
+								<option value="1">
+								<option value="2">
+								<option value="3">
+								<option value="4">
+								<option value="5">
+								<option value="6">
+								<option value="12">
+								<option value="18">
+								<option value="24">
+							</datalist>
+							<label for="hours">hour(s)</label>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<input id="mins" type="text" size="6" list="mins-list">
+							<datalist id="mins-list">
+								<option value="5">
+								<option value="10">
+								<option value="15">
+								<option value="20">
+								<option value="25">
+								<option value="30">
+								<option value="35">
+								<option value="40">
+								<option value="45">
+								<option value="50">
+								<option value="55">
+							</datalist>
+							<label for="mins">minute(s)</label>
+						</div>
+					</p>
+					<hr>
+					<p>
+						<label>Select the sites to override:</label><br>
+						<div id="blockSets">
+							<p>
+								<input id="blockSet1" type="checkbox">
+								<label id="blockSetLabel1" for="blockSet1">Sites specified in Block Set 1</label>
+							</p>
+						</div>
 					</p>
 				</fieldset>
 
@@ -46,10 +87,16 @@
 			<div id="alertNoDuration" title="LeechBlock Override">
 				<p>Please enter a non-zero duration for the override.</p>
 			</div>
+			<div id="alertNoSets" title="LeechBlock Override">
+				<p>Please select the sites to override.</p>
+			</div>
+			<div id="alertNoEligibleSets" title="LeechBlock Override">
+				<p>No block sets have "Allow temporary override" enabled.</p>
+				<p>You can enable this in Options for each block set.</p>
+			</div>
 			<div id="alertOverrideActivated" title="LeechBlock Override">
 				<p>Override activated. Blocking will be suspended until <strong><span id="alertOverrideEndTime"></span></strong>.</p>
-				<p id="alertOverrideNoSets"><strong>Note:</strong> Override will have no effect because you have not selected<br>"Allow temporary override for these sites" for any block sets.</p>
-				<p id="alertOverrideSets" style="display: none;">Override will be applied to sites in: <span id="alertOverrideSetList"></span></p>
+				<p id="alertOverrideSets">Override will be applied to sites in: <span id="alertOverrideSetList"></span></p>
 				<p id="alertOverrideLimit" style="display: none;">You are allowed <strong><span id="alertLimitLeft"></span></strong> more override(s) <span id="alertLimitPeriod"></span>.</p>
 			</div>
 		</div>

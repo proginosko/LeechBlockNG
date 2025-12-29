@@ -501,9 +501,6 @@ function checkTab(id, isBeforeNav, isRepeat) {
 	// Get current time/date
 	let timedate = new Date(now * 1000);
 
-	// Get override end time
-	let overrideEndTime = gOptions["oret"];
-
 	gTabs[id].secsLeft = Infinity;
 	gTabs[id].secsLeftSet = 0;
 	gTabs[id].showTimer = false;
@@ -645,9 +642,12 @@ function checkTab(id, isBeforeNav, isRepeat) {
 			// Check lockdown condition
 			let lockdown = (timedata[4] > now);
 
-			// Check override condition
+			// Check override condition (per-set override stored in timedata[8])
+			// Note: allowOverride is checked at activation time, not here, so active overrides
+			// persist until end time even if allowOverride is later disabled (matching lockdown behavior)
+			let overrideEndTime = timedata[8];
 			let override = (prevOverride || !isInternalPage) && (overrideEndTime > now)
-					&& allowOverride && (allowOverLock || !lockdown);
+					&& (allowOverLock || !lockdown);
 
 			// Determine whether this page should now be blocked
 			let doBlock = lockdown
@@ -1055,14 +1055,21 @@ function updateIcon() {
 	// Get current time in seconds
 	let now = Math.floor(Date.now() / 1000) + (gClockOffset * 60);
 
-	// Get override end time
-	let overrideEndTime = gOptions["oret"];
+	// Check if any block set has active override (per-set override stored in timedata[8])
+	let anyOverrideActive = false;
+	for (let set = 1; set <= gNumSets; set++) {
+		let timedata = gOptions[`timedata${set}`];
+		if (timedata && timedata[8] > now) {
+			anyOverrideActive = true;
+			break;
+		}
+	}
 
 	// Change icon only if override status has changed
-	if (!gOverrideIcon && overrideEndTime > now) {
+	if (!gOverrideIcon && anyOverrideActive) {
 		browser.action.setIcon({ path: OVERRIDE_ICON });
 		gOverrideIcon = true;
-	} else if (gOverrideIcon && overrideEndTime <= now) {
+	} else if (gOverrideIcon && !anyOverrideActive) {
 		browser.action.setIcon({ path: DEFAULT_ICON });
 		gOverrideIcon = false;
 	}
@@ -1340,19 +1347,25 @@ function cancelLockdown(set) {
 	saveTimeData();
 }
 
-// Apply override
+// Apply override for specified sets
 //
-function applyOverride(endTime) {
-	//log("applyOverride: " + endTime);
+function applyOverride(sets, endTime) {
+	//log("applyOverride: " + sets + " " + endTime);
 
-	if (!gGotOptions) {
+	if (!gGotOptions || !sets || sets.length == 0) {
 		return;
 	}
 
 	let options = {};
 
-	// Set override end time
-	options["oret"] = gOptions["oret"] = endTime;
+	// Apply override to each set (only if it doesn't reduce any current override)
+	for (let set of sets) {
+		if (set >= 1 && set <= gNumSets) {
+			if (endTime > gOptions[`timedata${set}`][8]) {
+				gOptions[`timedata${set}`][8] = endTime;
+			}
+		}
+	}
 
 	if (endTime) {
 		// Get current time in seconds
@@ -1386,6 +1399,22 @@ function applyOverride(endTime) {
 		function (error) { warn("Cannot set options: " + error); }
 	);
 
+	saveTimeData();
+	updateIcon();
+}
+
+// Cancel override for specified set
+//
+function cancelOverride(set) {
+	//log("cancelOverride: " + set);
+
+	if (!gGotOptions || set < 1 || set > gNumSets) {
+		return;
+	}
+
+	gOptions[`timedata${set}`][8] = 0;
+
+	saveTimeData();
 	updateIcon();
 }
 
@@ -1629,7 +1658,10 @@ function handleCommand(command) {
 			break;
 
 		case "lb-cancel-override":
-			applyOverride(0);
+			// Cancel override for all sets
+			for (let set = 1; set <= gNumSets; set++) {
+				cancelOverride(set);
+			}
 			break;
 
 		case "lb-add-sites":
@@ -1716,7 +1748,15 @@ function handleMessage(message, sender, sendResponse) {
 
 		case "override":
 			// Override requested
-			applyOverride(message.endTime);
+			if (!message.endTime) {
+				// Override canceled - cancel all overrides
+				for (let set = 1; set <= gNumSets; set++) {
+					cancelOverride(set);
+				}
+			} else {
+				// Override requested for specified sets
+				applyOverride(message.sets, message.endTime);
+			}
 			break;
 
 		case "password":
