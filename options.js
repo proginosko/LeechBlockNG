@@ -126,6 +126,12 @@ function initForm(numSets) {
 			let matchSubdomains = getElement("matchSubdomains").checked;
 			$(`#regexpAllow${set}`).val(getRegExpSites(sites, matchSubdomains).allow);
 		});
+		$(`#clearRegExpKeyword${set}`).click(function (e) { $(`#regexpKeyword${set}`).val(""); });
+		$(`#genRegExpKeyword${set}`).click(function (e) {
+			let sites = $(`#sites${set}`).val();
+			let matchSubdomains = getElement("matchSubdomains").checked;
+			$(`#regexpKeyword${set}`).val(getRegExpSites(sites, matchSubdomains).keyword);
+		});
 		$(`#cancelLockdown${set}`).click(function (e) {
 			browser.runtime.sendMessage({ type: "lockdown", set: set });
 			this.disabled = true;
@@ -1163,6 +1169,7 @@ function disableSetOptions(set, disabled) {
 		"defaultPage", "delayingPage", "blankPage",
 		"clearRegExpBlock", "genRegExpBlock",
 		"clearRegExpAllow", "genRegExpAllow",
+		"clearRegExpKeyword", "genRegExpKeyword",
 		"cancelLockdown"
 	];
 	for (let item of items) {

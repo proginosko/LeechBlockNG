@@ -73,7 +73,7 @@ function createRegExps() {
 		let referRE = gOptions[`referRE${set}`];
 		gRegExps[set].refer = referRE ? new RegExp(referRE, "i") : null;
 
-		let keywordRE = gOptions[`keywordRE${set}`];
+		let keywordRE = gOptions[`regexpKeyword${set}`] || gOptions[`keywordRE${set}`];
 		gRegExps[set].keyword = keywordRE ? new RegExp(keywordRE, "iu") : null;
 	}
 }

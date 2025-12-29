@@ -78,6 +78,7 @@ const PER_SET_OPTIONS = {
 	sitesURL: { type: "string", def: "", id: "sitesURL" },
 	regexpBlock: { type: "string", def: "", id: "regexpBlock" },
 	regexpAllow: { type: "string", def: "", id: "regexpAllow" },
+	regexpKeyword: { type: "string", def: "", id: "regexpKeyword" },
 	ignoreHash: { type: "boolean", def: true, id: "ignoreHash" },
 };
 
