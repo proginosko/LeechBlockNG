@@ -1347,23 +1347,27 @@ function cancelLockdown(set) {
 	saveTimeData();
 }
 
-// Apply override for specified set
+// Apply override for specified sets
 //
-function applyOverride(set, endTime, countLimit) {
-	//log("applyOverride: " + set + " " + endTime);
+function applyOverride(sets, endTime) {
+	//log("applyOverride: " + sets + " " + endTime);
 
-	if (!gGotOptions || set < 1 || set > gNumSets) {
+	if (!gGotOptions || !sets || sets.length == 0) {
 		return;
 	}
 
 	let options = {};
 
-	// Apply override only if it doesn't reduce any current override
-	if (endTime > gOptions[`timedata${set}`][8]) {
-		gOptions[`timedata${set}`][8] = endTime;
+	// Apply override to each set (only if it doesn't reduce any current override)
+	for (let set of sets) {
+		if (set >= 1 && set <= gNumSets) {
+			if (endTime > gOptions[`timedata${set}`][8]) {
+				gOptions[`timedata${set}`][8] = endTime;
+			}
+		}
 	}
 
-	if (countLimit && endTime) {
+	if (endTime) {
 		// Get current time in seconds
 		let now = Math.floor(Date.now() / 1000) + (gClockOffset * 60);
 
@@ -1745,18 +1749,13 @@ function handleMessage(message, sender, sendResponse) {
 		case "override":
 			// Override requested
 			if (!message.endTime) {
-				// Override canceled
-				if (message.set) {
-					cancelOverride(message.set);
-				} else {
-					// Cancel all overrides if no set specified
-					for (let set = 1; set <= gNumSets; set++) {
-						cancelOverride(set);
-					}
+				// Override canceled - cancel all overrides
+				for (let set = 1; set <= gNumSets; set++) {
+					cancelOverride(set);
 				}
 			} else {
-				// Override requested
-				applyOverride(message.set, message.endTime, message.countLimit);
+				// Override requested for specified sets
+				applyOverride(message.sets, message.endTime);
 			}
 			break;
 

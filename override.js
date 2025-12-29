@@ -328,34 +328,31 @@ function activateOverride() {
 	// Calculate end time for override
 	let endTime = Math.floor(Date.now() / 1000) + (gClockOffset * 60) + duration;
 
-	// Request override for each selected set
-	let noneSelected = true;
+	// Collect selected sets
+	let selectedSets = [];
 	let selectedSetNames = [];
-	let firstSet = true;
 	for (let set of gEligibleSets) {
 		let selected = getElement(`blockSet${set}`).checked;
 		if (selected) {
-			noneSelected = false;
-			let message = {
-				type: "override",
-				endTime: endTime,
-				set: set,
-				countLimit: firstSet  // Only count limit on first set
-			};
-			// Request override for this set
-			browser.runtime.sendMessage(message);
-			firstSet = false;
-
+			selectedSets.push(set);
 			// Build list of selected set names for confirmation
 			let label = getElement(`blockSetLabel${set}`).innerText;
 			selectedSetNames.push(label);
 		}
 	}
 
-	if (noneSelected) {
+	if (selectedSets.length == 0) {
 		$("#alertNoSets").dialog("open");
 		return;
 	}
+
+	// Request override for selected sets (single message)
+	let message = {
+		type: "override",
+		endTime: endTime,
+		sets: selectedSets
+	};
+	browser.runtime.sendMessage(message);
 
 	// Save options for next time
 	let options = {};
