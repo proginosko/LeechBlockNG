@@ -115,6 +115,7 @@ const GENERAL_OPTIONS = {
 	clockTimeFormat: { type: "string", def: "0", id: "clockTimeFormat" }, // default: locale default
 	saveSecs: { type: "string", def: "10", id: "saveSecs" }, // default: every 10 seconds
 	clockOffset: { type: "string", def: "", id: "clockOffset" }, // default: no offset
+	openAIKey: { type: "string", def: "", id: "openAIKey" },
 	ignoreJumpSecs: { type: "string", def: "", id: "ignoreJumpSecs" }, // default: do not ignore time jumps
 	allFocused: { type: "boolean", def: false, id: "allFocused" }, // default: disabled
 	useDocFocus: { type: "boolean", def: true, id: "useDocFocus" }, // default: enabled
@@ -275,6 +276,7 @@ function getRegExpSites(sites, matchSubdomains) {
 	let allows = [];
 	let refers = [];
 	let keywords = [];
+	let llm = "";
 	for (let pattern of patterns) {
 		let firstChar = pattern.charAt(0);
 
@@ -291,11 +293,15 @@ function getRegExpSites(sites, matchSubdomains) {
 		} else if (firstChar == "+") {
 			// Add a regexp to allow site(s) as exception(s)
 			allows.push(patternToRegExp(pattern.substr(1), matchSubdomains));
+		} else if (pattern.startsWith("llm")) {
+			llm = pattern.substr(4).replace(/_/g, " ");
+			console.log("LLM IS:", llm)
 		} else if (firstChar != "#") {
 			// Add a regexp to block site(s)
 			blocks.push(patternToRegExp(pattern, matchSubdomains));
 		}
 	}
+	console.log("BLOOPS:", blocks, allows, refers, keywords, llm)
 	return {
 		block: (blocks.length > 0)
 				? "^" + (blockFiles ? "file:|" : "") + "(https?|file):\\/+([\\w:]+@)?(" + blocks.join("|") + ")"
@@ -306,7 +312,8 @@ function getRegExpSites(sites, matchSubdomains) {
 		refer: (refers.length > 0) ? "^(https?|file):\\/+([\\w:]+@)?(" + refers.join("|") + ")" : "",
 		keyword: (keywords.length > 0)
 				? U_WORD_BEGIN + "(" + keywords.join("|") + ")" + U_WORD_END
-				: ""
+				: "",
+		llm: llm
 	};
 }
 
