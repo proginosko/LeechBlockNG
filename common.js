@@ -54,6 +54,7 @@ const PER_SET_OPTIONS = {
 	activeBlock: { type: "boolean", def: false, id: "activeBlock" },
 	minBlock: { type: "string", def: "", id: "minBlock" },
 	countFocus: { type: "boolean", def: true, id: "countFocus" },
+	countAllowed: { type: "boolean", def: false, id: "countAllowed" },
 	countAudio: { type: "boolean", def: false, id: "countAudio" },
 	showKeyword: { type: "boolean", def: true, id: "showKeyword" },
 	titleOnly: { type: "boolean", def: false, id: "titleOnly" },

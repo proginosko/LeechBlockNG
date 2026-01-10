@@ -573,8 +573,21 @@ function checkTab(id, isBeforeNav, isRepeat) {
 		let prevDebugging = gOptions[`prevDebugging${set}`];
 		let prevOverride = gOptions[`prevOverride${set}`];
 
+		// Get option for counting allowed sites
+		let countAllowed = gOptions[`countAllowed${set}`];
+
 		// Test URL against block/allow regular expressions
-		if (testURL(pageURL, referrer, blockRE, allowRE, referRE, allowRefers)
+		let match = testURL(pageURL, referrer, blockRE, allowRE, referRE, allowRefers);
+		let isAllowedCount = false;
+
+		if (!match && countAllowed && allowRE && allowRE.test(pageURL)) {
+			if (testURL(pageURL, referrer, blockRE, null, referRE, allowRefers)) {
+				match = true;
+				isAllowedCount = true;
+			}
+		}
+
+		if (match
 				|| (prevAddons && /^about:addons/i.test(pageURL))
 				|| (prevSupport && /^about:support/i.test(pageURL))
 				|| (prevProfiles && /^about:profiles/i.test(pageURL))
@@ -669,8 +682,13 @@ function checkTab(id, isBeforeNav, isRepeat) {
 					|| (!conjMode && (withinTimePeriods || afterTimeLimit))
 					|| (conjMode && (withinTimePeriods && afterTimeLimit));
 
+			// Exception page: count time but never block; hide timer when limit reached
+			if (isAllowedCount && doBlock) {
+				showTimer = false;
+			}
+
 			// Apply block if all relevant block conditions are fulfilled
-			if (!override && doBlock && (!isRepeat || activeBlock)) {
+			if (!override && doBlock && (!isRepeat || activeBlock) && !isAllowedCount) {
 
 				function applyBlock(keyword) {
 					if (gDiagMode) {
@@ -935,6 +953,9 @@ function updateTimeData(id, secsOpen, secsFocus) {
 		// Get option for treating referrers as allow-conditions
 		let allowRefers = gOptions[`allowRefers${set}`];
 
+		// Get option for counting allowed sites
+		let countAllowed = gOptions[`countAllowed${set}`];
+
 		// Get URL of page (possibly with hash part)
 		let pageURL = parsedURL.page;
 		if (parsedURL.hash != null) {
@@ -944,7 +965,14 @@ function updateTimeData(id, secsOpen, secsFocus) {
 		}
 
 		// Test URL against block/allow regular expressions
-		if (testURL(pageURL, referrer, blockRE, allowRE, referRE, allowRefers)) {
+		let match = testURL(pageURL, referrer, blockRE, allowRE, referRE, allowRefers);
+		if (!match && countAllowed && allowRE && allowRE.test(pageURL)) {
+			if (testURL(pageURL, referrer, blockRE, null, referRE, allowRefers)) {
+				match = true;
+			}
+		}
+
+		if (match) {
 			// Get options for this set
 			let timedata = gOptions[`timedata${set}`];
 			let countFocus = gOptions[`countFocus${set}`];
