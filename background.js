@@ -1283,8 +1283,15 @@ function getUnblockTime(set) {
 	} else if (!timePeriods && timeLimit) {
 		// Case 2: after time limit (no time periods)
 
-		// Return end time for current time limit period
-		unblockTime = new Date(timedata[2] * 1000 + limitPeriod * 1000);
+		// Determine whether time limit has actually been exceeded
+		let secsRollover = rollover ? timedata[5] : 0;
+		let afterTimeLimit = (timedata[2] == periodStart)
+				&& (timedata[3] >= secsRollover + (limitMins * 60));
+
+		if (afterTimeLimit) {
+			// Return end time for current time limit period
+			unblockTime = new Date(timedata[2] * 1000 + limitPeriod * 1000);
+		}
 	} else if (timePeriods && timeLimit) {
 		if (conjMode) {
 			// Case 3: within time periods AND after time limit
@@ -1330,7 +1337,7 @@ function getUnblockTime(set) {
 				}
 			}
 
-			if (!unblockTime) {
+			if (!unblockTime && afterTimeLimit) {
 				// Return end time for current time limit period
 				unblockTime = new Date(timedata[2] * 1000 + limitPeriod * 1000);
 			}
