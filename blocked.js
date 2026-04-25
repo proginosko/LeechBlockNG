@@ -21,6 +21,8 @@ function hashCode32(str) {
 function processBlockInfo(info) {
 	if (!info) return;
 
+	console.log("unblockTime raw:", info.unblockTime);
+
 	gBlockedURL = info.blockedURL;
 	gBlockedSet = info.blockedSet;
 	gHashCode = info.password ? hashCode32(info.password) : 0;
@@ -93,6 +95,68 @@ function processBlockInfo(info) {
 	let unblockTime = document.getElementById("lbUnblockTime");
 	if (info.unblockTime && unblockTime) {
 		unblockTime.innerText = info.unblockTime;
+	}
+
+	// ----- FEATURE 1: COUNTDOWN -----
+	let countdownEl = document.getElementById("lbCountdown");
+	let countdownText = document.getElementById("lbCountdownText");
+
+	if (info.unblockTime && countdownEl) {
+		function parseTimeString(timeStr) {
+			let now = new Date();
+
+			let parts = timeStr.trim().split(" ");
+			if (parts.length !== 2) return NaN;
+
+			let [time, modifier] = parts;
+			let timeParts = time.split(":").map(Number);
+
+			if (timeParts.length < 2) return NaN;
+
+			let hours = timeParts[0];
+			let minutes = timeParts[1];
+			let seconds = timeParts[2] || 0;
+
+			if (isNaN(hours) || isNaN(minutes)) return NaN;
+
+			if (modifier === "PM" && hours !== 12) hours += 12;
+			if (modifier === "AM" && hours === 12) hours = 0;
+
+			return new Date(
+				now.getFullYear(),
+				now.getMonth(),
+				now.getDate(),
+				hours,
+				minutes,
+				seconds
+			).getTime();
+		}
+
+		let endTime = parseTimeString(info.unblockTime);
+		if (isNaN(endTime)) {
+			console.error("Bad unblockTime format:", info.unblockTime);
+			countdownEl.innerText = "Invalid time";
+			return;
+		}
+
+		function updateCountdown() {
+			let now = Date.now();
+			let diff = endTime - now;
+
+			if (diff <= 0) {
+				countdownEl.innerText = "Unblocking...";
+				clearInterval(timer);
+				return;
+			}
+
+			countdownEl.innerText = formatRemaining(diff);
+		}
+
+		updateCountdown();
+		let timer = setInterval(updateCountdown, 1000);
+
+	} else if (countdownText) {
+		countdownText.style.display = "none";
 	}
 
 	let delaySecs = document.getElementById("lbDelaySeconds");
@@ -178,6 +242,17 @@ function reloadBlockedPage() {
 	if (gBlockedURL) {
 		document.location.href = gBlockedURL;
 	}
+}
+//
+//
+function formatRemaining(ms) {
+	if (ms <= 0) return "0m 00s";
+
+	let totalSeconds = Math.floor(ms / 1000);
+	let minutes = Math.floor(totalSeconds / 60);
+	let seconds = totalSeconds % 60;
+
+	return `${minutes}m ${seconds.toString().padStart(2, "0")}s`;
 }
 
 // Request block info from extension
