@@ -246,13 +246,30 @@ function reloadBlockedPage() {
 //
 //
 function formatRemaining(ms) {
-	if (ms <= 0) return "0m 00s";
+	if (ms <= 0) return "0 minutes";
 
 	let totalSeconds = Math.floor(ms / 1000);
-	let minutes = Math.floor(totalSeconds / 60);
+
+	let hours = Math.floor(totalSeconds / 3600);
+	let minutes = Math.floor((totalSeconds % 3600) / 60);
 	let seconds = totalSeconds % 60;
 
-	return `${minutes}m ${seconds.toString().padStart(2, "0")}s`;
+	let parts = [];
+
+	if (hours > 0) {
+		parts.push(`${hours} hour${hours !== 1 ? "s" : ""}`);
+	}
+
+	if (minutes > 0) {
+		parts.push(`${minutes} minute${minutes !== 1 ? "s" : ""}`);
+	}
+
+	// optional: only show seconds if under 1 minute remaining
+	if (hours === 0 && minutes < 5) {
+		parts.push(`${seconds} second${seconds !== 1 ? "s" : ""}`);
+	}
+
+	return parts.join(" ");
 }
 
 // Request block info from extension
