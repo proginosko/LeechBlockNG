@@ -74,6 +74,8 @@ function refreshPage() {
 		// Variables for new overall statistics
 		let totalBlockedSeconds = 0;
 		let earliestStartTime = null;
+		let maxSetTime = 0;
+		let mostActiveSet = 1;
 
 		for (let set = 1; set <= gNumSets; set++) {
 			let setName = options[`setName${set}`];
@@ -81,6 +83,11 @@ function refreshPage() {
 
 			// Collect data for overall statistics
 			totalBlockedSeconds += timedata[1];
+
+			if (timedata[1] > maxSetTime) {
+				maxSetTime = timedata[1];
+				mostActiveSet = set;
+			}
 
 			if (!earliestStartTime || timedata[0] < earliestStartTime) {
 				earliestStartTime = timedata[0];
@@ -135,9 +142,14 @@ function refreshPage() {
 
 			let avgPerDay = formatTime(totalBlockedSeconds / totalDays);
 
+			let timeSavedFormatted = formatTime(totalBlockedSeconds);
+
 			// Update UI
 			getElement("totalBlockedTime").innerText = totalBlockedFormatted;
 			getElement("avgBlockedPerDay").innerText = avgPerDay;
+			getElement("mostActiveSet").innerText =
+				options[`setName${mostActiveSet}`] || `Block Set ${mostActiveSet}`;
+			getElement("timeSaved").innerText = timeSavedFormatted;
 		}
 
 		$("#form").show();
