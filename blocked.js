@@ -290,7 +290,7 @@ function reloadBlockedPage() {
 		document.location.href = gBlockedURL;
 	}
 }
-//
+// Formats timer in hours, minutes and secodns for display
 //
 function formatRemaining(ms) {
 	if (ms <= 0) return "0 minutes";
