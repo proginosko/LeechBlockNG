@@ -14,6 +14,14 @@ const motivationalMessages = [
 	"Every minute of focus counts.",
 	"Small progress is still progress."
 ];
+//Break messages
+const breakMessages = [
+	"Take a 1–3 minute stretch break.",
+	"Relax your eyes for 20 seconds.",
+	"Drink some water.",
+	"Stand up and move around.",
+	"Take a deep breath before continuing later."
+];
 
 // Create 32-bit integer hash code from string
 //
@@ -90,17 +98,6 @@ function processBlockInfo(info) {
 		passwordSubmit.onclick = onSubmitPassword;
 	}
 
-	let customMsgDiv = document.getElementById("lbCustomMsgDiv");
-	let customMsg = document.getElementById("lbCustomMsg");
-	if (customMsgDiv && customMsg) {
-		if (info.customMsg) {
-			customMsg.innerText = info.customMsg;
-			customMsgDiv.style.display = "";
-		} else {
-			customMsgDiv.style.display = "none";
-		}
-	}
-
 	let unblockTime = document.getElementById("lbUnblockTime");
 	if (info.unblockTime && unblockTime) {
 		unblockTime.innerText = info.unblockTime;
@@ -125,9 +122,28 @@ function processBlockInfo(info) {
 
 		// show first message immediately
 		updateMotivation();
-
 		// rotate every 15 seconds
 		setInterval(updateMotivation, 15000);
+	}
+
+	// BREAK REMINDER SYSTEM
+	let breakEl = document.getElementById("lbBreakReminder");
+
+	if (breakEl) {
+		const TEN_MIN = 10 * 60 * 1000;
+
+		function showBreakMessage() {
+			let msg = breakMessages[Math.floor(Math.random() * breakMessages.length)];
+			breakEl.innerText = msg;
+		}
+
+		// show first break message after 5 min
+		setTimeout(() =>{
+			showBreakMessage();
+
+			// update every 10 min
+			setInterval(showBreakMessage, TEN_MIN);
+		}, TEN_MIN/2);
 	}
 
 	if (info.unblockTime && countdownEl) {
