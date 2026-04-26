@@ -138,6 +138,8 @@ function processBlockInfo(info) {
 			countdownEl.innerText = "Invalid time";
 			return;
 		}
+		let startTime = Date.now();
+		let totalDuration = endTime - startTime;
 
 		function updateCountdown() {
 			let now = Date.now();
@@ -149,7 +151,23 @@ function processBlockInfo(info) {
 				return;
 			}
 
+			// text
 			countdownEl.innerText = formatRemaining(diff);
+
+			// progress
+			let progress = (totalDuration - diff) / totalDuration;
+			progress = Math.max(0, Math.min(1, progress));
+
+			let bar = document.getElementById("lbProgressBar");
+			let percent = document.getElementById("lbProgressPercent");
+
+			if (bar) {
+				bar.style.width = (progress * 100) + "%";
+			}
+
+			if (percent) {
+				percent.innerText = Math.round(progress * 100) + "% completed";
+			}
 		}
 
 		updateCountdown();
