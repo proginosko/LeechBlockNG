@@ -5,6 +5,15 @@
 var gBlockedURL;
 var gBlockedSet;
 var gHashCode;
+// Motivational messages
+const motivationalMessages = [
+	"Stay focused — you’ve got this.",
+	"Distraction blocked. Productivity active.",
+	"Use this time intentionally.",
+	"Focus mode is enabled.",
+	"Every minute of focus counts.",
+	"Small progress is still progress."
+];
 
 // Create 32-bit integer hash code from string
 //
@@ -97,9 +106,29 @@ function processBlockInfo(info) {
 		unblockTime.innerText = info.unblockTime;
 	}
 
-	// ----- FEATURE 1: COUNTDOWN -----
+	//FEATURE 1: COUNTDOWN
 	let countdownEl = document.getElementById("lbCountdown");
 	let countdownText = document.getElementById("lbCountdownText");
+
+	//  MOTIVATIONAL MESSAGE ROTATION
+	let motivationEl = document.getElementById("lbMotivation");
+
+	if (motivationEl) {
+
+		// pick random starting message
+		let messageIndex = Math.floor(Math.random() * motivationalMessages.length);
+
+		function updateMotivation() {
+			motivationEl.innerText = motivationalMessages[messageIndex];
+			messageIndex = (messageIndex + 1) % motivationalMessages.length;
+		}
+
+		// show first message immediately
+		updateMotivation();
+
+		// rotate every 15 seconds
+		setInterval(updateMotivation, 15000);
+	}
 
 	if (info.unblockTime && countdownEl) {
 		function parseTimeString(timeStr) {

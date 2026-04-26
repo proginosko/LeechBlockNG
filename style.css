@@ -110,3 +110,9 @@ button:active:enabled {
 	border-radius: 5px;
 	transition: width 1s linear;
 }
+
+#lbMotivation {
+	margin-top: 12px;
+	font-style: italic;
+	opacity: 0.8;
+}
