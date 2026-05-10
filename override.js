@@ -193,14 +193,14 @@ function displayAccessCode(code, asImage) {
 	let idx = 0;
 	do {
 		let spaceIdx = (idx + 64 >= code.length) ? code.length : code.lastIndexOf(" ", idx + 64);
-		if (spaceIdx == -1) {
+		if (spaceIdx < idx || spaceIdx == -1) {
 			lines.push(code.substring(idx, idx + 64));
 			idx += 64;
 		} else {
 			lines.push(code.substring(idx, spaceIdx));
 			idx = spaceIdx + 1;
 		}
-	} while (idx < code.length - 1);
+	} while (idx < code.length);
 
 	if (asImage) {
 		// Display code as image
