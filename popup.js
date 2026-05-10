@@ -29,8 +29,7 @@ function initializePage() {
 // Open options page
 //
 function openOptions() {
-	browser.runtime.openOptionsPage();
-	window.close();
+	openExtensionPage("options.html");
 }
 
 // Open lockdown page

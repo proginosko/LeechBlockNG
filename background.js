@@ -1641,7 +1641,7 @@ function addSitesToSet(siteList, set) {
 function handleMenuClick(info, tab) {
 	let id = info.menuItemId;
 	if (id == "options") {
-		browser.runtime.openOptionsPage();
+		openExtensionPage("options.html");
 	} else if (id == "lockdown") {
 		openExtensionPage("lockdown.html");
 	} else if (id == "override") {
@@ -1661,7 +1661,7 @@ function handleCommand(command) {
 	switch(command) {
 
 		case "lb-options":
-			browser.runtime.openOptionsPage();
+			openExtensionPage("options.html");
 			break;
 
 		case "lb-statistics":
