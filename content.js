@@ -190,17 +190,15 @@ function onBlur(event) {
 	browser.runtime.sendMessage({ type: "focus", focus: false });
 }
 
-function onVisibilitychange(event) {
-    if (document.hidden) {
-        if (gTimer && gTimer.parentNode) {
-            gTimer.parentNode.removeChild(gTimer);
-            gTimer = null;
-        }
+function onPagehide(event) {
+    if (gTimer && gTimer.parentNode) {
+        gTimer.parentNode.removeChild(gTimer);
+        gTimer = null;
+    }
 
-        if (gAlert && gAlert.parentNode) {
-            gAlert.parentNode.removeChild(gAlert);
-            gAlert = null;
-        }
+    if (gAlert && gAlert.parentNode) {
+        gAlert.parentNode.removeChild(gAlert);
+        gAlert = null;
     }
 }
 
@@ -210,4 +208,4 @@ notifyLoaded();
 
 window.addEventListener("focus", onFocus);
 window.addEventListener("blur", onBlur);
-window.addEventListener("visibilitychange", onVisibilitychange);
+window.addEventListener("pagehide", onPagehide);
