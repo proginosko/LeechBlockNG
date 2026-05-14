@@ -1,0 +1,112 @@
+/* LeechBlock Modern theme style */
+
+body {
+	background: #000;
+	color: #eee;
+}
+
+.ui-button {
+	background: #444;
+	color: #eee;
+	border: none;
+}
+
+.ui-button:focus {
+	background: #666cdd;
+	color: #eee;
+	border: none;
+}
+
+.ui-button:hover {
+	background: #333;
+	color: #eee;
+	border: none;
+}
+
+.ui-widget button {
+	background: #444;
+	color: #eee;
+	border: none;
+}
+
+.ui-widget button:hover:enabled {
+	background: #333;
+}
+
+.ui-widget button:active:enabled {
+	background: #222;
+}
+
+.ui-widget button:disabled {
+	background: #333;
+	color: #666;
+	border: none;
+}
+
+.ui-widget fieldset, .ui-widget input, .ui-widget select, .ui-widget textarea {
+	background: #222;
+	color: #eee;
+	border: none;
+}
+
+.ui-widget input:disabled, .ui-widget select:disabled, .ui-widget textarea:disabled {
+	background: #333;
+	color: #666;
+	border: none;
+}
+
+.ui-widget hr {
+	height: 0px;
+	margin: 0px;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom: none;
+}
+
+.ui-widget th, td {
+	border: none;
+}
+
+.ui-widget-header {
+	background: #444;
+	color: #eee;
+	border: none;
+}
+
+.ui-widget-content {
+	background: #222;
+	color: #eee;
+	border: none;
+}
+
+.ui-widget.ui-widget-content {
+	border: none;
+}
+
+.ui-tabs .ui-state-default {
+	background: #aaa;
+	border: none;
+}
+
+.ui-tabs .ui-state-default a {
+	color: #000;
+}
+
+.ui-tabs .ui-state-hover {
+	background: #999;
+	border: none;
+}
+
+.ui-tabs .ui-state-active {
+	background: #222;
+	border: none;
+}
+
+.ui-tabs .ui-state-active a {
+	color: #eee;
+}
+
+#paneAbout {
+	color: #eee;
+}
