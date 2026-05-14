@@ -98,6 +98,8 @@ body {
 .ui-tabs .ui-state-default {
 	background: #333;
 	border: none;
+	border-radius: 15px 15px 0px 0px;
+	padding-top: 3px !important;
 }
 
 .ui-tabs .ui-state-default a {
