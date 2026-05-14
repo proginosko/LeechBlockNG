@@ -1,36 +1,44 @@
 /* LeechBlock Modern theme style */
 
 body {
-	background: #000;
+	background: #111;
 	color: #eee;
 }
 
 .ui-button {
-	background: #444;
+	background: #253;
 	color: #eee;
 	border: none;
+	border-radius: 50px;
+	padding:8px 15px;
 }
 
 .ui-button:focus {
-	background: #666cdd;
+	background: #253;
 	color: #eee;
 	border: none;
 }
 
 .ui-button:hover {
-	background: #333;
+	background: #142;
 	color: #eee;
 	border: none;
+	animation-name: ui-button-hover;
+ 	animation-duration: 0.3s;
 }
 
-.ui-widget button {
+.ui-widget button, input[type="file"]::file-selector-button{
 	background: #444;
 	color: #eee;
 	border: none;
+	padding:8px 12px;
+	border-radius:50px;
 }
 
-.ui-widget button:hover:enabled {
+.ui-widget button:hover:enabled, input[type="file"]::file-selector-button:hover{
 	background: #333;
+	animation-name: widget-hover;
+ 	animation-duration: 0.3s;
 }
 
 .ui-widget button:active:enabled {
@@ -46,13 +54,16 @@ body {
 .ui-widget fieldset, .ui-widget input, .ui-widget select, .ui-widget textarea {
 	background: #222;
 	color: #eee;
-	border: none;
+	border: 1px #aaa solid;
+	border-radius:15px;
+	padding: 2px 10px;
+	margin: 10px 0px;
 }
 
 .ui-widget input:disabled, .ui-widget select:disabled, .ui-widget textarea:disabled {
 	background: #333;
 	color: #666;
-	border: none;
+	border: 1px #aaa solid;
 }
 
 .ui-widget hr {
@@ -85,22 +96,26 @@ body {
 }
 
 .ui-tabs .ui-state-default {
-	background: #aaa;
+	background: #333;
 	border: none;
 }
 
 .ui-tabs .ui-state-default a {
-	color: #000;
+	color: #eee;
 }
 
 .ui-tabs .ui-state-hover {
-	background: #999;
+	background: #777;
 	border: none;
+	animation-name: tab-hover;
+  	animation-duration: 0.3s;
 }
 
 .ui-tabs .ui-state-active {
 	background: #222;
 	border: none;
+	animation-name: tab-select;
+  	animation-duration: 0.3s;
 }
 
 .ui-tabs .ui-state-active a {
@@ -109,4 +124,26 @@ body {
 
 #paneAbout {
 	color: #eee;
+}
+
+/* Animations */
+
+@keyframes ui-button-hover {
+  from {background-color: #253;}
+  to {background-color: #142;}
+}
+
+@keyframes widget-hover {
+  from {background-color: #444;}
+  to {background-color: #333;}
+}
+
+@keyframes tab-select {
+  from {background-color: #333;}
+  to {background-color: #222;}
+}
+
+@keyframes tab-hover {
+  from {background-color: #333;}
+  to {background-color: #777;}
 }
