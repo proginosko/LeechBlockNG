@@ -12,45 +12,47 @@ html {
 
 }
 
-@media (prefers-color-scheme: dark) {
-
-	body {
-		background: #222;
-	}
-
-}
-
 body {
-	color: #000;
+	color: #fff;
 	font-size: 14px;
 }
 
 .ui-button {
-	background: #eee;
-	color: #333;
-	border: 1px solid #888;
+	background: #34d46a;
+	color: #000;
+	border: none;
+	border-radius: 50px;
+	padding:8px 15px;
+	animation-name: ui-button-unhover;
+ 	animation-duration: 0.2s;
 }
 
 .ui-button:focus {
-	background: #eee;
-	border: 1px solid #888;
+	background: #34d46a;
+	border:none;
 }
 
 .ui-button:hover {
-	background: #ddd;
-	border: 1px solid #888;
+	background: #8cff6f;
+	border:none;
+	animation-name: ui-button-hover;
+ 	animation-duration: 0.2s;
 }
 
 .ui-widget button {
-	padding: 2px 8px;
-	background: #eee;
+	background: #ccc;
 	color: #333;
-	border: 1px solid #888;
-	border-radius: 3px;
+	border: none;
+	padding:8px 12px;
+	border-radius:50px;
+	animation-name: widget-unhover;
+ 	animation-duration: 0.2s;
 }
 
 .ui-widget button:hover:enabled {
 	background: #ddd;
+	animation-name: widget-hover;
+ 	animation-duration: 0.2s;
 }
 
 .ui-widget button:active:enabled {
@@ -60,13 +62,16 @@ body {
 .ui-widget button:disabled {
 	background: #eee;
 	color: #666;
-	border: 1px solid #ccc;
+	border: none;
 }
 
 .ui-widget fieldset, .ui-widget input, .ui-widget select, .ui-widget textarea {
 	background: #fff;
 	color: #000;
-	border: 1px solid #888;
+	border: 1px #aaa solid;
+	border-radius:15px;
+	padding: 8px 10px;
+	margin: 10px 0px;
 }
 
 .ui-widget input:disabled, .ui-widget select:disabled, .ui-widget textarea:disabled {
@@ -100,11 +105,58 @@ body {
 .ui-widget th, .ui-widget td {
 	text-align: center;
 	padding: 4px 12px;
+	border: none;
 }
 
 .ui-widget code {
 	font: normal 14px monospace;
 }
+
+.ui-widget-header {
+	background: #fff;
+	color: #333;
+	border: none;
+}
+
+.ui-widget-content {
+	background: #eee;
+	color: #000;
+	border: none;
+}
+
+.ui-widget.ui-widget-content {
+	border: none;
+}
+
+.ui-tabs .ui-state-default {
+	background: #ccc;
+	border: none;
+	border-radius: 15px 15px 0px 0px;
+	padding-top: 3px !important;
+}
+
+.ui-tabs .ui-state-default a {
+	color: #333;
+}
+
+.ui-tabs .ui-state-hover {
+	background: #aaa;
+	border: none;
+	animation-name: tab-hover;
+  	animation-duration: 0.2s;
+}
+
+.ui-tabs .ui-state-active {
+	background: #777;
+	border: none;
+	animation-name: tab-select;
+  	animation-duration: 0.2s;
+}
+
+.ui-tabs .ui-state-active a {
+	color: #eee;
+}
+
 
 .logo {
 	width: 408px;
@@ -152,4 +204,39 @@ body {
 
 #results {
 	font: normal 12px monospace;
+}
+
+@keyframes ui-button-hover {
+  	from {background-color: #34d46a;}
+  	to {background-color: #8cff6f;}
+}
+
+@keyframes ui-button-unhover {
+  	from {background-color: #8cff6f;}
+  	to {background-color: #34d46a;}
+}
+
+@keyframes widget-hover {
+	from {background-color: #ccc;}
+	to {background-color: #ddd;}
+}
+
+@keyframes widget-unhover {
+	from {background-color: #ddd;}
+	to {background-color: #ccc;}
+}
+
+@keyframes tab-select {
+  	from {background-color: #ccc;}
+  	to {background-color: #777;}
+}
+
+@keyframes tab-hover {
+  	from {background-color: #ccc;}
+  	to {background-color: #aaa;}
+}
+
+@keyframes tab-unhover {
+  	from {background-color: #aaa;}
+  	to {background-color: #ccc;}
 }
