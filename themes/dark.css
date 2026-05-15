@@ -1,58 +1,68 @@
-/* LeechBlock Dark theme style */
+/* LeechBlock Modern theme style */
 
 body {
-	background: #222;
-	color: #bbb;
+	background: #111;
+	color: #eee;
 }
 
 .ui-button {
-	background: #444;
-	color: #bbb;
-	border: 1px solid #666;
+	background: #253;
+	color: #eee;
+	border: none;
+	border-radius: 50px;
+	padding:8px 15px;
+	animation-name: ui-button-unhover;
+ 	animation-duration: 0.2s;
 }
 
 .ui-button:focus {
-	background: #444;
-	color: #bbb;
-	border: 1px solid #666;
+	background: #253;
+	color: #eee;
 }
 
 .ui-button:hover {
-	background: #333;
-	color: #bbb;
-	border: 1px solid #666;
+	background: #142;
+	color: #eee;
+	animation-name: ui-button-hover;
+ 	animation-duration: 0.2s;
 }
 
-.ui-widget button {
+.ui-widget button, input[type="file"]::file-selector-button{
 	background: #444;
-	color: #bbb;
-	border: 1px solid #666;
+	color: #eee;
+	animation-name: widget-unhover;
+ 	animation-duration: 0.2s;
 }
 
-.ui-widget button:hover:enabled {
+.ui-widget button:hover:enabled, input[type="file"]::file-selector-button:hover{
 	background: #333;
+	animation-name: widget-hover;
+ 	animation-duration: 0.2s;
 }
 
 .ui-widget button:active:enabled {
-	background: #222;
+	background: #444;
 }
 
 .ui-widget button:disabled {
 	background: #333;
 	color: #666;
-	border: 1px solid #444;
+	border: none;
 }
 
 .ui-widget fieldset, .ui-widget input, .ui-widget select, .ui-widget textarea {
 	background: #222;
-	color: #bbb;
-	border: 1px solid #666;
+	color: #eee;
+	border: 1px #555 solid;
+	border-radius:15px;
+	padding: 8px 10px;
+	margin: 10px 0px;
 }
 
 .ui-widget input:disabled, .ui-widget select:disabled, .ui-widget textarea:disabled {
 	background: #333;
 	color: #666;
-	border: 1px solid #444;
+	border: 1px #555 solid;
 }
 
 .ui-widget hr {
@@ -61,52 +71,91 @@ body {
 	border-top: none;
 	border-left: none;
 	border-right: none;
-	border-bottom: 1px solid #666;
-}
-
-.ui-widget th, td {
-	border: 1px solid #666;
+	border-bottom: 1px solid #555;
 }
 
 .ui-widget-header {
 	background: #444;
-	color: #bbb;
-	border: 1px solid #888;
+	color: #eee;
+	border: none;
 }
 
 .ui-widget-content {
 	background: #222;
-	color: #bbb;
-	border: 1px solid #888;
+	color: #eee;
+	border: none;
 }
 
 .ui-widget.ui-widget-content {
-	border: 1px solid #888;
+	border: none;
 }
 
 .ui-tabs .ui-state-default {
-	background: #aaa;
-	border: 1px solid #666;
+	background: #333;
+	border: none;
+	border-radius: 15px 15px 0px 0px;
+	padding-top: 3px !important;
 }
 
 .ui-tabs .ui-state-default a {
-	color: #000;
+	color: #eee;
 }
 
 .ui-tabs .ui-state-hover {
-	background: #999;
-	border: 1px solid #666;
+	background: #777;
+	border: none;
+	animation-name: tab-hover;
+  	animation-duration: 0.2s;
 }
 
 .ui-tabs .ui-state-active {
 	background: #222;
-	border: 1px solid #666;
+	border: none;
+	animation-name: tab-select;
+  	animation-duration: 0.2s;
 }
 
 .ui-tabs .ui-state-active a {
-	color: #bbb;
+	color: #eee;
 }
 
 #paneAbout {
-	color: #bbb;
+	color: #eee;
+}
+
+/* Animations */
+
+@keyframes ui-button-hover {
+  	from {background-color: #253;}
+  	to {background-color: #142;}
+}
+
+@keyframes ui-button-unhover {
+  	from {background-color: #142;}
+  	to {background-color: #253;}
+}
+
+@keyframes widget-hover {
+	from {background-color: #444;}
+	to {background-color: #333;}
+}
+
+@keyframes widget-unhover {
+	from {background-color: #333;}
+	to {background-color: #444;}
+}
+
+@keyframes tab-select {
+  	from {background-color: #333;}
+  	to {background-color: #222;}
+}
+
+@keyframes tab-hover {
+  	from {background-color: #333;}
+  	to {background-color: #777;}
+}
+
+@keyframes tab-unhover {
+  	from {background-color: #777;}
+  	to {background-color: #333;}
 }
