@@ -702,6 +702,8 @@ function confirmAccess(options) {
 	let password = options["password"];
 	let hpp = options["hpp"];
 
+	function onPaste(e) { e.preventDefault(); }
+
 	if (oa == 1 && password) {
 		gAccessHashCode = hashCode32(password);
 		if (hpp) {
@@ -723,6 +725,7 @@ function confirmAccess(options) {
 		gAccessHashCode = hashCode32(code);
 		displayAccessCode(code, options["accessCodeImage"]);
 		$("#promptAccessCodeInput").val("");
+		$("#promptAccessCodeInput").on("paste", onPaste);
 		$("#promptAccessCode").dialog("open");
 		$("#promptAccessCodeInput").focus();
 	} else {
