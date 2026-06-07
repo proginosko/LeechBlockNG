@@ -190,7 +190,7 @@ function onBlur(event) {
 	browser.runtime.sendMessage({ type: "focus", focus: false });
 }
 
-function onUnload(event) {
+function onPageHide(event) {
 	if (gTimer && gTimer.parentNode) {
 		gTimer.parentNode.removeChild(gTimer);
 		gTimer = null;
@@ -208,4 +208,4 @@ notifyLoaded();
 
 window.addEventListener("focus", onFocus);
 window.addEventListener("blur", onBlur);
-window.addEventListener("unload", onUnload);
+window.addEventListener("pagehide", onPageHide);

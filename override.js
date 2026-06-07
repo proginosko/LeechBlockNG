@@ -136,6 +136,8 @@ function confirmAccess(options) {
 	let password = options["password"];
 	let hpp = options["hpp"];
 
+	function onPaste(e) { e.preventDefault(); }
+
 	if (ora == 1 && password) {
 		gAccessHashCode = hashCode32(password);
 		if (hpp) {
@@ -150,6 +152,8 @@ function confirmAccess(options) {
 		gAccessHashCode = hashCode32(code);
 		numLines = displayAccessCode(code, options["accessCodeImage"]);
 		resizePromptInputHeight(numLines);
+		$("#promptAccessCodeInput").val("");
+		$("#promptAccessCodeInput").on("paste", onPaste);
 		$("#promptAccessCode").dialog("open");
 		$("#promptAccessCodeInput").focus();
 	} else if (ora == 9 && orp) {
@@ -170,6 +174,7 @@ function confirmAccess(options) {
 		numLines = displayAccessCode(code, options["accessCodeImage"]);
 		resizePromptInputHeight(numLines);
 		$("#promptAccessCodeInput").val("");
+		$("#promptAccessCodeInput").on("paste", onPaste);
 		$("#promptAccessCode").dialog("open");
 		$("#promptAccessCodeInput").focus();
 	} else if (gOverrideMins) {
