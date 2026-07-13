@@ -1,3 +1,6 @@
+# Version 1.7.3
+* Fixed block page showing cycle rollover time instead of manual lockdown end time.
+
 # Version 1.7.2 (04 Jan 2026)
 * Added option to specify minimum block time.
 * Added option to block only first accessed page of block set.
