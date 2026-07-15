@@ -805,6 +805,7 @@ function compileExportOptions(passwords) {
 	// Per-set options
 	for (let set = 1; set <= gNumSets; set++) {
 		for (let name in PER_SET_OPTIONS) {
+			if (!passwords && name.startsWith("passwordSetSpec")) continue;
 			let type = PER_SET_OPTIONS[name].type;
 			let id = PER_SET_OPTIONS[name].id;
 

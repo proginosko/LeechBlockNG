@@ -130,6 +130,7 @@ function checkKeyword(keywordRE, titleOnly) {
 //
 function applyFilter(filterName, filterCustom) {
 	let filters = {
+		"none": "none",
 		"blur (1px)": "blur(1px)",
 		"blur (2px)": "blur(2px)",
 		"blur (4px)": "blur(4px)",
