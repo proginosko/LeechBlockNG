@@ -1643,25 +1643,32 @@ function addSitesToSet(siteList, set) {
 	);
 }
 
-/*** EVENT HANDLERS BEGIN HERE ***/
+// Check for options in managed storage
+//
+function checkManagedStorage() {
+	//log("checkManagedStorage");
 
-function fetchFromManagedStorage() {
-	let data = browser.storage.managed.get().catch((exc) => {
-		return Promise.reject(exc);
-	});
-	data.then(onGot, (error) => {
-		log("Could not get options from managed storage: " + error);
-	});
+	if (browser.storage.managed) {
+		browser.storage.managed.get().then(onGot, onError);
 
-	function onGot(data) {
-		browser.storage.local.set(data).then(
-			() => log("Copied settings from managed to local storage"),
-			(error) => {
-				log("Could not copy options from managed to local storage: " + error);
-			},
-		);
+		function onGot(data) {
+			browser.storage.local.set(data).then(
+				() => {
+					log("Copied options from managed to local storage.");
+				},
+				(error) => {
+					warn("Cannot copy options from managed to local storage: " + error);
+				}
+			);
+		}
+
+		function onError(error) {
+			warn("No options available from managed storage: " + error);
+		}
 	}
 }
+
+/*** EVENT HANDLERS BEGIN HERE ***/
 
 function handleMenuClick(info, tab) {
 	let id = info.menuItemId;
@@ -1959,7 +1966,8 @@ function onAlarm(alarmInfo) {
 
 /*** STARTUP CODE BEGINS HERE ***/
 
-browser.runtime.onStartup.addListener(fetchFromManagedStorage);
+checkManagedStorage();
+
 browser.runtime.getPlatformInfo().then(
 	function (info) { gIsAndroid = (info.os == "android"); }
 );
