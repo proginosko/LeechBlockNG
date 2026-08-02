@@ -419,7 +419,8 @@ function saveOptions(event) {
 
 			// Set option value
 			if (name == "sites") {
-				let sites = cleanSites(getElement(`${id}${set}`).value);
+				let sortSites = getElement(`sortSites${set}`).checked;
+				let sites = cleanSites(getElement(`${id}${set}`).value, sortSites);
 				options[`${name}${set}`] = sites;
 
 				// Get regular expressions to match sites
@@ -811,7 +812,8 @@ function compileExportOptions(passwords) {
 
 			// Set option value
 			if (name == "sites") {
-				let sites = cleanSites(getElement(`${id}${set}`).value);
+				let sortSites = getElement(`sortSites${set}`).checked;
+				let sites = cleanSites(getElement(`${id}${set}`).value, sortSites);
 				options[`${name}${set}`] = sites;
 			} else if (name == "times") {
 				let times = cleanTimePeriods(getElement(`${id}${set}`).value);

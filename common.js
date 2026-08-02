@@ -33,6 +33,7 @@ const PER_SET_OPTIONS = {
 	// def: default value, id: form element identifier (see options.html)
 	setName: { type: "string", def: "", id: "setName" },
 	sites: { type: "string", def: "", id: "sites" },
+	sortSites: { type: "boolean", def: true, id: "sortSites" },
 	times: { type: "string", def: "", id: "times" },
 	limitMins: { type: "string", def: "", id: "limitMins" },
 	limitPeriod: { type: "string", def: "", id: "limitPeriod" },
@@ -259,14 +260,14 @@ function getParsedURL(url) {
 
 // Clean list of sites
 //
-function cleanSites(sites) {
+function cleanSites(sites, sortSites) {
 	// Remove leading/trailing whitespace
 	sites = sites.replace(/(^\s+)|(\s+$)/g, "");
 
 	// Remove URL protocols and sort alphabetically
 	sites = sites.split(/\s+/);
 	sites.forEach((item, i, array) => { array[i] = item.replace(/^([+>]?)[a-z-]+:\/+/, "$1"); });
-	sites = sites.sort().join(" ");
+	sites = sortSites ? sites.sort().join(" ") : sites.join(" ");
 
 	return sites;
 }
