@@ -1,3 +1,9 @@
+# Version 1.7.3 (04 Aug 2026)
+* Added support for managed storage.
+* Added option to (not) sort list of sites.
+* Added option for "none" filter (allows for mute tab without filter).
+* Bug fixes and under-the-hood improvements.
+
 # Version 1.7.2 (04 Jan 2026)
 * Added option to specify minimum block time.
 * Added option to block only first accessed page of block set.
