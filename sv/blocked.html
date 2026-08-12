@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html id="lbBlockingPage" lang="sv">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=0.75, shrink-to-fit=no">
+		<title>Webbplats blockerad</title>
+		<link rel="shortcut icon" href="/icons/leechblock32.ico" type="image/x-icon">
+		<link rel="icon" href="/icons/leechblock32.ico" type="image/x-icon">
+		<link rel="stylesheet" href="/fonts.css" type="text/css">
+		<link rel="stylesheet" href="/style.css" type="text/css">
+		<link id="themeLink" rel="stylesheet">
+		<style id="customStyle"></style>
+	</head>
+
+	<body>
+
+		<!-- logo -->
+		<div id="lbLogoDiv">
+			<a href="https://www.proginosko.com/leechblock/"><img id="lbLogoImg" src="/images/leechblock_logo.svg" class="logo" alt="LeechBlock-logotyp" title="LeechBlock"></a>
+		</div>
+
+		<!-- warning message -->
+		<div id="lbWarningMsgDiv">
+			<h1>Sidan du försöker komma åt har blockerats av <a href="https://www.proginosko.com/leechblock/">LeechBlock</a>.</h1>
+		</div>
+
+		<!-- blocked site info -->
+		<div id="lbBlockedDiv">
+			<a id="lbBlockedURLLink" target="_self"><span id="lbBlockedURL"></span></a>
+			(<span id="lbBlockedSet">Blockeringsuppsättning</span>)
+			<p id="lbKeywordMatched" style="display: none;">Nyckelord som matchade: <span id="lbKeywordMatch" class="keyword"></span></p>
+			<p id="lbUnblockText">Sidan avblockeras: <span id="lbUnblockTime" class="time">aldrig</span></p>
+		</div>
+
+		<!-- custom message (optional) -->
+		<div id="lbCustomMsgDiv" style="display: none;">
+			<p>Ett meddelande från dig själv:</p>
+			<blockquote id="lbCustomMsg"></blockquote>
+		</div>
+
+		<!-- support info -->
+		<div id="lbSupportDiv" class="support">
+			LeechBlock kommer alltid att vara gratis att använda, men om det har förbättrat ditt liv,<br>
+			överväg gärna att stödja den fortsatta utvecklingen genom att<br>
+			<a href="https://www.paypal.me/JamesNAnderson">ge ett bidrag</a> or
+			<a href="https://addons.mozilla.org/firefox/addon/leechblock-ng/">skriva en recension</a>.
+		</div>
+
+		<script src="/blocked.js"></script>
+
+	</body>
+
+</html>
