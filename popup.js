@@ -59,14 +59,21 @@ function openExtensionPage(url) {
 
 	function onGot(tabs) {
 		if (tabs.length > 0) {
+			// Bring tab to front
 			browser.tabs.update(tabs[0].id, { active: true });
+			if (browser.windows) {
+				// Bring window to front
+				browser.windows.update(tabs[0].windowId, { focused: true });
+			}
 		} else {
+			// Create new tab
 			browser.tabs.create({ url: fullURL });
 		}
 		window.close();
 	}
 
 	function onError(error) {
+		// Create new tab
 		browser.tabs.create({ url: fullURL });
 		window.close();
 	}

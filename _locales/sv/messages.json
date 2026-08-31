@@ -1,0 +1,38 @@
+{
+	"extensionName": {
+		"message": "LeechBlock NG",
+		"description": "Name of the extension."
+	},
+	"extensionDescription": {
+		"message": "LeechBlock är ett enkelt produktivitetsverktyg för att blockera tidsödande webbplatser.",
+		"description": "Description of the extension."
+	},
+	"localePath": {
+		"message": "/sv/",
+		"description": "Path to localized files."
+	},
+	"optionsMenuItem": {
+		"message": "Inställningar"
+	},
+	"lockdownMenuItem": {
+		"message": "Låsning"
+	},
+	"overrideMenuItem": {
+		"message": "Åsidosätt"
+	},
+	"statisticsMenuItem": {
+		"message": "Statistik"
+	},
+	"addSiteMenuItem": {
+		"message": "Lägg till webbplats"
+	},
+	"addSiteToBlockSetMenuItem": {
+		"message": "Lägg till webbplats i blockeringsuppsättning"
+	},
+	"addPageMenuItem": {
+		"message": "Lägg till sida"
+	},
+	"addPageToBlockSetMenuItem": {
+		"message": "Lägg till sida i blockeringsuppsättning"
+	}
+}
