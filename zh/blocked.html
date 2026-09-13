@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html id="lbBlockingPage" lang="zh">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=0.75, shrink-to-fit=no">
+		<title>页面已被屏蔽</title>
+		<link rel="shortcut icon" href="/icons/leechblock32.ico" type="image/x-icon">
+		<link rel="icon" href="/icons/leechblock32.ico" type="image/x-icon">
+		<link rel="stylesheet" href="/fonts.css" type="text/css">
+		<link rel="stylesheet" href="/style.css" type="text/css">
+		<link id="themeLink" rel="stylesheet">
+		<style id="customStyle"></style>
+	</head>
+
+	<body>
+
+		<!-- logo -->
+		<div id="lbLogoDiv">
+			<a href="https://www.proginosko.com/leechblock/"><img id="lbLogoImg" src="/images/leechblock_logo.svg" class="logo" alt="LeechBlock logo" title="LeechBlock"></a>
+		</div>
+
+		<!-- warning message -->
+		<div id="lbWarningMsgDiv">
+			<h1>您要访问的页面已被 <a href="https://www.proginosko.com/leechblock/">LeechBlock</a> 屏蔽。</h1>
+		</div>
+
+		<!-- blocked site info -->
+		<div id="lbBlockedDiv">
+			<a id="lbBlockedURLLink" target="_self"><span id="lbBlockedURL"></span></a>
+			(<span id="lbBlockedSet">屏蔽集</span>)
+			<p id="lbKeywordMatched" style="display: none">发现匹配的关键词： <span id="lbKeywordMatch" class="keyword"></span></p>
+			<p id="lbUnblockText">页面将在以下时间解锁： <span id="lbUnblockTime" class="time">永不自动解除</span></p>
+		</div>
+
+		<!-- custom message (optional) -->
+		<div id="lbCustomMsgDiv" style="display: none">
+			<p>来自您自己的留言：</p>
+			<blockquote id="lbCustomMsg"></blockquote>
+		</div>
+
+		<!-- support info -->
+		<div id="lbSupportDiv" class="support">
+			LeechBlock 将始终免费使用，但如果它改善了您的生活，<br>
+			请考虑通过 <a href="https://www.paypal.me/JamesNAnderson">捐赠</a> 或
+			<a href="https://addons.mozilla.org/firefox/addon/leechblock-ng/">撰写评价</a>
+			来支持它的持续开发。
+		</div>
+
+		<script src="/blocked.js"></script>
+
+	</body>
+
+</html>
