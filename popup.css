@@ -17,7 +17,7 @@
 }
 
 body {
-	color: #000;
+	color: #fff;
 	font-size: 14px;
 	text-align: center;
 }
@@ -28,17 +28,20 @@ body {
 }
 
 button {
-	display: inline;
-	width: 100%;
-	margin: 2px;
-	padding: 2px;
 	background: #eee;
-	border: 1px solid #888;
-	border-radius: 6px;
+	color: #333;
+	border: none;
+	padding:8px 12px;
+	margin: 2px 0px;
+	border-radius:50px;
+	animation-name: button-unhover;
+ 	animation-duration: 0.2s;
 }
 
 button:hover:enabled {
 	background: #ddd;
+	animation: button-hover;
+	animation-duration: 0.2s;
 }
 
 button:active:enabled {
@@ -47,4 +50,14 @@ button:active:enabled {
 
 .logo {
 	width: 204px;
+}
+
+@keyframes button-hover {
+  	from {background-color: #eee;}
+  	to {background-color: #ddd;}
+}
+
+@keyframes button-unhover {
+  	from {background-color: #ddd;}
+  	to {background-color: #eee;}
 }

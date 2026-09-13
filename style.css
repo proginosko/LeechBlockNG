@@ -11,13 +11,14 @@
 @media (prefers-color-scheme: dark) {
 
 	body {
-		background: #222;
+		background: #000;
 	}
 
 }
 
 body {
-	color: #2e3436;
+	padding:30px 0px;
+	color: #000;
 	font: normal 16px "Open Sans", Arial, sans-serif;
 	text-align: center;
 }
@@ -44,28 +45,55 @@ blockquote {
 	font-weight: bold;
 }
 
-input, button {
-	color: #333;
-	font: normal 16px "Open Sans", Arial, sans-serif;
-	padding: 2px 8px;
-	border: 1px solid #888;
-	border-radius: 6px;
+input {
+	background: #fff;
+	color: #000;
+	border: 1px #aaa solid;
+	border-radius:15px;
+	padding: 8px 10px;
+	margin: 10px 0px;
 }
 
 button {
 	background: #eee;
+	color: #333;
+	border: none;
+	padding:6px 12px;
+	margin: 2px 0px;
+	border-radius:50px;
+	animation-name: button-unhover;
+ 	animation-duration: 0.2s;
 }
 
 button:hover:enabled {
 	background: #ddd;
+	animation: button-hover;
+	animation-duration: 0.2s;
 }
 
 button:active:enabled {
 	background: #ccc;
 }
 
+@keyframes button-hover {
+  	from {background-color: #eee;}
+  	to {background-color: #ddd;}
+}
+
+@keyframes button-unhover {
+  	from {background-color: #ddd;}
+  	to {background-color: #eee;}
+}
+
 .logo {
-	width: 408px;
+	width:408px;
+	animation: leechblock;
+	animation-duration: 1s;
+}
+
+@keyframes leechblock {
+  	from {width:100%;}
+  	to {width:408px;}
 }
 
 .keyword {
