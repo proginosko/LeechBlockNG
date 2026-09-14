@@ -1,0 +1,38 @@
+{
+	"extensionName": {
+		"message": "LeechBlock NG",
+		"description": "Uzantının adı."
+	},
+	"extensionDescription": {
+		"message": "LeechBlock vaxt aparan saytları bloklamaq üçün sadə məhsuldarlıq alətidir.",
+		"description": "Uzantının təsviri."
+	},
+	"localePath": {
+		"message": "/az/",
+		"description": "Lokallaşdırılmış faylların yolu."
+	},
+	"optionsMenuItem": {
+		"message": "Parametrlər"
+	},
+	"lockdownMenuItem": {
+		"message": "Kilidləmə"
+	},
+	"overrideMenuItem": {
+		"message": "İcazə ver"
+	},
+	"statisticsMenuItem": {
+		"message": "Statistika"
+	},
+	"addSiteMenuItem": {
+		"message": "Sayt əlavə et"
+	},
+	"addSiteToBlockSetMenuItem": {
+		"message": "Saytı bloklama dəstinə əlavə et"
+	},
+	"addPageMenuItem": {
+		"message": "Səhifə əlavə et"
+	},
+	"addPageToBlockSetMenuItem": {
+		"message": "Səhifəni bloklama dəstinə əlavə et"
+	}
+}
