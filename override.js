@@ -150,7 +150,7 @@ function confirmAccess(options) {
 		$("#promptPasswordInput").focus();
 	} else if (ora == 8 && code) {
 		gAccessHashCode = hashCode32(code);
-		numLines = displayAccessCode(code, options["accessCodeImage"]);
+		let numLines = displayAccessCode(code, options["accessCodeImage"]);
 		resizePromptInputHeight(numLines);
 		$("#promptAccessCodeInput").val("");
 		$("#promptAccessCodeInput").on("paste", onPaste);
@@ -171,7 +171,7 @@ function confirmAccess(options) {
 			code += createAccessCode(64);
 		}
 		gAccessHashCode = hashCode32(code);
-		numLines = displayAccessCode(code, options["accessCodeImage"]);
+		let numLines = displayAccessCode(code, options["accessCodeImage"]);
 		resizePromptInputHeight(numLines);
 		$("#promptAccessCodeInput").val("");
 		$("#promptAccessCodeInput").on("paste", onPaste);

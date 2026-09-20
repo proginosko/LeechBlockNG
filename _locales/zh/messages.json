@@ -1,0 +1,38 @@
+{
+    "extensionName": {
+        "message": "LeechBlock NG",
+        "description": "Name of the extension."
+    },
+    "extensionDescription": {
+        "message": "LeechBlock 是一款用于屏蔽时间消耗网站，保持专注的简易效率工具。",
+        "description": "Description of the extension."
+    },
+    "localePath": {
+        "message": "/zh/",
+        "description": "Path to localized files."
+    },
+    "optionsMenuItem": {
+        "message": "选项"
+    },
+    "lockdownMenuItem": {
+        "message": "强制锁定"
+    },
+    "overrideMenuItem": {
+        "message": "临时解锁"
+    },
+    "statisticsMenuItem": {
+        "message": "统计数据"
+    },
+    "addSiteMenuItem": {
+        "message": "添加网站"
+    },
+    "addSiteToBlockSetMenuItem": {
+        "message": "添加网站到屏蔽列表"
+    },
+    "addPageMenuItem": {
+        "message": "添加页面"
+    },
+    "addPageToBlockSetMenuItem": {
+        "message": "添加页面到屏蔽列表"
+    }
+}
