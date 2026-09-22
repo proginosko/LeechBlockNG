@@ -254,6 +254,10 @@ function loadSiteLists() {
 		let sitesURL = gOptions[`sitesURL${set}`];
 		if (sitesURL) {
 			sitesURL = sitesURL.replace(/\$S/, set).replace(/\$T/, time);
+			if (!/^https:\/\//i.test(sitesURL)) {
+				warn("Refusing to load sites from insecure URL: " + sitesURL);
+				continue;
+			}
 			fetch(sitesURL).then(
 				(response) => {
 					if (response.status == 200) {
