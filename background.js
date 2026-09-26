@@ -789,7 +789,7 @@ function checkTab(id, isBeforeNav, isRepeat) {
 			}
 
 			// Update seconds left before block
-			let secsLeft = conjMode
+			let secsLeft = lockdown ? 0 : conjMode
 					? (withinTimePeriods ? secsLeftBeforeLimit : Infinity)
 					: Math.min(secsLeftBeforePeriod, secsLeftBeforeLimit);
 			if (override) {
