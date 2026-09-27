@@ -126,6 +126,7 @@ const GENERAL_OPTIONS = {
 	useDocFocus: { type: "boolean", def: true, id: "useDocFocus" }, // default: enabled
 	processTabsSecs: { type: "string", def: "1", id: "processTabsSecs" }, // default: every second
 	processActiveTabs: { type: "boolean", def: false, id: "processActiveTabs" }, // default: disabled
+	prevPastePassword: { type: "boolean", def: false, id: "prevPastePassword" }, // default: disabled
 	accessCodeImage: { type: "boolean", def: true, id: "accessCodeImage" }, // default: enabled
 	allowLBWebsite: { type: "boolean", def: true, id: "allowLBWebsite" }, // default: enabled
 	diagMode: { type: "boolean", def: false, id: "diagMode" }, // default: disabled

@@ -135,6 +135,7 @@ function confirmAccess(options) {
 	let code = options["orcode"];
 	let password = options["password"];
 	let hpp = options["hpp"];
+	let ppp = options["prevPastePassword"];
 
 	function onPaste(e) { e.preventDefault(); }
 
@@ -146,6 +147,9 @@ function confirmAccess(options) {
 			$("#promptPasswordInput").attr("type", "text");
 		}
 		$("#promptPasswordInput").val("");
+		if (ppp) {
+			$("#promptPasswordInput").on("paste", onPaste);
+		}
 		$("#promptPassword").dialog("open");
 		$("#promptPasswordInput").focus();
 	} else if (ora == 8 && code) {
@@ -160,6 +164,9 @@ function confirmAccess(options) {
 		gAccessHashCode = hashCode32(orp);
 		$("#promptPasswordInput").attr("type", "password");
 		$("#promptPasswordInput").val("");
+		if (ppp) {
+			$("#promptPasswordInput").on("paste", onPaste);
+		}
 		$("#promptPassword").dialog("open");
 		$("#promptPasswordInput").focus();
 	} else if (ora >= 2 && ora <= 4) {

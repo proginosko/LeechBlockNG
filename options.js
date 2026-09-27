@@ -702,6 +702,7 @@ function confirmAccess(options) {
 	let oa = options["oa"];
 	let password = options["password"];
 	let hpp = options["hpp"];
+	let ppp = options["prevPastePassword"];
 
 	function onPaste(e) { e.preventDefault(); }
 
@@ -713,6 +714,9 @@ function confirmAccess(options) {
 			$("#promptPasswordInput").attr("type", "text");
 		}
 		$("#promptPasswordInput").val("");
+		if (ppp) {
+			$("#promptPasswordInput").on("paste", onPaste);
+		}
 		$("#promptPassword").dialog("open");
 		$("#promptPasswordInput").focus();
 	} else if (oa > 1) {
