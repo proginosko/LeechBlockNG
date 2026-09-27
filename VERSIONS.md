@@ -1,3 +1,11 @@
+# Version 1.8 (27 Sep 2026)
+* Added Swedish localization (thanks to Jonatan Nyberg).
+* Added Simplified Chinese localization (thanks to lostwangwang).
+* Added Azerbaijani localization (thanks to Jamal Kamaladdinoglu).
+* Added option to count time on allowed sites (exceptions).
+* Added option to prevent pasting passwords from clipboard.
+* Bug fixes.
+
 # Version 1.7.3 (04 Aug 2026)
 * Added support for managed storage.
 * Added option to (not) sort list of sites.
