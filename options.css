@@ -1,5 +1,18 @@
 /* LeechBlock options style */
 
+:root {
+	--primary-bg-color: #fff;
+	--primary-text-color: #000;
+	--ui-button-bg-color: #227f6e;
+	--ui-button-bg-hover-color: #3ac9ac;
+	--ui-widget-button-bg-color: #ccc;
+	--ui-widget-button-bg-hover-color: #ddd;
+	--ui-tabs-bg-color: #ccc;
+	--ui-tabs-bg-hover-color: #ddd;
+	--ui-tabs-bg-active-color: #eee;
+}
+
+
 html {
 	overflow-y: scroll;
 }
@@ -7,69 +20,88 @@ html {
 @media (prefers-color-scheme: light) {
 
 	body {
-		background: #fff;
-	}
-
-}
-
-@media (prefers-color-scheme: dark) {
-
-	body {
-		background: #222;
+		background: var(--primary-bg-color);
 	}
 
 }
 
 body {
-	color: #000;
+	color: #fff;
 	font-size: 14px;
 }
 
 .ui-button {
-	background: #eee;
-	color: #333;
-	border: 1px solid #888;
+	background: var(--ui-button-bg-color);
+	color: var(--primary-text-color);
+	border: none;
+	border-radius: 50px;
+	padding: 8px 15px;
+	animation-name: ui-button-unhover;
+	animation-duration: 0.2s;
 }
 
 .ui-button:focus {
-	background: #eee;
-	border: 1px solid #888;
+	background: var(--ui-button-bg-color);
+	border: none;
 }
 
 .ui-button:hover {
-	background: #ddd;
-	border: 1px solid #888;
+	background: var(--ui-button-bg-hover-color);
+	border: none;
+	animation-name: ui-button-hover;
+	animation-duration: 0.2s;
 }
 
-.ui-widget button {
-	padding: 2px 8px;
-	background: #eee;
+.ui-widget button ,
+input[type="file"]::file-selector-button{
+	background: var(--ui-widget-button-bg-color);
 	color: #333;
-	border: 1px solid #888;
-	border-radius: 3px;
+	border: none;
+	padding: 8px 12px;
+	border-radius: 50px;
+	animation-name: widget-unhover;
+	animation-duration: 0.2s;
 }
 
-.ui-widget button:hover:enabled {
-	background: #ddd;
+.ui-widget button:hover,
+input[type="file"]::file-selector-button:hover{
+	background: var(--ui-widget-button-bg-hover-color);
+	animation-name: widget-hover;
+	animation-duration: 0.2s;
 }
 
 .ui-widget button:active:enabled {
-	background: #ccc;
+	background: var(--ui-widget-button-bg-color);
 }
 
 .ui-widget button:disabled {
 	background: #eee;
 	color: #666;
-	border: 1px solid #ccc;
+	border: none;
 }
 
-.ui-widget fieldset, .ui-widget input, .ui-widget select, .ui-widget textarea {
-	background: #fff;
-	color: #000;
-	border: 1px solid #888;
+.ui-widget fieldset {
+	margin: 10px 0px;
 }
 
-.ui-widget input:disabled, .ui-widget select:disabled, .ui-widget textarea:disabled {
+.ui-widget fieldset,
+.ui-widget input,
+.ui-widget select,
+.ui-widget textarea {
+	color: var(--primary-text-color);
+	border: 1px #aaa solid;
+	border-radius: 15px;
+	padding: 4px 8px;
+}
+
+.ui-widget input,
+.ui-widget select {
+	background-color: var(--primary-bg-color);
+}
+
+.ui-widget input:disabled,
+.ui-widget select:disabled,
+.ui-widget textarea:disabled {
 	background: #eee;
 	color: #666;
 	border: 1px solid #ccc;
@@ -89,22 +121,66 @@ body {
 }
 
 .ui-widget a {
-    color: #2ca089;
-    text-decoration: none;
+	color: #2ca089;
+	text-decoration: none;
 }
 
 .ui-widget a:hover {
-    text-decoration: underline;
+	text-decoration: underline;
 }
 
-.ui-widget th, .ui-widget td {
+.ui-widget th,
+.ui-widget td {
 	text-align: center;
 	padding: 4px 12px;
+	border: none;
 }
 
 .ui-widget code {
 	font: normal 14px monospace;
 }
+
+.ui-widget-header {
+	background: var(--primary-bg-color);
+	color: #333;
+	border: none;
+}
+
+.ui-widget-content {
+	background: #eee;
+	color: var(--primary-text-color);
+	border: none;
+}
+
+.ui-widget.ui-widget-content {
+	border: none;
+}
+
+.ui-tabs .ui-state-default {
+	background: #ccc;
+	border: none;
+	border-radius: 15px 15px 0px 0px;
+	padding-top: 3px !important;
+}
+
+.ui-tabs .ui-state-default a {
+	color: #333;
+}
+
+.ui-tabs .ui-state-hover {
+	background: #ddd;
+	border: none;
+	animation-name: tab-hover;
+	animation-duration: 0.2s;
+}
+
+.ui-tabs .ui-state-active {
+	background: #eee;
+	border: none;
+	animation-name: tab-select;
+	animation-duration: 0.2s;
+}
+
 
 .logo {
 	width: 408px;
@@ -116,7 +192,7 @@ body {
 }
 
 #form {
-  text-align: center;
+	text-align: center;
 }
 
 #tabs {
@@ -137,7 +213,7 @@ body {
 }
 
 #promptAccessCodeCanvas {
-	background: #fff;
+	background: var(--primary-bg-color);
 }
 
 #promptAccessCodeInput {
@@ -152,4 +228,74 @@ body {
 
 #results {
 	font: normal 12px monospace;
+}
+
+@keyframes ui-button-hover {
+	from {
+		background-color: var(--ui-button-bg-color);
+	}
+
+	to {
+		background-color: var(--ui-button-bg-hover-color);
+	}
+}
+
+@keyframes ui-button-unhover {
+	from {
+		background-color: var(--ui-button-bg-hover-color);
+	}
+
+	to {
+		background-color: var(--ui-button-bg-color);
+	}
+}
+
+@keyframes widget-hover {
+	from {
+		background-color: var(--ui-widget-button-bg-color);
+	}
+
+	to {
+		background-color: var(--ui-widget-button-bg-hover-color);
+	}
+}
+
+@keyframes widget-unhover {
+	from {
+		background-color: var(--ui-widget-button-bg-hover-color);
+	}
+
+	to {
+		background-color: var(--ui-widget-button-bg-color);
+	}
+}
+
+@keyframes tab-select {
+	from {
+		background-color: var(--ui-tabs-bg-color);
+	}
+
+	to {
+		background-color: var(--ui-tabs-bg-active-color);
+	}
+}
+
+@keyframes tab-hover {
+	from {
+		background-color: var(--ui-tabs-bg-color);
+	}
+
+	to {
+		background-color: var(--ui-tabs-bg-hover-color);
+	}
+}
+
+@keyframes tab-unhover {
+	from {
+		background-color: var(--ui-tabs-bg-hover-color);
+	}
+
+	to {
+		background-color: var(--ui-tabs-bg-color);
+	}
 }

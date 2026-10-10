@@ -1,36 +1,48 @@
 /* LeechBlock Spruce theme style */
 
+:root {
+	--primary-bg-color: #031f;
+	--primary-text-color: #adb;
+	--ui-button-bg-color: #253;
+	--ui-button-bg-hover-color: #142;
+	--ui-widget-button-bg-color: #253;
+	--ui-widget-button-bg-hover-color: #142;
+	--ui-tabs-bg-color: #475;
+	--ui-tabs-bg-hover-color: #364;
+	--ui-tabs-bg-active-color: #031;
+}
+
 body {
-	background: #031;
-	color: #9ca;
+	background: var(--primary-bg-color);
+	color: var(--primary-text-color);
 }
 
 .ui-button {
-	background: #253;
-	color: #adb;
+	background: var(--ui-button-bg-color);
+	color: var(--primary-text-color);
 	border: 1px solid #840;
 }
 
 .ui-button:focus {
-	background: #253;
-	color: #adb;
+	background: var(--ui-button-bg-color);
+	color: var(--primary-text-color);
 	border: 1px solid #840;
 }
 
 .ui-button:hover {
-	background: #142;
-	color: #adb;
+	background: var(--ui-button-bg-hover-color);
+	color: var(--primary-text-color);
 	border: 1px solid #840;
 }
 
 .ui-widget button {
-	background: #253;
-	color: #adb;
+	background: var(--ui-widget-button-bg-color);
+	color: var(--primary-text-color);
 	border: 1px solid #840;
 }
 
 .ui-widget button:hover:enabled {
-	background: #142;
+	background: var(--ui-widget-button-bg-hover-color);
 }
 
 .ui-widget button:active:enabled {
@@ -38,21 +50,21 @@ body {
 }
 
 .ui-widget button:disabled {
-	background: #142;
+	background: var(--ui-widget-button-bg-hover-color);
 	color: #586;
-	border: 1px solid #253;
+	border: 1px solid var(--ui-widget-button-bg-color);
 }
 
 .ui-widget fieldset, .ui-widget input, .ui-widget select, .ui-widget textarea {
 	background: #031;
-	color: #9ca;
+	color: var(--primary-text-color);
 	border: 1px solid #840;
 }
 
 .ui-widget input:disabled, .ui-widget select:disabled, .ui-widget textarea:disabled {
-	background: #142;
+	background: var(--ui-widget-button-bg-hover-color);
 	color: #586;
-	border: 1px solid #253;
+	border: 1px solid var(--ui-widget-button-bg-color);
 }
 
 .ui-widget hr {
@@ -69,14 +81,14 @@ body {
 }
 
 .ui-widget-header {
-	background: #253;
-	color: #adb;
+	background: var(--ui-widget-button-bg-color);
+	color: var(--primary-text-color);
 	border: 1px solid #840;
 }
 
 .ui-widget-content {
 	background: #031;
-	color: #8b9;
+	color: var(--primary-text-color);
 	border: 1px solid #840;
 }
 
@@ -85,7 +97,7 @@ body {
 }
 
 .ui-tabs .ui-state-default {
-	background: #475;
+	background: var(--ui-tabs-bg-color);
 	border: 1px solid #840;
 }
 
@@ -94,12 +106,12 @@ body {
 }
 
 .ui-tabs .ui-state-hover {
-	background: #364;
+	background: var(--ui-tabs-bg-hover-color);
 	border: 1px solid #840;
 }
 
 .ui-tabs .ui-state-active {
-	background: #031;
+	background: var(--ui-tabs-bg-active-color);
 	border: 1px solid #840;
 }
 
@@ -108,5 +120,40 @@ body {
 }
 
 #paneAbout {
-	color: #9ca;
+	color: var(--primary-text-color);
+}
+
+@keyframes ui-button-hover {
+  	from {background-color: var(--ui-button-bg-color);}
+  	to {background-color: var(--ui-button-bg-hover-color);}
+}
+
+@keyframes ui-button-unhover {
+  	from {background-color: var(--ui-button-bg-hover-color);}
+  	to {background-color: var(--ui-button-bg-color);}
+}
+
+@keyframes widget-hover {
+	from {background-color: var(--ui-widget-button-bg-color);}
+	to {background-color: var(--ui-widget-button-bg-hover-color);}
+}
+
+@keyframes widget-unhover {
+	from {background-color: var(--ui-widget-button-bg-hover-color);}
+	to {background-color: var(--ui-widget-button-bg-color);}
+}
+
+@keyframes tab-select {
+   from {background-color: var(--ui-tabs-bg-color);}
+   to {background-color: var(--ui-tabs-bg-active-color);}
+}
+
+@keyframes tab-hover {
+   from {background-color: var(--ui-tabs-bg-color);}
+   to {background-color: var(--ui-tabs-bg-hover-color);}
+}
+
+@keyframes tab-unhover {
+   from {background-color: var(--ui-tabs-bg-hover-color);}
+   to {background-color: var(--ui-tabs-bg-color);}
 }

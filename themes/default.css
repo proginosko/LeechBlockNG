@@ -1,62 +1,88 @@
 /* LeechBlock Default theme style */
 
 @media (prefers-color-scheme: dark) {
+/* LeechBlock Dark theme style */
 
-/* The following should replicate the Dark theme style */
+/* LeechBlock Dark theme style */
+/* LeechBlock Dark theme style */
+
+:root {
+	--primary-bg-color: #111;
+	--primary-text-color: #eee;
+	--ui-button-bg-color: #186d5c;
+	--ui-button-bg-hover-color: #145145;
+	--ui-widget-button-bg-color: #444;
+	--ui-widget-button-bg-hover-color: #333;
+	--ui-tabs-bg-color: #333;
+	--ui-tabs-bg-hover-color: #777;
+	--ui-tabs-bg-active-color: #222;
+}
 
 body {
-	background: #222;
-	color: #bbb;
+	background: var(--primary-bg-color);
+	color: var(--primary-text-color);
 }
 
 .ui-button {
-	background: #444;
-	color: #bbb;
-	border: 1px solid #666;
+	background: var(--ui-button-bg-color);
+	color: var(--primary-text-color);
+	animation-name: ui-button-unhover;
+	animation-duration: 0.2s;
 }
 
 .ui-button:focus {
-	background: #444;
-	color: #bbb;
-	border: 1px solid #666;
+	background: var(--ui-button-bg-color);
+	color: var(--primary-text-color);
 }
 
 .ui-button:hover {
-	background: #333;
-	color: #bbb;
-	border: 1px solid #666;
+	background: var(--ui-button-bg-hover-color);
+	color: var(--primary-text-color);
+	animation-name: ui-button-hover;
+	animation-duration: 0.2s;
 }
 
-.ui-widget button {
-	background: #444;
-	color: #bbb;
-	border: 1px solid #666;
+.ui-widget button,
+input[type="file"]::file-selector-button {
+	background: var(--ui-widget-button-bg-color);
+	color: var(--primary-text-color);
+	animation-name: widget-unhover;
+	animation-duration: 0.2s;
 }
 
-.ui-widget button:hover:enabled {
-	background: #333;
+.ui-widget button:hover:enabled,
+input[type="file"]::file-selector-button:hover {
+	background: var(--ui-widget-button-bg-hover-color);
+	animation-name: widget-hover;
+	animation-duration: 0.2s;
 }
 
 .ui-widget button:active:enabled {
-	background: #222;
+	background: var(--ui-widget-button-bg-color);
 }
 
 .ui-widget button:disabled {
-	background: #333;
+	background: var(--ui-widget-button-bg-hover-color);
 	color: #666;
-	border: 1px solid #444;
+	border: none;
 }
 
-.ui-widget fieldset, .ui-widget input, .ui-widget select, .ui-widget textarea {
+.ui-widget fieldset,
+.ui-widget input,
+.ui-widget select,
+.ui-widget textarea {
 	background: #222;
-	color: #bbb;
-	border: 1px solid #666;
+	color: var(--primary-text-color);
+	border: 1px #555 solid;
+	border-radius: 15px;
 }
 
-.ui-widget input:disabled, .ui-widget select:disabled, .ui-widget textarea:disabled {
+.ui-widget input:disabled,
+.ui-widget select:disabled,
+.ui-widget textarea:disabled {
 	background: #333;
 	color: #666;
-	border: 1px solid #444;
+	border: 1px #555 solid;
 }
 
 .ui-widget hr {
@@ -65,54 +91,127 @@ body {
 	border-top: none;
 	border-left: none;
 	border-right: none;
-	border-bottom: 1px solid #666;
-}
-
-.ui-widget th, td {
-	border: 1px solid #666;
+	border-bottom: 1px solid #555;
 }
 
 .ui-widget-header {
 	background: #444;
-	color: #bbb;
-	border: 1px solid #888;
+	color: var(--primary-text-color);
+	border: none;
 }
 
 .ui-widget-content {
 	background: #222;
-	color: #bbb;
-	border: 1px solid #888;
+	color: var(--primary-text-color);
+	border: none;
 }
 
 .ui-widget.ui-widget-content {
-	border: 1px solid #888;
+	border: none;
 }
 
 .ui-tabs .ui-state-default {
-	background: #aaa;
-	border: 1px solid #666;
+	background: var(--ui-tabs-bg-color);
+	border: none;
+	border-radius: 15px 15px 0px 0px;
+	padding-top: 3px !important;
 }
 
 .ui-tabs .ui-state-default a {
-	color: #000;
+	color: var(--primary-text-color);
 }
 
 .ui-tabs .ui-state-hover {
-	background: #999;
-	border: 1px solid #666;
+	background: var(--ui-tabs-bg-hover-color);
+	border: none;
+	animation-name: tab-hover;
+	animation-duration: 0.2s;
 }
 
 .ui-tabs .ui-state-active {
-	background: #222;
-	border: 1px solid #666;
+	background: var(--ui-tabs-bg-active-color);
+	border: none;
+	animation-name: tab-select;
+	animation-duration: 0.2s;
 }
 
 .ui-tabs .ui-state-active a {
-	color: #bbb;
+	color: var(--primary-text-color);
 }
 
 #paneAbout {
-	color: #bbb;
+	color: var(--primary-text-color);
 }
 
+/* Animations */
+
+@keyframes ui-button-hover {
+	from {
+		background-color: var(--ui-button-bg-color);
+	}
+
+	to {
+		background-color: var(--ui-button-bg-hover-color);
+	}
+}
+
+@keyframes ui-button-unhover {
+	from {
+		background-color: var(--ui-button-bg-hover-color);
+	}
+
+	to {
+		background-color: var(--ui-button-bg-color);
+	}
+}
+
+@keyframes widget-hover {
+	from {
+		background-color: var(--ui-widget-button-bg-color);
+	}
+
+	to {
+		background-color: var(--ui-widget-button-bg-hover-color);
+	}
+}
+
+@keyframes widget-unhover {
+	from {
+		background-color: var(--ui-widget-button-bg-hover-color);
+	}
+
+	to {
+		background-color: var(--ui-widget-button-bg-color);
+	}
+}
+
+@keyframes tab-select {
+	from {
+		background-color: var(--ui-tabs-bg-color);
+	}
+
+	to {
+		background-color: var(--ui-tabs-bg-active-color);
+	}
+}
+
+@keyframes tab-hover {
+	from {
+		background-color: var(--ui-tabs-bg-color);
+	}
+
+	to {
+		background-color: var(--ui-tabs-bg-hover-color);
+	}
+}
+
+@keyframes tab-unhover {
+	from {
+		background-color: var(--ui-tabs-bg-hover-color);
+	}
+
+	to {
+		background-color: var(--ui-tabs-bg-color);
+	}
+}
 }
