@@ -567,9 +567,12 @@ function checkTab(id, isBeforeNav, isRepeat) {
 		// Allow page covered by a shared delay session
 		let session = getLiveSession(set, now);
 		if (session && grantCovers(session, parsedURL)) {
-			gTabs[id].secsLeft = session.endTime - now;
-			gTabs[id].secsLeftSet = set;
-			gTabs[id].showTimer = gOptions[`showTimer${set}`];
+			// Only report the set when the grant is tied to a host
+			if (session.host) {
+				gTabs[id].secsLeft = session.endTime - now;
+				gTabs[id].secsLeftSet = set;
+				gTabs[id].showTimer = gOptions[`showTimer${set}`];
+			}
 			continue;
 		}
 
@@ -1600,14 +1603,14 @@ function allowBlockedPage(id, url, set, autoLoad) {
 	// Set parameters for allowing host
 	let delayFirst = gOptions[`delayFirst${set}`];
 	let delayFirstMode = gOptions[`delayFirstMode${set}`];
-	let delayAllowMins = +gOptions[`delayAllowMins${set}`];
+	let delayAllowMins = gOptions[`delayAllowMins${set}`];
 	let now = Math.floor(Date.now() / 1000) + (gClockOffset * 60);
 	let grant = {
 		host: (delayFirst && delayFirstMode == 1) ? null : parsedURL.host,
 		path: delayFirst ? null : parsedURL.path,
 		endTime: delayAllowMins ? now + (delayAllowMins * 60) : 0
 	};
-	if (delayAllowMins) {
+	if (grant.endTime > now) {
 		// Share one session per block set, and never extend a live one
 		let session = getLiveSession(set, now);
 		if (session && grantCovers(session, parsedURL)) {
