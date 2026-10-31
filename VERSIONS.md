@@ -1,3 +1,8 @@
+# Unreleased
+* Fixed: once a delay countdown completes, the allowance is shared by every tab on the site (one session per block set) instead of applying to one tab, so pages opened in new tabs no longer start their own countdown.
+* Fixed: delay sessions are stored locally, so they survive the background page being suspended.
+* Fixed: a single unfocused tick no longer cancels the delay countdown.
+
 # Version 1.8 (27 Sep 2026)
 * Added Swedish localization (thanks to Jonatan Nyberg).
 * Added Simplified Chinese localization (thanks to lostwangwang).

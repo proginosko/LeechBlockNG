@@ -19,6 +19,7 @@ var gOptions = {};
 var gDiagMode = false;
 var gNumSets;
 var gTabs = [];
+var gSessions = {};
 var gSetCounted = [];
 var gSavedTimeData = [];
 var gRegExps = [];
@@ -87,6 +88,63 @@ function testURL(url, referrer, blockRE, allowRE, referRE, allowRefers) {
 	return allowRefers
 		? block && !(allow || refer)	// refer as allow-condition
 		: (block || refer) && !allow;	// refer as block-condition
+}
+
+// Check whether two host names refer to the same site
+//
+function isSameHost(host1, host2) {
+	return (host1 == host2)
+			|| (host1 == "www." + host2)
+			|| (host2 == "www." + host1);
+}
+
+// Check whether a grant covers the given parsed URL
+//
+function grantCovers(grant, parsedURL) {
+	return (!grant.host || isSameHost(grant.host, parsedURL.host))
+			&& (!grant.path || grant.path == parsedURL.path);
+}
+
+// Save delay sessions to local storage
+//
+function saveSessions() {
+	return browser.storage.local.set({ delaySessions: gSessions }).catch(
+		function (error) { warn("Cannot save delay sessions: " + error); }
+	);
+}
+
+// Load unexpired delay sessions from local storage
+//
+function loadSessions() {
+	return browser.storage.local.get("delaySessions").then(
+		function (data) {
+			let sessions = data["delaySessions"] || {};
+			let now = Math.floor(Date.now() / 1000) + (gClockOffset * 60);
+			gSessions = {};
+			for (let set in sessions) {
+				if (sessions[set].endTime > now) {
+					gSessions[set] = sessions[set];
+				}
+			}
+		},
+		function (error) { warn("Cannot load delay sessions: " + error); }
+	);
+}
+
+// Get the unexpired delay session for a block set (if any)
+//
+function getLiveSession(set, now) {
+	let session = gSessions[set];
+	if (!session) {
+		return null;
+	}
+	if (now > session.endTime) {
+		// Session has expired
+		delete gSessions[set];
+		saveSessions();
+		return null;
+	}
+	return session;
 }
 
 // Refresh menus
@@ -451,12 +509,6 @@ function processTabs(active) {
 function checkTab(id, isBeforeNav, isRepeat) {
 	//log("checkTab: " + id + " " + isBeforeNav + " " + isRepeat);
 
-	function isSameHost(host1, host2) {
-		return (host1 == host2)
-				|| (host1 == "www." + host2)
-				|| (host2 == "www." + host1);
-	}
-
 	let url = gTabs[id].url;
 
 	gTabs[id].blockable = BLOCKABLE_URL.test(url);
@@ -511,6 +563,15 @@ function checkTab(id, isBeforeNav, isRepeat) {
 	for (let set = 1; set <= gNumSets; set++) {
 		// Do nothing if set is disabled
 		if (gOptions[`disable${set}`]) continue;
+
+		// Allow page covered by a shared delay session
+		let session = getLiveSession(set, now);
+		if (session && grantCovers(session, parsedURL)) {
+			gTabs[id].secsLeft = session.endTime - now;
+			gTabs[id].secsLeftSet = set;
+			gTabs[id].showTimer = gOptions[`showTimer${set}`];
+			continue;
+		}
 
 		if (allowHost && allowPath && allowedSet == set) {
 			// Allow delayed site/page
@@ -1539,18 +1600,27 @@ function allowBlockedPage(id, url, set, autoLoad) {
 	// Set parameters for allowing host
 	let delayFirst = gOptions[`delayFirst${set}`];
 	let delayFirstMode = gOptions[`delayFirstMode${set}`];
-	let delayAllowMins = gOptions[`delayAllowMins${set}`];
-	gTabs[id].allowedHost = (delayFirst && delayFirstMode == 1) ? null : parsedURL.host;
-	gTabs[id].allowedPath = delayFirst ? null : parsedURL.path;
-	gTabs[id].allowedSet = set;
+	let delayAllowMins = +gOptions[`delayAllowMins${set}`];
+	let now = Math.floor(Date.now() / 1000) + (gClockOffset * 60);
+	let grant = {
+		host: (delayFirst && delayFirstMode == 1) ? null : parsedURL.host,
+		path: delayFirst ? null : parsedURL.path,
+		endTime: delayAllowMins ? now + (delayAllowMins * 60) : 0
+	};
 	if (delayAllowMins) {
-		// Calculate end time for allowing access
-		let now = Math.floor(Date.now() / 1000) + (gClockOffset * 60);
-		gTabs[id].allowedEndTime = now + (delayAllowMins * 60);
-	} else {
-		// No end time for allowing access
-		gTabs[id].allowedEndTime = 0;
+		// Share one session per block set, and never extend a live one
+		let session = getLiveSession(set, now);
+		if (session && grantCovers(session, parsedURL)) {
+			grant = session;
+		} else if (!session) {
+			gSessions[set] = grant;
+			saveSessions();
+		}
 	}
+	gTabs[id].allowedHost = grant.host;
+	gTabs[id].allowedPath = grant.path;
+	gTabs[id].allowedSet = set;
+	gTabs[id].allowedEndTime = grant.endTime;
 
 	if (autoLoad) {
 		// Redirect page
@@ -1989,6 +2059,7 @@ function onAlarm(alarmInfo) {
 /*** STARTUP CODE BEGINS HERE ***/
 
 checkManagedStorage();
+loadSessions();
 
 browser.runtime.getPlatformInfo().then(
 	function (info) { gIsAndroid = (info.os == "android"); }

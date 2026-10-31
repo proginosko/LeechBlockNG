@@ -102,8 +102,16 @@ function processBlockInfo(info) {
 		// Start countdown timer
 		let countdown = {
 			delaySecs: info.delaySecs,
-			delayCancel: info.delayCancel
+			delayCancel: info.delayCancel,
+			unfocused: 0
 		};
+
+		// Clear any leftover strike-through
+		let countdownText = document.getElementById("lbCountdownText");
+		if (countdownText) {
+			countdownText.style.textDecoration = "";
+		}
+
 		countdown.interval = window.setInterval(onCountdownTimer, 1000, countdown);
 	}
 
@@ -118,6 +126,13 @@ function processBlockInfo(info) {
 function onCountdownTimer(countdown) {
 	// Cancel countdown if document not focused
 	if (countdown.delayCancel && !document.hasFocus()) {
+		countdown.unfocused = (countdown.unfocused || 0) + 1;
+
+		// Tolerate a single spurious sample (e.g. while a new tab is attaching)
+		if (countdown.unfocused < 2) {
+			return;
+		}
+
 		// Clear countdown timer
 		window.clearInterval(countdown.interval);
 
@@ -129,6 +144,8 @@ function onCountdownTimer(countdown) {
 
 		return;
 	}
+
+	countdown.unfocused = 0;
 
 	countdown.delaySecs--;
 
