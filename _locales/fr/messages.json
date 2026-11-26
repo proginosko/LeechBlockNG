@@ -25,10 +25,10 @@
 
 	"addSiteMenuItem": { "message": "Ajouter le site" },
 
-	"addSiteToBlockSetMenuItem": { "message": "Ajouter le site au groupe de blocage" },
+	"addSiteToBlockSetMenuItem": { "message": "Ajouter le site à la liste" },
 
 	"addPageMenuItem": { "message": "Ajouter la page" },
 
-	"addPageToBlockSetMenuItem": { "message": "Ajouter la page au groupe de blocage" }
+	"addPageToBlockSetMenuItem": { "message": "Ajouter la page à la liste" }
 
 }
