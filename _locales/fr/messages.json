@@ -1,0 +1,34 @@
+{
+
+	"extensionName": {
+		"message": "LeechBlock NG",
+		"description": "Nom de l'extension."
+	},
+
+	"extensionDescription": {
+		"message": "LeechBlock est un outil de productivité simple permettant de bloquer les sites chronophages.",
+		"description": "Description de l'extension."
+	},
+
+	"localePath": {
+		"message": "/fr/",
+		"description": "Chemin vers les fichiers localisés."
+	},
+
+	"optionsMenuItem": { "message": "Options" },
+
+	"lockdownMenuItem": { "message": "Verrouillage" },
+
+	"overrideMenuItem": { "message": "Contournement" },
+
+	"statisticsMenuItem": { "message": "Statistiques" },
+
+	"addSiteMenuItem": { "message": "Ajouter le site" },
+
+	"addSiteToBlockSetMenuItem": { "message": "Ajouter le site au groupe de blocage" },
+
+	"addPageMenuItem": { "message": "Ajouter la page" },
+
+	"addPageToBlockSetMenuItem": { "message": "Ajouter la page au groupe de blocage" }
+
+}
